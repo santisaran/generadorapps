@@ -21,6 +21,7 @@ global miBits
 miBits = Bits[:]
 global miBytes
 miBytes= Bytes[:]
+
   
 class MiFrame(gui.frmPpal):
     """Frame principal"""
