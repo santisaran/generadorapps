@@ -71,6 +71,7 @@ class MiFrame(gui.frmPpal):
         win = mifrmEditByte(self,item)
         win.Show()
         
+        
     def OnEditarBit( self, event ):
         id = event.GetId()
         item = self.GetMenuBar().FindItemById(id)
@@ -95,9 +96,7 @@ class MiFrame(gui.frmPpal):
     def OnAbrirPrograma(self,event):
         id = event.GetId()
         item = self.GetMenuBar().FindItemById(id)
-        print item.GetText()
         for i in self.programas:
-            print u"Programa %0.2d: %s"%(i.AppNum,i.Nombre)
             if u"Programa %0.2d: %s"%(i.AppNum,i.Nombre) ==item.GetText():
                 win = mifrmEditApp(self,i)
                 win.Show(True)
@@ -233,7 +232,8 @@ class mifrmEditApp(gui.frmEditApp):
         self.padre.programas[self.tempApp.AppNum] = self.tempApp.copy()
         self.padre.AppMenuItems[self.tempApp.AppNum].SetText(\
             u"Programa %0.2d: %s"%(self.tempApp.AppNum,self.tempApp.Nombre))
-
+        #TODO Preguntar por guardar cambios.
+        
     
     def OnCambiarNombre( self, event ):
         
@@ -246,6 +246,7 @@ class mifrmEditApp(gui.frmEditApp):
 
 
     def OnClose(self,event):
+        
         self.padre.AppMenuItems[self.tempApp.AppNum].Enable(True)
         self.Destroy()
       
@@ -293,7 +294,6 @@ class mifrmBloques( gui.frmBloques):
         
         
     def OnGuardar( self, event ):
-        
         self.Guardar()
 
 
@@ -303,14 +303,13 @@ class mifrmBloques( gui.frmBloques):
         #    self.padre.tempApp.Estados[self.notBloque.estado].copy()
         #nombre del estado
         nombre = "%0.2d"%self.notBloque.estado + " : " + self.Title
-        print "Guardar: nombre: " + nombre
         self.padre.EstadosDic[self.notBloque.estado].opened = True
-        print self.padre.EstadosDic[self.notBloque.estado].Nombre
         self.padre.listEstados.Delete(self.notBloque.estado)
-        self.padre.listEstados.Insert(nombre, self.notBloque.estado)
-        
+        self.padre.listEstados.Insert(nombre, self.notBloque.estado)        
         self.padre.EstadosDic[self.notBloque.estado].Nombre = nombre
         self.padre.EstadosDic[self.notBloque.estado].opened = True
+        self.notBloque.Modificado = False
+        #TODO guardar comentarios
         
 
     def OnClose ( self , event ):
@@ -330,7 +329,7 @@ class mifrmBloques( gui.frmBloques):
         
 
     def OnTitulo( self, event ):
-        
+        self.notBloque.Modificado = True
         self.Title = self.txtctrlTitulo.GetValue()
         self.padre.tempApp.Estados[self.notBloque.estado].Nombre = self.Title
   
@@ -412,6 +411,7 @@ class mipanelBloque(gui.panelBloque):
     
     
     def OnChoiceAccion( self, event ):
+        self.padre.Modificado = True
         self.txtctrlSeudo.SetValue("")
         if self.Acciones.has_key(event.GetString()):
             self.Acciones[event.GetString()]()
@@ -800,6 +800,8 @@ class mipanelCondicion ( gui.panelCondicion ):
             frmEditApp.tempApp.Estados[self.padre.estado].Resultados[0])
         self.choiceEstadoFalse.SetSelection (\
             frmEditApp.tempApp.Estados[self.padre.estado].Resultados[1])
+        
+        self.padre.Modificado = False
             
             
     def SCNull(self):
@@ -896,8 +898,6 @@ class mipanelCondicion ( gui.panelCondicion ):
     def ActualizarSeudoCodigo(self):
         self.frmEditApp.SCTotal[self.numero] = self.GeneradoresCodigo[self.choiceAccion.GetLabelText()]()
         self.padre.Modificado = True
-        print self.ValorCondiciones
-        print self.ValorResultados
         self.txtctrlSeudo.SetValue("")
         for i in range(len(self.frmEditApp.SCTotal)-1):
             if self.frmEditApp.SCTotal[i]:
@@ -1032,13 +1032,13 @@ class  mifrmEntrada (gui.frmEntrada):
     def OnGuardar( self, event ):
         self.muestras = self.frmEstado_txtctrl_muestras.GetValue()
         self.tiempo   = self.frmEstado_txtctrl_tiempo.GetValue()
-        print self.muestras + self.tiempo
     
     def OnCerrar( self, event ):
         self.item.Enable(True)
         self.Destroy()
         
     def OnCargarDefaults( self, event ):
+        #TODO Cargar Defaults
         pass
     
 ########################################################################
@@ -1191,8 +1191,10 @@ class miDlgCopiarApp ( gui.DialogoCopiarApp ):
                 caption="Error al copiar", style=wx.OK, pos=wx.DefaultPosition)
             dlg.ShowModal()
         else:
+            num = self.padre.programas[selA].AppNum
             self.padre.programas[selA] = self.padre.programas[selB].copy()
-
+            self.padre.programas[selA].AppNum = num
+            #TODO modificar item en menu
         
 
                
