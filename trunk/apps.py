@@ -31,9 +31,9 @@ Cantidad_Bytes_Usuario = 256
 
 #// Almacenado en los bits [29:24] de la informacion de los bloques (uint32_t)
 
-BloquesPosibles = ("Null","Incrementar","Decrementar","AND_2_BIT",\
-    "OR_2_BIT","NOT_BIT","Sumar_2_Reg","Restar_2_Reg","Invertir_Reg",\
-    "Transmitir_BB","SetBit","ClrBit","ClrReg","CopiarRegistro")
+BloquesPosibles = (u"Null",u"Incrementar",u"Decrementar",u"AND_2_BIT",\
+    u"OR_2_BIT",u"NOT_BIT",u"Sumar_2_Reg",u"Restar_2_Reg",u"Invertir_Reg",\
+    u"Transmitir_BB",u"SetBit",u"ClrBit",u"ClrReg",u"CopiarRegistro")
 
 BloquesDic = {}
 
