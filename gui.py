@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*- 
 
 ###########################################################################
-## Python code generated with wxFormBuilder (version Apr 10 2012)
+## Python code generated with wxFormBuilder (version Oct  8 2012)
 ## http://www.wxformbuilder.org/
 ##
 ## PLEASE DO "NOT" EDIT THIS FILE!
@@ -173,6 +173,7 @@ class frmEditBit ( wx.Frame ):
 		gbSizer1.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
 		self.BitsTxtCtrl = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.Point( 1,0 ), wx.DefaultSize, 0 )
+		self.BitsTxtCtrl.SetMaxLength( 0 ) 
 		gbSizer1.Add( self.BitsTxtCtrl, wx.GBPosition( 0, 1 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 		
 		self.BitsSpinCtrl = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.Point( 0,0 ), wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 255, 255 )
@@ -254,6 +255,7 @@ class dlgGenProg ( wx.Dialog ):
 		bSizer2.Add( gSizer2, 1, wx.EXPAND, 5 )
 		
 		self.txtctrl_prog = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.txtctrl_prog.SetMaxLength( 0 ) 
 		bSizer2.Add( self.txtctrl_prog, 0, wx.ALL|wx.EXPAND, 5 )
 		
 		
@@ -296,6 +298,7 @@ class frmEditByte ( wx.Frame ):
 		gbSizer1.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
 		self.BytesTxtCtrl = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.Point( 1,0 ), wx.DefaultSize, 0 )
+		self.BytesTxtCtrl.SetMaxLength( 0 ) 
 		gbSizer1.Add( self.BytesTxtCtrl, wx.GBPosition( 0, 1 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 		
 		self.BytesSpinCtrl = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.Point( 0,0 ), wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 255, 1 )
@@ -571,6 +574,7 @@ class frmBloques ( wx.Frame ):
 		bSizer29.Add( self.m_staticText39, 0, wx.ALL, 5 )
 		
 		self.txtctrlTitulo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_PROCESS_ENTER )
+		self.txtctrlTitulo.SetMaxLength( 0 ) 
 		bSizer29.Add( self.txtctrlTitulo, 0, wx.ALL|wx.EXPAND, 5 )
 		
 		self.m_staticText40 = wx.StaticText( self, wx.ID_ANY, u"Comentario", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -578,6 +582,7 @@ class frmBloques ( wx.Frame ):
 		bSizer29.Add( self.m_staticText40, 0, wx.ALL, 5 )
 		
 		self.txtctrlComentario = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
+		self.txtctrlComentario.SetMaxLength( 0 ) 
 		bSizer29.Add( self.txtctrlComentario, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
@@ -682,6 +687,7 @@ class panelBloque ( wx.Panel ):
 		bSizer22.Add( self.m_staticText35, 0, wx.ALL, 5 )
 		
 		self.txtctrlSeudo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
+		self.txtctrlSeudo.SetMaxLength( 0 ) 
 		bSizer22.Add( self.txtctrlSeudo, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
@@ -792,6 +798,7 @@ class panelCondicion ( wx.Panel ):
 		bSizer25.Add( self.txtctrlSeudo, 0, wx.ALL, 5 )
 		
 		self.txtctrlSeudo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
+		self.txtctrlSeudo.SetMaxLength( 0 ) 
 		bSizer25.Add( self.txtctrlSeudo, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
@@ -850,6 +857,7 @@ class frmEntrada ( wx.Frame ):
 		bSizer26.Add( self.m_staticText48, 0, wx.ALL, 5 )
 		
 		self.frmEstado_txtctrl_muestras = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.frmEstado_txtctrl_muestras.SetMaxLength( 0 ) 
 		bSizer26.Add( self.frmEstado_txtctrl_muestras, 0, wx.ALL, 5 )
 		
 		
@@ -865,6 +873,7 @@ class frmEntrada ( wx.Frame ):
 		bSizer28.Add( self.m_staticText49, 0, wx.ALL, 5 )
 		
 		self.frmEstado_txtctrl_tiempo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.frmEstado_txtctrl_tiempo.SetMaxLength( 0 ) 
 		bSizer28.Add( self.frmEstado_txtctrl_tiempo, 0, wx.ALL, 5 )
 		
 		
@@ -1008,6 +1017,7 @@ class frmAnalog ( wx.Frame ):
 		gSizer3.Add( self.m_staticText6, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
 		self.dlg_Analog_txtctrl_Asup = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.dlg_Analog_txtctrl_Asup.SetMaxLength( 0 ) 
 		gSizer3.Add( self.dlg_Analog_txtctrl_Asup, 0, wx.ALL, 5 )
 		
 		self.m_staticText7 = wx.StaticText( self, wx.ID_ANY, u"Límite inferior zona A", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -1015,6 +1025,7 @@ class frmAnalog ( wx.Frame ):
 		gSizer3.Add( self.m_staticText7, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
 		self.dlg_Analog_txtctrl_Ainf = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.dlg_Analog_txtctrl_Ainf.SetMaxLength( 0 ) 
 		gSizer3.Add( self.dlg_Analog_txtctrl_Ainf, 0, wx.ALL, 5 )
 		
 		self.m_staticText8 = wx.StaticText( self, wx.ID_ANY, u"Límite superior zona B", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -1022,6 +1033,7 @@ class frmAnalog ( wx.Frame ):
 		gSizer3.Add( self.m_staticText8, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
 		self.dlg_Analog_txtctrl_Bsup = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.dlg_Analog_txtctrl_Bsup.SetMaxLength( 0 ) 
 		gSizer3.Add( self.dlg_Analog_txtctrl_Bsup, 0, wx.ALL, 5 )
 		
 		self.m_staticText9 = wx.StaticText( self, wx.ID_ANY, u"Límite inferior zona B", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -1029,6 +1041,7 @@ class frmAnalog ( wx.Frame ):
 		gSizer3.Add( self.m_staticText9, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
 		self.dlg_Analog_txtctrl_Binf = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.dlg_Analog_txtctrl_Binf.SetMaxLength( 0 ) 
 		gSizer3.Add( self.dlg_Analog_txtctrl_Binf, 0, wx.ALL, 5 )
 		
 		self.m_staticText10 = wx.StaticText( self, wx.ID_ANY, u"Límite superior zona C", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -1036,6 +1049,7 @@ class frmAnalog ( wx.Frame ):
 		gSizer3.Add( self.m_staticText10, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
 		self.dlg_Analog_txtctrl_Csup = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.dlg_Analog_txtctrl_Csup.SetMaxLength( 0 ) 
 		gSizer3.Add( self.dlg_Analog_txtctrl_Csup, 0, wx.ALL, 5 )
 		
 		self.m_staticText11 = wx.StaticText( self, wx.ID_ANY, u"Límite inferior zona C", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -1043,6 +1057,7 @@ class frmAnalog ( wx.Frame ):
 		gSizer3.Add( self.m_staticText11, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
 		self.dlg_Analog_txtctrl_Cinf = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.dlg_Analog_txtctrl_Cinf.SetMaxLength( 0 ) 
 		gSizer3.Add( self.dlg_Analog_txtctrl_Cinf, 0, wx.ALL, 5 )
 		
 		self.m_staticText12 = wx.StaticText( self, wx.ID_ANY, u"Límite superior zona D", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -1050,6 +1065,7 @@ class frmAnalog ( wx.Frame ):
 		gSizer3.Add( self.m_staticText12, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
 		self.dlg_Analog_txtctrl_Dsup = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.dlg_Analog_txtctrl_Dsup.SetMaxLength( 0 ) 
 		gSizer3.Add( self.dlg_Analog_txtctrl_Dsup, 0, wx.ALL, 5 )
 		
 		self.m_staticText13 = wx.StaticText( self, wx.ID_ANY, u"Límite inferior zona D", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -1057,6 +1073,7 @@ class frmAnalog ( wx.Frame ):
 		gSizer3.Add( self.m_staticText13, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
 		self.dlg_Analog_txtctrl_Dinf = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.dlg_Analog_txtctrl_Dinf.SetMaxLength( 0 ) 
 		gSizer3.Add( self.dlg_Analog_txtctrl_Dinf, 0, wx.ALL, 5 )
 		
 		
@@ -1086,6 +1103,7 @@ class frmAnalog ( wx.Frame ):
 		gSizer5.Add( self.m_staticText17, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
 		self.dlg_analog_textCtrl_muestreo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.dlg_analog_textCtrl_muestreo.SetMaxLength( 0 ) 
 		gSizer5.Add( self.dlg_analog_textCtrl_muestreo, 0, wx.ALL, 5 )
 		
 		self.m_staticText18 = wx.StaticText( self, wx.ID_ANY, u"Cantidad de muestras\nPara validar zona", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -1093,6 +1111,7 @@ class frmAnalog ( wx.Frame ):
 		gSizer5.Add( self.m_staticText18, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
 		self.dlg_Analog_txtCtrl_muestras = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.dlg_Analog_txtCtrl_muestras.SetMaxLength( 0 ) 
 		gSizer5.Add( self.dlg_Analog_txtCtrl_muestras, 0, wx.ALL, 5 )
 		
 		
@@ -1108,6 +1127,7 @@ class frmAnalog ( wx.Frame ):
 		bSizer7.Add( self.m_staticText19, 0, wx.ALL, 5 )
 		
 		self.m_textCtrl17 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
+		self.m_textCtrl17.SetMaxLength( 0 ) 
 		bSizer7.Add( self.m_textCtrl17, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		self.frm_analog_btnGuardar = wx.Button( self, wx.ID_ANY, u"Guardar", wx.DefaultPosition, wx.DefaultSize, 0 )

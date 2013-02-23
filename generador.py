@@ -403,7 +403,7 @@ class mipanelBloque(gui.panelBloque):
                                          
     def ActualizarSeudoCodigo(self):
         self.frmEditApp.SCTotal[self.numero] = \
-            self.GeneradoresCodigo[self.choiceAccion.GetLabelText()]()
+            self.GeneradoresCodigo[GetTexto(self.choiceAccion)]()
         self.padre.Modificado = True
         #CARGA EL VALOR DEL BLOQUE
         self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero] = self.ValorBloque
@@ -419,9 +419,7 @@ class mipanelBloque(gui.panelBloque):
             print "Valor fuera de rango"
     
     def OnChoice( self, event ):
-        cadena = self.ActualizarSeudoCodigo()
-        if cadena:
-            self.frmEditApp.SCTotal[self.numero] = cadena[:]
+        self.ActualizarSeudoCodigo()
     
     def BloqueNull( self):
         self.choiceParametro1.Enable(False)
@@ -576,12 +574,12 @@ class mipanelBloque(gui.panelBloque):
         """ Función encargada de generar el seudocódigo
         para la función incrementar
         """
-        cadena = self.choiceGuardar.GetLabelText() + " = " +\
-                self.choiceParametro1.GetLabelText() + " + 1"
+        cadena = GetTexto(self.choiceGuardar) + " = " +\
+                GetTexto(self.choiceParametro1) + " + 1"
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = ((Bloque_Incrementar<<24)|\
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
-            int(self.choiceParametro1.GetCurrentSelection()))
+            int(self.choiceParametro1.GetCurrentSelection()))   
         self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero] = self.ValorBloque
         return cadena
 
@@ -589,8 +587,8 @@ class mipanelBloque(gui.panelBloque):
         """ Función encargada de generar el seudocódigo
             para la función decrementar
         """
-        cadena = self.choiceGuardar.GetLabelText() + " = " +\
-            self.choiceParametro1.GetLabelText() + " - 1"
+        cadena = GetTexto(self.choiceGuardar) + " = " +\
+            GetTexto(self.choiceParametro1) + " - 1"
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = ((Bloque_Decrementar<<24)|\
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
@@ -602,9 +600,9 @@ class mipanelBloque(gui.panelBloque):
         """Función encargada de generar el seudocódigo
             para la función AND
         """
-        cadena = self.choiceGuardar.GetLabelText() + " = " +\
-            self.choiceParametro1.GetLabelText() + " & " +\
-            self.choiceParametro2.GetLabelText()            
+        cadena = GetTexto(self.choiceGuardar) + " = " +\
+            GetTexto(self.choiceParametro1) + " & " +\
+            GetTexto(self.choiceParametro2)            
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = ((Bloque_AND_2_BIT<<24)|\
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
@@ -617,9 +615,9 @@ class mipanelBloque(gui.panelBloque):
         """Función encargada de generar el seudocódigo
             para la función OR
         """
-        cadena = self.choiceGuardar.GetLabelText() + " = " +\
-            self.choiceParametro1.GetLabelText() + " | " +\
-            self.choiceParametro2.GetLabelText()            
+        cadena = GetTexto(self.choiceGuardar) + " = " +\
+            GetTexto(choiceParametro1) + " | " +\
+            GetTexto(choiceParametro2)            
         self.txtctrlSeudo.SetValue(cadena) 
         self.ValorBloque = ((Bloque_OR_2_BIT<<24)|\
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
@@ -632,8 +630,8 @@ class mipanelBloque(gui.panelBloque):
         """Función encargada de generar el seudocódigo
         para la función NOT
         """
-        cadena = self.choiceGuardar.GetLabelText() + " = NOT(" +\
-            self.choiceParametro1.GetLabelText() + ")"
+        cadena = GetTexto(self.choiceGuardar) + " = NOT(" +\
+            GetTexto(self.choiceParametro1) + ")"
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = ((Bloque_NOT_BIT<<24)|\
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
@@ -645,9 +643,9 @@ class mipanelBloque(gui.panelBloque):
         """Función encargada de generar el seudocódigo
         para la función sumar
         """
-        cadena = self.choiceGuardar.GetLabelText() + " = " +\
-            self.choiceParametro1.GetLabelText() + " + " +\
-            self.choiceParametro2.GetLabelText()
+        cadena = GetTexto(self.choiceGuardar) + " = " +\
+            GetTexto(self.choiceParametro1) + " + " +\
+            GetTexto(self.choiceParametro2)
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = ((Bloque_Sumar_2_Reg<<24)|\
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
@@ -660,9 +658,9 @@ class mipanelBloque(gui.panelBloque):
         """Función encargada de generar el seudocódigo
         para la función restar
         """
-        cadena = self.choiceGuardar.GetLabelText() + " = " +\
-            self.choiceParametro1.GetLabelText() + " - " +\
-            self.choiceParametro2.GetLabelText()            
+        cadena = GetTexto(self.choiceGuardar) + " = " +\
+            GetTexto(self.choiceParametro1) + " - " +\
+            GetTexto(self.choiceParametro2)            
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = ((Bloque_Restar_2_Reg<<24)|\
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
@@ -675,8 +673,8 @@ class mipanelBloque(gui.panelBloque):
         """Función encargada de generar el seudocódigo
         para la función invertir
         """
-        cadena = self.choiceGuardar.GetLabelText() + " = ~(" +\
-            self.choiceParametro1.GetLabelText() + ")"
+        cadena = GetTexto(self.choiceGuardar) + " = ~(" +\
+            GetTexto(self.choiceParametro1) + ")"
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = ((Bloque_Invertir_Reg<<24)|\
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
@@ -699,7 +697,7 @@ class mipanelBloque(gui.panelBloque):
         """Función encargada de generar el seudocódigo
         para la función set bit
         """
-        cadena = self.choiceParametro1.GetLabelText() + " = 1"
+        cadena = GetTexto(self.choiceParametro1) + " = 1"
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = ((Bloque_SetBit<<24)|\
             int(self.choiceParametro2.GetCurrentSelection()<<8))
@@ -710,7 +708,7 @@ class mipanelBloque(gui.panelBloque):
         """Función encargada de generar el seudocódigo
         para la función clr bit
         """
-        cadena = self.choiceParametro1.GetLabelText() + " = 0"
+        cadena = GetTexto(self.choiceParametro1) + " = 0"
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = ((Bloque_ClrBit<<24)|\
             int(self.choiceParametro1.GetCurrentSelection()))
@@ -721,7 +719,7 @@ class mipanelBloque(gui.panelBloque):
         """Función encargada de generar el seudocódigo
         para la función clr reg
         """
-        cadena = self.choiceParametro1.GetLabelText() + " = 0"
+        cadena = GetTexto(self.choiceParametro1) + " = 0"
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = ((Bloque_ClrReg<<24)|\
             int(self.choiceParametro1.GetCurrentSelection()))
@@ -733,8 +731,8 @@ class mipanelBloque(gui.panelBloque):
         """Función encargada de generar el seudocódigo
         para la función copiar reg
         """
-        cadena = self.choiceGuardar.GetLabelText() + " = "+\
-            self.choiceParametro1.GetLabelText()
+        cadena = GetTexto(self.choiceGuardar) + " = "+\
+            GetTexto(self.choiceParametro1)
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = ((Bloque_CopiarRegistro<<24)|\
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
@@ -816,10 +814,10 @@ class mipanelCondicion ( gui.panelCondicion ):
         """ Función encargada de generar el seudocódigo
         para la condición mayor
         """
-        cadena = "if (" + self.choiceParametro1.GetLabelText() + " > " +\
-                self.choiceParametro2.GetLabelText() + ")\n" +\
-                "\t\tEstadoApp = " + self.choiceEstadoTrue.GetLabelText()\
-                + "\n\telse:\n\t\tEstadoApp = " + self.choiceEstadoFalse.GetLabelText()
+        cadena = "if (" + GetTexto(self.choiceParametro1) + " > " +\
+                GetTexto(self.choiceParametro2) + ")\n" +\
+                "\t\tEstadoApp = " + GetTexto(self.choiceEstadoTrue)\
+                + "\n\telse:\n\t\tEstadoApp = " + GetTexto(self.choiceEstadoFalse)
         self.ValorCondiciones[0] = Condicion_Mayor
         self.ValorCondiciones[1] = self.choiceParametro1.GetCurrentSelection()
         self.ValorCondiciones[2] = self.choiceParametro2.GetCurrentSelection()
@@ -833,10 +831,10 @@ class mipanelCondicion ( gui.panelCondicion ):
         """ Función encargada de generar el seudocódigo
         para la condicion menor
         """
-        cadena = "if (" + self.choiceParametro1.GetLabelText() + " < " +\
-                self.choiceParametro2.GetLabelText() + ")\n" +\
-                "\t\tEstadoApp = " + self.choiceEstadoTrue.GetLabelText()\
-                + "\n\telse:\n\t\tEstadoApp = " + self.choiceEstadoFalse.GetLabelText()
+        cadena = "if (" + GetTexto(self.choiceParametro1) + " < " +\
+                GetTexto(self.choiceParametro2) + ")\n" +\
+                "\t\tEstadoApp = " + GetTexto(self.choiceEstadoTrue)\
+                + "\n\telse:\n\t\tEstadoApp = " + GetTexto(self.choiceEstadoFalse)
         self.ValorCondiciones[0] = Condicion_Menor
         self.ValorCondiciones[1] = self.choiceParametro1.GetCurrentSelection()
         self.ValorCondiciones[2] = self.choiceParametro2.GetCurrentSelection()
@@ -850,10 +848,10 @@ class mipanelCondicion ( gui.panelCondicion ):
         """ Función encargada de generar el seudocódigo
         para la condición igual
         """
-        cadena = "if (" + self.choiceParametro1.GetLabelText() + " == " +\
-                self.choiceParametro2.GetLabelText() + ")\n" +\
-                "\t\tEstadoApp = " + self.choiceEstadoTrue.GetLabelText()\
-                + "\n\telse:\n\t\tEstadoApp = " + self.choiceEstadoFalse.GetLabelText()
+        cadena = "if (" + GetTexto(self.choiceParametro1) + " == " +\
+                GetTexto(self.choiceParametro2) + ")\n" +\
+                "\t\tEstadoApp = " + GetTexto(self.choiceEstadoTrue)\
+                + "\n\telse:\n\t\tEstadoApp = " + GetTexto(self.choiceEstadoFalse)
         self.ValorCondiciones[0] = Condicion_Igual
         self.ValorCondiciones[1] = self.choiceParametro1.GetCurrentSelection()
         self.ValorCondiciones[2] = self.choiceParametro2.GetCurrentSelection()
@@ -867,9 +865,9 @@ class mipanelCondicion ( gui.panelCondicion ):
         """ Función encargada de generar el seudocódigo
         para la condición bit true
         """
-        cadena = "if (" + self.choiceParametro1.GetLabelText() + \
-                " == True)\n\t\tEstadoApp = " + self.choiceEstadoTrue.GetLabelText()\
-                + "\n\telse:\n\t\tEstadoApp = " + self.choiceEstadoFalse.GetLabelText()
+        cadena = "if (" + GetTexto(self.choiceParametro1) + \
+                " == True)\n\t\tEstadoApp = " + GetTexto(self.choiceEstadoTrue)\
+                + "\n\telse:\n\t\tEstadoApp = " + GetTexto(self.choiceEstadoFalse)
         self.ValorCondiciones[0] = Condicion_Bit_True
         self.ValorCondiciones[1] = self.choiceParametro1.GetCurrentSelection()
         self.ValorCondiciones[2] = 0
@@ -883,9 +881,9 @@ class mipanelCondicion ( gui.panelCondicion ):
         """ Función encargada de generar el seudocódigo
         para la condición bit true
         """
-        cadena = "if (" + self.choiceParametro1.GetLabelText() + \
-                " == False)\n\t\tEstadoApp = " + self.choiceEstadoTrue.GetLabelText()\
-                + "\n\telse:\n\t\tEstadoApp = " + self.choiceEstadoFalse.GetLabelText()
+        cadena = "if (" + GetTexto(self.choiceParametro1) + \
+                " == False)\n\t\tEstadoApp = " + GetTexto(self.choiceEstadoTrue)\
+                + "\n\telse:\n\t\tEstadoApp = " + GetTexto(self.choiceEstadoFalse)
         self.ValorCondiciones[0] = Condicion_Bit_False
         self.ValorCondiciones[1] = self.choiceParametro1.GetCurrentSelection()
         self.ValorCondiciones[2] = 0
@@ -896,7 +894,7 @@ class mipanelCondicion ( gui.panelCondicion ):
         return cadena
                                  
     def ActualizarSeudoCodigo(self):
-        self.frmEditApp.SCTotal[self.numero] = self.GeneradoresCodigo[self.choiceAccion.GetLabelText()]()
+        self.frmEditApp.SCTotal[self.numero] = self.GeneradoresCodigo[GetTexto(self.choiceAccion)]()
         self.padre.Modificado = True
         self.txtctrlSeudo.SetValue("")
         for i in range(len(self.frmEditApp.SCTotal)-1):
@@ -1194,9 +1192,11 @@ class miDlgCopiarApp ( gui.DialogoCopiarApp ):
             num = self.padre.programas[selA].AppNum
             self.padre.programas[selA] = self.padre.programas[selB].copy()
             self.padre.programas[selA].AppNum = num
+            self.padre.AppMenuItems[num].SetText(u"Programa %0.2d: %s"%(num,self.padre.programas[selA].Nombre))
             #TODO modificar item en menu
         
-
+def GetTexto(elec):
+    return elec.GetString(elec.GetSelection())
                
 
 aplicacion = wx.App(0)
