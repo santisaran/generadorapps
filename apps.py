@@ -103,12 +103,25 @@ for i in range(Cantidad_Bytes_Usuario):
 #    Aplicacion["Estados"].append({"Bloques":[0 for i in range(Cantidad_Bloques)],"Condiciones":[0,0,0],"Resultados":[0,0],"Nombre":"","Comentario":""})
 
 
-class Aplicacion(object):
+class Aplicacion():
     def __init__(self,numero, nombre):
         self.AppNum = numero
         self.Nombre = nombre
         self.EstadoActual = None
-        class Estado():
+        self.Estados = []
+        for i in range(Cantidad_Estados):
+            self.Estados.append(Estado())
+    
+    def copy(self):
+        App = Aplicacion(self.AppNum,self.Nombre)
+        App.EstadoActual = self.EstadoActual
+        App.Estados = []
+        for i in self.Estados:
+            App.Estados.append(i.copy())
+        return App
+        
+       
+class Estado():
             def __init__(self):
                 self.Bloques     = [Bloque_Null,Bloque_Null,Bloque_Null,Bloque_Null,Bloque_Null]
                 self.Condiciones = [Condicion_NULL,PARAMETRO1,PARAMETRO2]
@@ -123,19 +136,8 @@ class Aplicacion(object):
                 EST.Nombre = "%s"%self.Nombre
                 EST.Comentario = "%s"%self.Comentario
                 return EST
-        self.Estados = []
-        for i in range(Cantidad_Estados):
-            self.Estados.append(Estado())
-    
-    def copy(self):
-        App = Aplicacion(self.AppNum,self.Nombre)
-        App.EstadoActual = self.EstadoActual
-        App.Estados = []
-        for i in self.Estados:
-            App.Estados.append(i.copy())
-        return App
-        
-        
+                
+       
 def main():
     app1 = Aplicacion(1,"ap")
     app2 = app1.copy()

@@ -106,7 +106,7 @@ class MiFrame(gui.frmPpal):
         print u"\n\naplicación %d: %s"% (self.programas[numero].AppNum\
             ,self.programas[numero].Nombre)
         for i in range(Cantidad_Estados):
-            print str(self.programas[numero].Estados[i]) + "\n"
+            print str(self.programas[numero].Estados[i].Nombre) + "\n"
 
     def OnCopiarPrograma(self, event):
         dlg = miDlgCopiarApp(self)
@@ -140,18 +140,20 @@ class mifrmEditApp(gui.frmEditApp):
         self.Title = self.tempApp.Nombre
         self.EstadosDic = {}
         self.Cambios = False
+        self.CargarLista()
         #cargar los estados en un diccionario
 
+    #diccionario de lista de estados {0:{"nombre":nombre,"opened":False/True}}
+    
+    def CargarLista(self):
+        self.listEstados.Clear()
         for i in range(Cantidad_Estados):
             self.EstadosDic[i] = self.tempApp.Estados[i].copy()
             self.EstadosDic[i].opened = False
             self.EstadosDic[i].ventana = None
             titulo = self.EstadosDic[i].Nombre
             titulo = "%0.2d"%i + " : " + titulo
-            #Agrega el estado a la lista de estados
-            self.listEstados.Append(titulo)
-
-        #diccionario de lista de estados {0:{"nombre":nombre,"opened":False/True}}
+            self.listEstados.Append(titulo)        
 
     def OnEditarEstado( self, event ):
         self.Cambios = True
@@ -168,21 +170,17 @@ class mifrmEditApp(gui.frmEditApp):
                 self.EstadosDic[int(text[0:2])].ventana.SetFocus()
 
     def OnDuplicarEstado( self, event ):
-        #TODO copiar de un estado a otro
-
-        event.Skip()
+        dlg = miDlgCopiarEstado(self)
+        dlg.ShowModal()
 
 
     def OnEliminarEstado( self, event ):
 
         sel = self.listEstados.GetSelection()
         if sel != -1:
-            estado = self.listEstados.GetString(sel)
-            estado = int(estado[0:2])
-            #sobreescribo el estado con ceros
+            self.Cambios = False
             print "Borrando aplicación %d:"%sel
-            print self.EstadosDic[sel]
-            self.EstadosDic[sel] = Aplicacion.Estados[0].copy()
+            self.tempApp.Estados[sel] = Estado()
             self.EstadosDic[sel].opened = False
             self.listEstados.Delete(sel)
             self.listEstados.Insert( "%0.2d :"%sel, sel )
@@ -296,17 +294,17 @@ class mifrmBloques( gui.frmBloques):
         self.padre.EstadosDic[self.notBloque.estado].opened = True
         self.padre.listEstados.Delete(self.notBloque.estado)
         self.padre.listEstados.Insert(nombre, self.notBloque.estado)
-        self.padre.EstadosDic[self.notBloque.estado].Nombre = nombre
+        self.padre.EstadosDic[self.notBloque.estado].Nombre = self.Title
         self.padre.EstadosDic[self.notBloque.estado].opened = True
         self.notBloque.Modificado = False
         self.comentario = self.txtctrlComentario.GetValue()
         self.padre.tempApp.Estados[self.notBloque.estado].Comentario = self.comentario
-        #TODO guardar comentarios
 
 
     def OnClose ( self , event ):
 
         """Quita la ventana actual de la lista de ventanas abiertas"""
+        
         if self.notBloque.Modificado == True:
             dlg = wx.MessageDialog(self, u"Guardar Estado?",\
             caption=u"Cerrar Edición Estado",
@@ -1143,12 +1141,7 @@ class miDlgCopiarApp ( gui.DialogoCopiarApp ):
     def __init__( self, parent ):
         gui.DialogoCopiarApp.__init__ ( self, parent)
         self.padre = parent
-        choices = []
-        for i in self.padre.programas:
-            choices.append("%0.2d: %s"%(i.AppNum,i.Nombre))
-        self.choiceAppA.SetItems(choices)
-        self.choiceAppB.SetItems(choices)
-
+        self.CargarChoices()
 
     def OnChoiceAppA( self, event ):
         sel = self.choiceAppA.GetSelection()
@@ -1169,6 +1162,7 @@ class miDlgCopiarApp ( gui.DialogoCopiarApp ):
                 style=wx.OK, pos=wx.DefaultPosition)
             dlg.ShowModal()
 
+
     def OnCopiar( self, event ):
         selA = self.choiceAppA.GetSelection()
         selB = self.choiceAppB.GetSelection()
@@ -1181,7 +1175,66 @@ class miDlgCopiarApp ( gui.DialogoCopiarApp ):
             self.padre.programas[selA] = self.padre.programas[selB].copy()
             self.padre.programas[selA].AppNum = num
             self.padre.AppMenuItems[num].SetText(u"Programa %0.2d: %s"%(num,self.padre.programas[selA].Nombre))
-            #TODO modificar item en menu
+            self.txtctrlCopia.AppendText("Copiado %s en %s\n"%(selB,selA))
+            self.CargarChoices()
+          
+    def OnCerrar( self, event ):
+        self.Destroy()
+    
+    def CargarChoices(self):
+        choices = []
+        for i in self.padre.programas:
+            choices.append("%0.2d: %s"%(i.AppNum,i.Nombre))
+        self.choiceAppA.SetItems(choices)
+        self.choiceAppB.SetItems(choices)
+
+        
+class miDlgCopiarEstado ( gui.DlgCopiarEstado ):
+    """Copiar un estado a otro, copia todo menos el número de estado"""
+    
+    def __init__(self, parent):
+        super(miDlgCopiarEstado,self).__init__(parent)
+        self.padre = parent
+        self.NumApp = parent.tempApp.AppNum
+        self.CargarChoices()        
+        
+    def OnCopiar( self, event ):
+        selA = self.choiceEstA.GetSelection()
+        selB = self.choiceEstB.GetSelection()
+        if (selA == -1) or (selB == -1):
+            dlg = wx.MessageDialog(self, u"Seleccionar Estados\n",\
+                caption="Error al copiar", style=wx.OK, pos=wx.DefaultPosition)
+            dlg.ShowModal()
+        else:
+            #num = self.padre.EstadosDic[selA].
+            self.padre.tempApp.Estados[self.choices[1][selA]] = \
+                self.padre.tempApp.Estados[self.choices[1][selB]].copy()
+            
+            self.txtctrlCopia.AppendText("Copiado %s en %s\n"%(\
+                GetTexto(self.choiceEstB),GetTexto(self.choiceEstA)))
+            self.CargarChoices()
+            self.padre.CargarLista()
+            
+    def CargarChoices(self):
+        self.choices = [[],[]]
+        for i in range(Cantidad_Estados):
+            #Los estados que están siendo editados no son puestos en la 
+            #lista.
+            if not self.padre.EstadosDic[i].opened:
+                titulo = self.padre.EstadosDic[i].Nombre
+                titulo = "%0.2d"%i + " : " + titulo
+                print titulo
+                print i
+                #Agrega el nombre y el estado a la lista choices
+                self.choices[0].append(titulo)
+                self.choices[1].append(i)
+                
+        self.choiceEstA.SetItems(self.choices[0])
+        self.choiceEstB.SetItems(self.choices[0])
+    
+    def OnCerrar( self , event ):
+        self.Destroy()
+            
 
 def GetTexto(elec):
     return elec.GetString(elec.GetSelection())
