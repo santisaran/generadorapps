@@ -65,27 +65,6 @@ class frmPpal ( wx.Frame ):
 		self.m_drivers_analog = wx.MenuItem( self.m_drivers, wx.ID_ANY, u"Entrada Analógica", wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_drivers.AppendItem( self.m_drivers_analog )
 		
-		self.m_drivers_contacto = wx.MenuItem( self.m_drivers, wx.ID_ANY, u"Entrada Contacto", wx.EmptyString, wx.ITEM_NORMAL )
-		self.m_drivers.AppendItem( self.m_drivers_contacto )
-		
-		self.m_drivers_aux1 = wx.MenuItem( self.m_drivers, wx.ID_ANY, u"Entrada Auxiliar 1", wx.EmptyString, wx.ITEM_NORMAL )
-		self.m_drivers.AppendItem( self.m_drivers_aux1 )
-		
-		self.m_drivers_panico = wx.MenuItem( self.m_drivers, wx.ID_ANY, u"Entrada Pánico", wx.EmptyString, wx.ITEM_NORMAL )
-		self.m_drivers.AppendItem( self.m_drivers_panico )
-		
-		self.m_drivers_puls = wx.MenuItem( self.m_drivers, wx.ID_ANY, u"Entrada Pulsador", wx.EmptyString, wx.ITEM_NORMAL )
-		self.m_drivers.AppendItem( self.m_drivers_puls )
-		
-		self.m_drivers_porton = wx.MenuItem( self.m_drivers, wx.ID_ANY, u"Entrada Portón", wx.EmptyString, wx.ITEM_NORMAL )
-		self.m_drivers.AppendItem( self.m_drivers_porton )
-		
-		self.m_drivers_corteNA = wx.MenuItem( self.m_drivers, wx.ID_ANY, u"Entrada CorteNA", wx.EmptyString, wx.ITEM_NORMAL )
-		self.m_drivers.AppendItem( self.m_drivers_corteNA )
-		
-		self.m_drivers_cortec = wx.MenuItem( self.m_drivers, wx.ID_ANY, u"Entrada CorteC", wx.EmptyString, wx.ITEM_NORMAL )
-		self.m_drivers.AppendItem( self.m_drivers_cortec )
-		
 		self.m_menubar1.Append( self.m_drivers, u"&Drivers" ) 
 		
 		self.m_ventana = wx.Menu()
@@ -121,13 +100,6 @@ class frmPpal ( wx.Frame ):
 		self.Bind( wx.EVT_MENU, self.OnEditarBytes, id = self.m_variables_Byte.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnEditarBit, id = self.m_variables_bit.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnDriverAnalog, id = self.m_drivers_analog.GetId() )
-		self.Bind( wx.EVT_MENU, self.OnDriver, id = self.m_drivers_contacto.GetId() )
-		self.Bind( wx.EVT_MENU, self.OnDriver, id = self.m_drivers_aux1.GetId() )
-		self.Bind( wx.EVT_MENU, self.OnDriver, id = self.m_drivers_panico.GetId() )
-		self.Bind( wx.EVT_MENU, self.OnDriver, id = self.m_drivers_puls.GetId() )
-		self.Bind( wx.EVT_MENU, self.OnDriver, id = self.m_drivers_porton.GetId() )
-		self.Bind( wx.EVT_MENU, self.OnDriver, id = self.m_drivers_corteNA.GetId() )
-		self.Bind( wx.EVT_MENU, self.OnDriver, id = self.m_drivers_cortec.GetId() )
 		self.m_button22.Bind( wx.EVT_BUTTON, self.OnTest )
 	
 	def __del__( self ):
@@ -143,15 +115,6 @@ class frmPpal ( wx.Frame ):
 	
 	def OnDriverAnalog( self, event ):
 		event.Skip()
-	
-	def OnDriver( self, event ):
-		event.Skip()
-	
-	
-	
-	
-	
-	
 	
 	def OnTest( self, event ):
 		event.Skip()
@@ -941,10 +904,10 @@ class frmEntrada ( wx.Frame ):
 		
 		self.m_staticText48 = wx.StaticText( self, wx.ID_ANY, u"Cantidad de muestras para validar cambio", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText48.Wrap( -1 )
-		bSizer26.Add( self.m_staticText48, 0, wx.ALL, 5 )
+		bSizer26.Add( self.m_staticText48, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.frmEstado_txtctrl_muestras = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer26.Add( self.frmEstado_txtctrl_muestras, 0, wx.ALL, 5 )
+		self.txtctrlMuestras = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer26.Add( self.txtctrlMuestras, 0, wx.ALL, 5 )
 		
 		
 		bSizer25.Add( bSizer26, 0, wx.EXPAND, 5 )
@@ -956,10 +919,10 @@ class frmEntrada ( wx.Frame ):
 		
 		self.m_staticText49 = wx.StaticText( self, wx.ID_ANY, u"Tiempo de muestreo [ms]", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText49.Wrap( -1 )
-		bSizer28.Add( self.m_staticText49, 0, wx.ALL, 5 )
+		bSizer28.Add( self.m_staticText49, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.frmEstado_txtctrl_tiempo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer28.Add( self.frmEstado_txtctrl_tiempo, 0, wx.ALL, 5 )
+		self.txtctrlTiempo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer28.Add( self.txtctrlTiempo, 0, wx.ALL, 5 )
 		
 		
 		bSizer25.Add( bSizer28, 0, wx.EXPAND, 5 )
@@ -1056,7 +1019,7 @@ class DlgGenError ( wx.Dialog ):
 class frmAnalog ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Configuración entrada analógica", pos = wx.DefaultPosition, size = wx.Size( 500,300 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Configuración entrada analógica", pos = wx.DefaultPosition, size = wx.Size( 550,408 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -1066,34 +1029,22 @@ class frmAnalog ( wx.Frame ):
 		
 		bSizer8 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.m_staticText4 = wx.StaticText( self, wx.ID_ANY, u"Modo de Funcionamiento", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_LEFT )
-		self.m_staticText4.Wrap( -1 )
-		self.m_staticText4.SetFont( wx.Font( 12, 70, 90, 90, False, wx.EmptyString ) )
-		self.m_staticText4.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_GRAYTEXT ) )
+		sbSizer12 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Modo de funcionamiento" ), wx.VERTICAL )
 		
-		bSizer8.Add( self.m_staticText4, 0, wx.ALL, 5 )
-		
-		self.dlg_analog_rad_4zonas = wx.RadioButton( self, wx.ID_ANY, u"Utilizar 4 zonas", wx.DefaultPosition, wx.DefaultSize, wx.RB_GROUP|wx.RB_SINGLE )
+		self.dlg_analog_rad_4zonas = wx.RadioButton( self, wx.ID_ANY, u"Utilizar 4 zonas", wx.DefaultPosition, wx.DefaultSize, wx.RB_GROUP )
 		self.dlg_analog_rad_4zonas.SetValue( True ) 
-		bSizer8.Add( self.dlg_analog_rad_4zonas, 0, wx.ALL, 5 )
+		sbSizer12.Add( self.dlg_analog_rad_4zonas, 0, wx.ALL, 5 )
 		
 		self.dlg_analog_rad_valorADC = wx.RadioButton( self, wx.ID_ANY, u"Obtener valor ADC", wx.DefaultPosition, wx.DefaultSize, wx.RB_GROUP|wx.RB_SINGLE )
-		bSizer8.Add( self.dlg_analog_rad_valorADC, 0, wx.ALL, 5 )
+		sbSizer12.Add( self.dlg_analog_rad_valorADC, 0, wx.ALL, 5 )
 		
-		self.m_staticline1 = wx.StaticLine( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
-		bSizer8.Add( self.m_staticline1, 0, wx.ALL|wx.EXPAND, 5 )
+		
+		bSizer8.Add( sbSizer12, 1, wx.EXPAND|wx.ALL, 5 )
 		
 		
 		bSizer5.Add( bSizer8, 0, wx.EXPAND, 5 )
 		
-		bSizer9 = wx.BoxSizer( wx.VERTICAL )
-		
-		self.m_staticText5 = wx.StaticText( self, wx.ID_ANY, u"Configuración Zonas", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText5.Wrap( -1 )
-		self.m_staticText5.SetFont( wx.Font( 12, 70, 90, 90, False, wx.EmptyString ) )
-		self.m_staticText5.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_GRAYTEXT ) )
-		
-		bSizer9.Add( self.m_staticText5, 0, wx.ALL, 5 )
+		sbSizer13 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Configuración Zonas" ), wx.VERTICAL )
 		
 		gSizer3 = wx.GridSizer( 0, 2, 0, 0 )
 		
@@ -1101,63 +1052,63 @@ class frmAnalog ( wx.Frame ):
 		self.m_staticText6.Wrap( -1 )
 		gSizer3.Add( self.m_staticText6, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
-		self.dlg_Analog_txtctrl_Asup = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer3.Add( self.dlg_Analog_txtctrl_Asup, 0, wx.ALL, 5 )
+		self.txtctrlAsup = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		gSizer3.Add( self.txtctrlAsup, 0, wx.ALL, 5 )
 		
 		self.m_staticText7 = wx.StaticText( self, wx.ID_ANY, u"Límite inferior zona A", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText7.Wrap( -1 )
 		gSizer3.Add( self.m_staticText7, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
-		self.dlg_Analog_txtctrl_Ainf = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer3.Add( self.dlg_Analog_txtctrl_Ainf, 0, wx.ALL, 5 )
+		self.txtctrlAinf = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		gSizer3.Add( self.txtctrlAinf, 0, wx.ALL, 5 )
 		
 		self.m_staticText8 = wx.StaticText( self, wx.ID_ANY, u"Límite superior zona B", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText8.Wrap( -1 )
 		gSizer3.Add( self.m_staticText8, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
-		self.dlg_Analog_txtctrl_Bsup = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer3.Add( self.dlg_Analog_txtctrl_Bsup, 0, wx.ALL, 5 )
+		self.txtctrlBsup = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		gSizer3.Add( self.txtctrlBsup, 0, wx.ALL, 5 )
 		
 		self.m_staticText9 = wx.StaticText( self, wx.ID_ANY, u"Límite inferior zona B", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText9.Wrap( -1 )
 		gSizer3.Add( self.m_staticText9, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
-		self.dlg_Analog_txtctrl_Binf = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer3.Add( self.dlg_Analog_txtctrl_Binf, 0, wx.ALL, 5 )
+		self.txtctrlBinf = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		gSizer3.Add( self.txtctrlBinf, 0, wx.ALL, 5 )
 		
 		self.m_staticText10 = wx.StaticText( self, wx.ID_ANY, u"Límite superior zona C", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText10.Wrap( -1 )
 		gSizer3.Add( self.m_staticText10, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
-		self.dlg_Analog_txtctrl_Csup = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer3.Add( self.dlg_Analog_txtctrl_Csup, 0, wx.ALL, 5 )
+		self.txtctrlCsup = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		gSizer3.Add( self.txtctrlCsup, 0, wx.ALL, 5 )
 		
 		self.m_staticText11 = wx.StaticText( self, wx.ID_ANY, u"Límite inferior zona C", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText11.Wrap( -1 )
 		gSizer3.Add( self.m_staticText11, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
-		self.dlg_Analog_txtctrl_Cinf = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer3.Add( self.dlg_Analog_txtctrl_Cinf, 0, wx.ALL, 5 )
+		self.txtctrlCinf = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		gSizer3.Add( self.txtctrlCinf, 0, wx.ALL, 5 )
 		
 		self.m_staticText12 = wx.StaticText( self, wx.ID_ANY, u"Límite superior zona D", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText12.Wrap( -1 )
 		gSizer3.Add( self.m_staticText12, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
-		self.dlg_Analog_txtctrl_Dsup = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer3.Add( self.dlg_Analog_txtctrl_Dsup, 0, wx.ALL, 5 )
+		self.txtctrlDsup = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		gSizer3.Add( self.txtctrlDsup, 0, wx.ALL, 5 )
 		
 		self.m_staticText13 = wx.StaticText( self, wx.ID_ANY, u"Límite inferior zona D", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText13.Wrap( -1 )
 		gSizer3.Add( self.m_staticText13, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
 		
-		self.dlg_Analog_txtctrl_Dinf = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer3.Add( self.dlg_Analog_txtctrl_Dinf, 0, wx.ALL, 5 )
+		self.txtctrlDinf = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		gSizer3.Add( self.txtctrlDinf, 0, wx.ALL, 5 )
 		
 		
-		bSizer9.Add( gSizer3, 1, wx.EXPAND, 5 )
+		sbSizer13.Add( gSizer3, 1, wx.EXPAND, 5 )
 		
 		
-		bSizer5.Add( bSizer9, 0, wx.EXPAND, 10 )
+		bSizer5.Add( sbSizer13, 1, wx.EXPAND|wx.ALL, 5 )
 		
 		
 		bSizer4.Add( bSizer5, 1, wx.EXPAND, 5 )
@@ -1169,7 +1120,7 @@ class frmAnalog ( wx.Frame ):
 		self.m_staticText16 = wx.StaticText( self, wx.ID_ANY, u"Configuración General", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText16.Wrap( -1 )
 		self.m_staticText16.SetFont( wx.Font( 12, 70, 90, 90, False, wx.EmptyString ) )
-		self.m_staticText16.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_GRAYTEXT ) )
+		self.m_staticText16.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
 		
 		bSizer11.Add( self.m_staticText16, 0, wx.ALL, 5 )
 		
@@ -1177,41 +1128,40 @@ class frmAnalog ( wx.Frame ):
 		
 		self.m_staticText17 = wx.StaticText( self, wx.ID_ANY, u"Tiempo de muestreo[ms]", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText17.Wrap( -1 )
-		gSizer5.Add( self.m_staticText17, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
+		gSizer5.Add( self.m_staticText17, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.dlg_analog_textCtrl_muestreo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer5.Add( self.dlg_analog_textCtrl_muestreo, 0, wx.ALL, 5 )
+		self.txtctrlTiempo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		gSizer5.Add( self.txtctrlTiempo, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
 		
 		self.m_staticText18 = wx.StaticText( self, wx.ID_ANY, u"Cantidad de muestras\nPara validar zona", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText18.Wrap( -1 )
-		gSizer5.Add( self.m_staticText18, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
+		gSizer5.Add( self.m_staticText18, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.dlg_Analog_txtCtrl_muestras = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer5.Add( self.dlg_Analog_txtCtrl_muestras, 0, wx.ALL, 5 )
+		self.txtctrlMuestras = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		gSizer5.Add( self.txtctrlMuestras, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
 		
 		
-		bSizer11.Add( gSizer5, 1, wx.EXPAND, 5 )
+		bSizer11.Add( gSizer5, 0, wx.EXPAND, 5 )
 		
 		
 		bSizer7.Add( bSizer11, 0, wx.EXPAND, 5 )
 		
-		self.m_staticText19 = wx.StaticText( self, wx.ID_ANY, u"Comentario:", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText19.Wrap( -1 )
-		self.m_staticText19.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), 70, 90, 90, False, wx.EmptyString ) )
-		
-		bSizer7.Add( self.m_staticText19, 0, wx.ALL, 5 )
+		sbSizer14 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Comentario" ), wx.VERTICAL )
 		
 		self.m_textCtrl17 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
-		bSizer7.Add( self.m_textCtrl17, 1, wx.ALL|wx.EXPAND, 5 )
+		sbSizer14.Add( self.m_textCtrl17, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		
+		bSizer7.Add( sbSizer14, 1, wx.EXPAND, 5 )
 		
 		self.frm_analog_btnGuardar = wx.Button( self, wx.ID_ANY, u"Guardar", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer7.Add( self.frm_analog_btnGuardar, 1, wx.ALL|wx.EXPAND, 5 )
+		bSizer7.Add( self.frm_analog_btnGuardar, 0, wx.ALL|wx.EXPAND, 5 )
 		
 		self.frm_analog_btnCargarDefault = wx.Button( self, wx.ID_ANY, u"Cargar Default", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer7.Add( self.frm_analog_btnCargarDefault, 1, wx.ALL|wx.EXPAND, 5 )
+		bSizer7.Add( self.frm_analog_btnCargarDefault, 0, wx.ALL|wx.EXPAND, 5 )
 		
 		self.frm_analog_btnCerrar = wx.Button( self, wx.ID_ANY, u"Cerrar", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer7.Add( self.frm_analog_btnCerrar, 1, wx.ALL|wx.EXPAND, 5 )
+		bSizer7.Add( self.frm_analog_btnCerrar, 0, wx.ALL|wx.EXPAND, 5 )
 		
 		
 		bSizer4.Add( bSizer7, 1, wx.EXPAND, 5 )
