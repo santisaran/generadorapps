@@ -4,7 +4,6 @@ import copy
 Estados = ( "ESTADO0","ESTADO1","ESTADO2","ESTADO3","ESTADO4","ESTADO5","ESTADO6",\
     "ESTADO7","ESTADO8","ESTADO9")
 
-
 ESTADO0=0
 ESTADO1=1
 ESTADO2=2
@@ -136,51 +135,21 @@ class Estado():
                 EST.Nombre = "%s"%self.Nombre
                 EST.Comentario = "%s"%self.Comentario
                 return EST
-                
+muestras = 5
+tiempo = 20                
+Entradas = (u"Contacto", u"Aux1", u"Pánico", u"Pulsador", "Porton", "CorteNA",\
+    "CorteC")
+ValoresEntradas = {}
+for i in Entradas:
+    ValoresEntradas[i] = [muestras, tiempo]
+
+
+Analogica = {"supA":,"infA":,"supB":,"infB":,"supC":,"infC":,"supD":,"infD":,
+             "tiempo":, "muestras":}
+
        
 def main():
-    app1 = Aplicacion(1,"ap")
-    app2 = app1.copy()
-
-    app1.Nombre = "aplicacion1"
-    print app1.Nombre
-    print app2.Nombre
-    app1.AppNum = 2
-    print app1.AppNum
-    print app2.AppNum
-    app1.EstadoActual = 2
-    print app1.EstadoActual
-    print app2.EstadoActual
-    
-    app1.Estados[0].Bloques[0] = 255
-    print app1.Estados[0].Bloques[0]
-    print app2.Estados[0].Bloques[0]
-    
-    app1.Estados[0].Nombre = "unnombre"
-    print app1.Estados[0].Nombre
-    print app2.Estados[0].Nombre
-
-    
-    
-    raw_input()
-    
-    print "Estados app1"
-    for i in app1.Estados:
-        print i
-        print i.Bloques
-        print i.Condiciones
-        print i.Resultados
-        print i.Nombre
-        print i.Comentario
-    
-    print "\n\nEstados app2"
-    for i in app2.Estados:
-        print i
-        print i.Bloques
-        print i.Condiciones
-        print i.Resultados
-        print i.Nombre
-        print i.Comentario
+    pass
 
 if __name__ == '__main__':
 	main()

@@ -20,6 +20,13 @@ miBits = Bits[:]
 global miBytes
 miBytes= Bytes[:]
 
+global ValoresEntradas
+global miValoresEntradas
+miValoresEntradas = {}
+for i in ValoresEntradas.keys():
+    miValoresEntradas[i] = ValoresEntradas[i][:]
+
+
 class MiFrame(gui.frmPpal):
     """Frame principal"""
     def __init__(self):
@@ -49,6 +56,10 @@ class MiFrame(gui.frmPpal):
         self.m_programas.AppendItem(item)
         self.Bind ( wx.EVT_MENU, self.OnCopiarPrograma, id = item.GetId() )
         self.sizerbotones.Fit( self.scroolled )
+        for i in Entradas:
+            item = wx.MenuItem( self.m_drivers, wx.ID_ANY, i, wx.EmptyString, wx.ITEM_NORMAL )
+            self.m_drivers.AppendItem( item )
+            self.Bind( wx.EVT_MENU, self.OnDriver, id = item.GetId() )
 
     def DisableDriverSubMenu(self,elemento):
         pass
@@ -77,6 +88,12 @@ class MiFrame(gui.frmPpal):
         win.Show()
 
     def OnDriverAnalog( self, event ):
+        id = event.GetId()
+        item = self.GetMenuBar().FindItemById(id)
+        item.Enable(False)
+        win = mifrmAnalog(self)
+        win.Show()
+        
         pass
 
     def OnDriver( self, event ):
@@ -189,8 +206,8 @@ class mifrmEditApp(gui.frmEditApp):
     def OnEliminarPrograma( self, event ):
 
         dlg = wx.MessageDialog(self, u"Desea borrar la\nAplicación actual?",\
-            caption="Borrar Aplicación",
-            style=wx.YES | wx.NO,
+            caption="Borrar Aplicación",\
+            style=wx.YES | wx.NO,\
             pos=wx.DefaultPosition)
         val = dlg.ShowModal()
         if val == wx.ID_YES:
@@ -200,13 +217,13 @@ class mifrmEditApp(gui.frmEditApp):
             print u"Eliminada App: %d: %s"%\
                 (self.tempApp.AppNum,self.tempApp.Nombre)
             self.padre.AppMenuItems[self.tempApp.AppNum].SetText(\
-                u"Programa %0.2d: %s"%(self.app.AppNum,self.app.Nombre))
+                u"Programa %0.2d: %s"%(self.tempApp.AppNum,self.tempApp.Nombre))
+            self.padre.AppMenuItems[num].Enable()
             self.Destroy()
 
 
     def OnGuardarPrograma( self, event ):
         self.Guardar()
-
 
     def OnCambiarNombre( self, event ):
         self.Cambios = True
@@ -1012,18 +1029,35 @@ class  mifrmEntrada (gui.frmEntrada):
         self.padre = parent
         self.item = item
         self.Title = self.Title + self.item.GetText()
+        global miValoresEntradas
+        self.muestras = miValoresEntradas[self.item.GetText()][0]
+        self.tiempo = miValoresEntradas[self.item.GetText()][1]
+        self.txtctrlMuestras.SetValue(str(self.muestras))
+        self.txtctrlTiempo.SetValue(str(self.tiempo))
+        
 
     def OnGuardar( self, event ):
-        self.muestras = self.frmEstado_txtctrl_muestras.GetValue()
-        self.tiempo   = self.frmEstado_txtctrl_tiempo.GetValue()
+        global miValoresEntradas
+        self.muestras = self.txtctrlMuestras.GetValue()
+        self.tiempo   = self.txtctrlTiempo.GetValue()
+        miValoresEntradas[self.item.GetText()][0] = self.muestras
+        miValoresEntradas[self.item.GetText()][1] = self.tiempo
 
     def OnCerrar( self, event ):
+        global miValoresEntradas
         self.item.Enable(True)
         self.Destroy()
 
     def OnCargarDefaults( self, event ):
-        #TODO Cargar Defaults
-        pass
+        global miValoresEntradas
+        global ValoresEntradas
+        miValoresEntradas[self.item.GetText()] = ValoresEntradas[self.item.GetText()]
+        self.muestras = miValoresEntradas[self.item.GetText()][0]
+        self.tiempo = miValoresEntradas[self.item.GetText()][1]
+        self.txtctrlMuestras.SetValue(str(self.muestras))
+        self.txtctrlTiempo.SetValue(str(self.tiempo))
+
+
 
 ########################################################################
 ########################################################################
@@ -1215,7 +1249,7 @@ class miDlgCopiarEstado ( gui.DlgCopiarEstado ):
             self.CargarChoices()
             self.padre.CargarLista()
             
-    def CargarChoices(self):
+    def CargarChoices ( self ):
         self.choices = [[],[]]
         for i in range(Cantidad_Estados):
             #Los estados que están siendo editados no son puestos en la 
@@ -1223,8 +1257,6 @@ class miDlgCopiarEstado ( gui.DlgCopiarEstado ):
             if not self.padre.EstadosDic[i].opened:
                 titulo = self.padre.EstadosDic[i].Nombre
                 titulo = "%0.2d"%i + " : " + titulo
-                print titulo
-                print i
                 #Agrega el nombre y el estado a la lista choices
                 self.choices[0].append(titulo)
                 self.choices[1].append(i)
@@ -1235,6 +1267,27 @@ class miDlgCopiarEstado ( gui.DlgCopiarEstado ):
     def OnCerrar( self , event ):
         self.Destroy()
             
+
+class mifrmAnalog ( gui.frmAnalog ):
+	
+	def __init__( self, parent ):
+		gui.frmAnalog.__init__ ( self, parent)
+
+	def On4zonas( self, event ):
+		event.Skip()
+	
+	def OnValorADC( self, event ):
+		event.Skip()
+	
+	def OnGuardar( self, event ):
+		event.Skip()
+	
+	def OnCargarDefault( self, event ):
+		event.Skip()
+	
+	def OnCerrar( self, event ):
+		event.Skip()
+
 
 def GetTexto(elec):
     return elec.GetString(elec.GetSelection())
