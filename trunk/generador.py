@@ -1284,32 +1284,39 @@ class mifrmAnalog ( gui.frmAnalog ):
     def __init__( self, parent ):
         gui.frmAnalog.__init__ ( self, parent)
         global miAnalogica
-        self.Asup = miAnalogica["Asup"]
-        self.Bsup = miAnalogica["Bsup"]
-        self.Csup = miAnalogica["Csup"]
-        self.Dsup = miAnalogica["Dsup"]
-        self.Ainf = miAnalogica["Ainf"]
-        self.Binf = miAnalogica["Binf"]
-        self.Cinf = miAnalogica["Cinf"]
-        self.Dinf = miAnalogica["Dinf"]
-        self.txtctrlAsup.SetValue(str(self.Asup))
-        self.txtctrlBsup.SetValue(str(self.Bsup))
-        self.txtctrlCsup.SetValue(str(self.Csup))
-        self.txtctrlDsup.SetValue(str(self.Dsup))
-        self.txtctrlAinf.SetValue(str(self.Ainf))
-        self.txtctrlBinf.SetValue(str(self.Binf))
-        self.txtctrlCinf.SetValue(str(self.Cinf))
-        self.txtctrlDinf.SetValue(str(self.Dinf))
+        self.nZonas = ("Asup","Ainf","Bsup","Binf","Csup","Cinf","Dsup","Dinf")        
+        self.zonas = {\
+            "Asup":[self.spinAsup,0],\
+            "Ainf":[self.spinAinf,0],\
+            "Bsup":[self.spinBsup,0],\
+            "Binf":[self.spinBinf,0],\
+            "Csup":[self.spinCsup,0],\
+            "Cinf":[self.spinCinf,0],\
+            "Dsup":[self.spinDsup,0],\
+            "Dinf":[self.spinDinf,0]\
+            }
+        for zona in self.zonas.keys():
+            self.zonas[zona][1] = miAnalogica[zona]
+        for zona in self.zonas.keys():
+            self.zonas[zona][0].SetValue(\
+                self.zonas[zona][1])
+
+        self.txtctrlMuestras.SetValue(str(miAnalogica["muestras"]))
+        self.txtctrlTiempo.SetValue(str(miAnalogica["tiempo"]))
 
     def On4zonas( self, event ):
+        self.radbtnValorADC.Enable(False)
         event.Skip()
     
     def OnValorADC( self, event ):
-        event.Skip()
+        self.radbtn4zonas.Enable(False)
     
     def OnGuardar( self, event ):
-        event.Skip()
-    
+        if not self.DatosValidos():
+            dlg = wx.MessageDialog(self, u"Límites de zonas\nincorrectos",\
+                caption="Error al guardar", style=wx.OK, pos=wx.DefaultPosition)
+            dlg.ShowModal()    
+
     def OnCargarDefault( self, event ):
         event.Skip()
     
@@ -1321,26 +1328,30 @@ class mifrmAnalog ( gui.frmAnalog ):
         win.Show()
     
     def OnChar( self, event ):
-        EsNumero( event)
-    
-    def OnKillFocus ( self, event):
-        txtctrl = event.GetEventObject()
-        texto = int(txtctrl.GetString(0,-1))
-        if texto > 100:
-            dlg = wx.MessageDialog(self, u"Insertar valor entre 0 y 100",\
-                caption="Editar nivel",\
-                pos=wx.DefaultPosition)
-            dlg.ShowModal()
-            txtctrl.SetFocus()
-            txtctrl.SetValue("")
-            print texto
+        EsNumero( event)      
+            
+    def DatosValidos( self ):
+
+        self.leerDatos()
+        if ((self.zonas["Asup"][1]>self.zonas["Ainf"][1]) and\
+            (self.zonas["Ainf"][1]>self.zonas["Bsup"][1]) and\
+            (self.zonas["Bsup"][1]>self.zonas["Binf"][1]) and\
+            (self.zonas["Binf"][1]>self.zonas["Csup"][1]) and\
+            (self.zonas["Csup"][1]>self.zonas["Cinf"][1]) and\
+            (self.zonas["Cinf"][1]>self.zonas["Dsup"][1]) and\
+            (self.zonas["Dsup"][1]>self.zonas["Dinf"][1])):
+            return True
+        else:
+            return False
+        
+    def leerDatos( self ):
+        
+        for zona in self.zonas.keys():
+            valor = self.zonas[zona][0].GetValue()
+            self.zonas[zona][1] = 0 if (valor == "") else int(valor)
         
     def OnEnter( self , event):
-        numero = event.GetString()
-        print numero
-        
-        if int(numero)<100:
-            event.Skip()
+        pass
             
 
 class miFrameZonas(gui.FrameZonas):

@@ -1028,6 +1028,7 @@ class frmAnalog ( wx.Frame ):
 		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Configuración entrada analógica", pos = wx.DefaultPosition, size = wx.Size( 550,408 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
+		self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_ACTIVEBORDER ) )
 		
 		bSizer4 = wx.BoxSizer( wx.HORIZONTAL )
 		
@@ -1036,10 +1037,9 @@ class frmAnalog ( wx.Frame ):
 		sbSizer12 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Modo de funcionamiento" ), wx.VERTICAL )
 		
 		self.radbtn4zonas = wx.RadioButton( self, wx.ID_ANY, u"Utilizar 4 zonas", wx.DefaultPosition, wx.DefaultSize, wx.RB_GROUP )
-		self.radbtn4zonas.SetValue( True ) 
 		sbSizer12.Add( self.radbtn4zonas, 0, wx.ALL, 5 )
 		
-		self.radbtnValorADC = wx.RadioButton( self, wx.ID_ANY, u"Obtener valor ADC", wx.DefaultPosition, wx.DefaultSize, wx.RB_GROUP|wx.RB_SINGLE )
+		self.radbtnValorADC = wx.RadioButton( self, wx.ID_ANY, u"Obtener valor ADC", wx.DefaultPosition, wx.DefaultSize, wx.RB_GROUP )
 		sbSizer12.Add( self.radbtnValorADC, 0, wx.ALL, 5 )
 		
 		
@@ -1053,57 +1053,63 @@ class frmAnalog ( wx.Frame ):
 		self.m_staticText6.Wrap( -1 )
 		gSizer3.Add( self.m_staticText6, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.txtctrlAsup = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer3.Add( self.txtctrlAsup, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.spinAsup = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 0 )
+		self.spinAsup.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_HIGHLIGHT ) )
+		
+		gSizer3.Add( self.spinAsup, 0, wx.ALL, 5 )
 		
 		self.m_staticText7 = wx.StaticText( self, wx.ID_ANY, u"Límite inferior zona A", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText7.Wrap( -1 )
 		gSizer3.Add( self.m_staticText7, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.txtctrlAinf = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer3.Add( self.txtctrlAinf, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.spinAinf = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 0 )
+		self.spinAinf.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), 70, 90, 90, False, wx.EmptyString ) )
+		self.spinAinf.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_SCROLLBAR ) )
+		self.spinAinf.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_INACTIVECAPTION ) )
+		
+		gSizer3.Add( self.spinAinf, 0, wx.ALL, 5 )
 		
 		self.m_staticText8 = wx.StaticText( self, wx.ID_ANY, u"Límite superior zona B", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText8.Wrap( -1 )
 		gSizer3.Add( self.m_staticText8, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.txtctrlBsup = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer3.Add( self.txtctrlBsup, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.spinBsup = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 0 )
+		gSizer3.Add( self.spinBsup, 0, wx.ALL, 5 )
 		
 		self.m_staticText9 = wx.StaticText( self, wx.ID_ANY, u"Límite inferior zona B", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText9.Wrap( -1 )
 		gSizer3.Add( self.m_staticText9, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.txtctrlBinf = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer3.Add( self.txtctrlBinf, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.spinBinf = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 0 )
+		gSizer3.Add( self.spinBinf, 0, wx.ALL, 5 )
 		
 		self.m_staticText10 = wx.StaticText( self, wx.ID_ANY, u"Límite superior zona C", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText10.Wrap( -1 )
 		gSizer3.Add( self.m_staticText10, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.txtctrlCsup = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer3.Add( self.txtctrlCsup, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.spinCsup = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 0 )
+		gSizer3.Add( self.spinCsup, 0, wx.ALL, 5 )
 		
 		self.m_staticText11 = wx.StaticText( self, wx.ID_ANY, u"Límite inferior zona C", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText11.Wrap( -1 )
 		gSizer3.Add( self.m_staticText11, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.txtctrlCinf = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer3.Add( self.txtctrlCinf, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.spinCinf = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 0 )
+		gSizer3.Add( self.spinCinf, 0, wx.ALL, 5 )
 		
 		self.m_staticText12 = wx.StaticText( self, wx.ID_ANY, u"Límite superior zona D", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText12.Wrap( -1 )
 		gSizer3.Add( self.m_staticText12, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.txtctrlDsup = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer3.Add( self.txtctrlDsup, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.spinDsup = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 0 )
+		gSizer3.Add( self.spinDsup, 0, wx.ALL, 5 )
 		
 		self.m_staticText13 = wx.StaticText( self, wx.ID_ANY, u"Límite inferior zona D", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText13.Wrap( -1 )
 		gSizer3.Add( self.m_staticText13, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.txtctrlDinf = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer3.Add( self.txtctrlDinf, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.spinDinf = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 0 )
+		gSizer3.Add( self.spinDinf, 0, wx.ALL, 5 )
 		
 		
 		sbSizer13.Add( gSizer3, 1, wx.EXPAND, 5 )
@@ -1130,17 +1136,17 @@ class frmAnalog ( wx.Frame ):
 		
 		self.m_staticText17 = wx.StaticText( self, wx.ID_ANY, u"Tiempo de muestreo[ms]", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText17.Wrap( -1 )
-		gSizer5.Add( self.m_staticText17, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		gSizer5.Add( self.m_staticText17, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
 		
 		self.txtctrlTiempo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer5.Add( self.txtctrlTiempo, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.RIGHT, 5 )
+		gSizer5.Add( self.txtctrlTiempo, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 		
 		self.m_staticText18 = wx.StaticText( self, wx.ID_ANY, u"Cantidad de muestras\npara validar zona", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText18.Wrap( -1 )
-		gSizer5.Add( self.m_staticText18, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		gSizer5.Add( self.m_staticText18, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
 		
 		self.txtctrlMuestras = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer5.Add( self.txtctrlMuestras, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.RIGHT, 5 )
+		gSizer5.Add( self.txtctrlMuestras, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 		
 		
 		bSizer7.Add( gSizer5, 0, wx.EXPAND, 5 )
@@ -1174,23 +1180,14 @@ class frmAnalog ( wx.Frame ):
 		# Connect Events
 		self.radbtn4zonas.Bind( wx.EVT_RADIOBUTTON, self.On4zonas )
 		self.radbtnValorADC.Bind( wx.EVT_RADIOBUTTON, self.OnValorADC )
-		self.txtctrlAsup.Bind( wx.EVT_CHAR, self.OnChar )
-		self.txtctrlAsup.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
-		self.txtctrlAsup.Bind( wx.EVT_TEXT_ENTER, self.OnEnter )
-		self.txtctrlAinf.Bind( wx.EVT_CHAR, self.OnChar )
-		self.txtctrlAinf.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
-		self.txtctrlBsup.Bind( wx.EVT_CHAR, self.OnChar )
-		self.txtctrlBsup.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
-		self.txtctrlBinf.Bind( wx.EVT_CHAR, self.OnChar )
-		self.txtctrlBinf.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
-		self.txtctrlCsup.Bind( wx.EVT_CHAR, self.OnChar )
-		self.txtctrlCsup.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
-		self.txtctrlCinf.Bind( wx.EVT_CHAR, self.OnChar )
-		self.txtctrlCinf.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
-		self.txtctrlDsup.Bind( wx.EVT_CHAR, self.OnChar )
-		self.txtctrlDsup.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
-		self.txtctrlDinf.Bind( wx.EVT_CHAR, self.OnChar )
-		self.txtctrlDinf.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
+		self.spinAsup.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
+		self.spinAinf.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
+		self.spinBsup.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
+		self.spinBinf.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
+		self.spinCsup.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
+		self.spinCinf.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
+		self.spinDsup.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
+		self.spinDinf.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
 		self.btnInformacion.Bind( wx.EVT_BUTTON, self.OnInfo )
 		self.txtctrlTiempo.Bind( wx.EVT_CHAR, self.OnChar )
 		self.txtctrlMuestras.Bind( wx.EVT_CHAR, self.OnChar )
@@ -1209,21 +1206,8 @@ class frmAnalog ( wx.Frame ):
 	def OnValorADC( self, event ):
 		event.Skip()
 	
-	def OnChar( self, event ):
-		event.Skip()
-	
 	def OnKillFocus( self, event ):
 		event.Skip()
-	
-	def OnEnter( self, event ):
-		event.Skip()
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -1235,6 +1219,8 @@ class frmAnalog ( wx.Frame ):
 	def OnInfo( self, event ):
 		event.Skip()
 	
+	def OnChar( self, event ):
+		event.Skip()
 	
 	
 	def OnGuardar( self, event ):
