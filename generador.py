@@ -25,6 +25,14 @@ global miValoresEntradas
 miValoresEntradas = {}
 for i in ValoresEntradas.keys():
     miValoresEntradas[i] = ValoresEntradas[i][:]
+    
+global Analogica
+global miAnalogica
+miAnalogica = {}
+for i in Analogica.keys():
+    miAnalogica[i] = Analogica[i]
+
+
 
 
 class MiFrame(gui.frmPpal):
@@ -1056,6 +1064,9 @@ class  mifrmEntrada (gui.frmEntrada):
         self.tiempo = miValoresEntradas[self.item.GetText()][1]
         self.txtctrlMuestras.SetValue(str(self.muestras))
         self.txtctrlTiempo.SetValue(str(self.tiempo))
+    
+    def OnChar( self, event ):
+        EsNumero ( event )
 
 
 
@@ -1269,25 +1280,71 @@ class miDlgCopiarEstado ( gui.DlgCopiarEstado ):
             
 
 class mifrmAnalog ( gui.frmAnalog ):
-	
-	def __init__( self, parent ):
-		gui.frmAnalog.__init__ ( self, parent)
+    
+    def __init__( self, parent ):
+        gui.frmAnalog.__init__ ( self, parent)
+        global miAnalogica
+        self.Asup = miAnalogica["Asup"]
+        self.Bsup = miAnalogica["Bsup"]
+        self.Csup = miAnalogica["Csup"]
+        self.Dsup = miAnalogica["Dsup"]
+        self.Ainf = miAnalogica["Ainf"]
+        self.Binf = miAnalogica["Binf"]
+        self.Cinf = miAnalogica["Cinf"]
+        self.Dinf = miAnalogica["Dinf"]
+        self.txtctrlAsup.SetValue(str(self.Asup))
+        self.txtctrlBsup.SetValue(str(self.Bsup))
+        self.txtctrlCsup.SetValue(str(self.Csup))
+        self.txtctrlDsup.SetValue(str(self.Dsup))
+        self.txtctrlAinf.SetValue(str(self.Ainf))
+        self.txtctrlBinf.SetValue(str(self.Binf))
+        self.txtctrlCinf.SetValue(str(self.Cinf))
+        self.txtctrlDinf.SetValue(str(self.Dinf))
 
-	def On4zonas( self, event ):
-		event.Skip()
-	
-	def OnValorADC( self, event ):
-		event.Skip()
-	
-	def OnGuardar( self, event ):
-		event.Skip()
-	
-	def OnCargarDefault( self, event ):
-		event.Skip()
-	
-	def OnCerrar( self, event ):
-		event.Skip()
+    def On4zonas( self, event ):
+        event.Skip()
+    
+    def OnValorADC( self, event ):
+        event.Skip()
+    
+    def OnGuardar( self, event ):
+        event.Skip()
+    
+    def OnCargarDefault( self, event ):
+        event.Skip()
+    
+    def OnCerrar( self, event ):
+        event.Skip()
+      
+    def OnInfo( self, event ):
+        win = miFrameZonas(self)
+        win.Show()
+    
+    def OnChar( self, event ):
+        EsNumero( event)
 
+class miFrameZonas(gui.FrameZonas):
+    
+    def __init__(self, parent):
+        super(miFrameZonas, self).__init__(parent)
+    
+    def OnClose( self, event ):
+        self.Destroy()
+        
+def EsNumero( event):
+    
+    keycode = event.GetKeyCode()
+    if keycode < 255:
+    # valid ASCII
+         if chr(keycode).isdigit():
+             # Valid alphanumeric character
+             event.Skip()
+         elif keycode < 31 or keycode == 127:
+             event.Skip()
+    elif keycode > 255:
+        event.Skip()
+    
+    
 
 def GetTexto(elec):
     return elec.GetString(elec.GetSelection())

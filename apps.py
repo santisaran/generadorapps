@@ -144,8 +144,8 @@ for i in Entradas:
     ValoresEntradas[i] = [muestras, tiempo]
 
 
-Analogica = {"supA":,"infA":,"supB":,"infB":,"supC":,"infC":,"supD":,"infD":,
-             "tiempo":, "muestras":}
+Analogica = {"Asup":100,"Ainf":90,"Bsup":80,"Binf":70,"Csup":60,"Cinf":50,\
+	"Dsup":40,"Dinf":30,"tiempo":5, "muestras":5}
 
        
 def main():
