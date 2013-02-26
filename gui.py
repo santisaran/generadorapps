@@ -1035,12 +1035,12 @@ class frmAnalog ( wx.Frame ):
 		
 		sbSizer12 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Modo de funcionamiento" ), wx.VERTICAL )
 		
-		self.dlg_analog_rad_4zonas = wx.RadioButton( self, wx.ID_ANY, u"Utilizar 4 zonas", wx.DefaultPosition, wx.DefaultSize, wx.RB_GROUP )
-		self.dlg_analog_rad_4zonas.SetValue( True ) 
-		sbSizer12.Add( self.dlg_analog_rad_4zonas, 0, wx.ALL, 5 )
+		self.radbtn4zonas = wx.RadioButton( self, wx.ID_ANY, u"Utilizar 4 zonas", wx.DefaultPosition, wx.DefaultSize, wx.RB_GROUP )
+		self.radbtn4zonas.SetValue( True ) 
+		sbSizer12.Add( self.radbtn4zonas, 0, wx.ALL, 5 )
 		
-		self.dlg_analog_rad_valorADC = wx.RadioButton( self, wx.ID_ANY, u"Obtener valor ADC", wx.DefaultPosition, wx.DefaultSize, wx.RB_GROUP|wx.RB_SINGLE )
-		sbSizer12.Add( self.dlg_analog_rad_valorADC, 0, wx.ALL, 5 )
+		self.radbtnValorADC = wx.RadioButton( self, wx.ID_ANY, u"Obtener valor ADC", wx.DefaultPosition, wx.DefaultSize, wx.RB_GROUP|wx.RB_SINGLE )
+		sbSizer12.Add( self.radbtnValorADC, 0, wx.ALL, 5 )
 		
 		
 		bSizer5.Add( sbSizer12, 0, wx.EXPAND|wx.ALL, 5 )
@@ -1133,14 +1133,14 @@ class frmAnalog ( wx.Frame ):
 		gSizer5.Add( self.m_staticText17, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		self.txtctrlTiempo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer5.Add( self.txtctrlTiempo, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
+		gSizer5.Add( self.txtctrlTiempo, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.RIGHT, 5 )
 		
-		self.m_staticText18 = wx.StaticText( self, wx.ID_ANY, u"Cantidad de muestras\nPara validar zona", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText18 = wx.StaticText( self, wx.ID_ANY, u"Cantidad de muestras\npara validar zona", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText18.Wrap( -1 )
 		gSizer5.Add( self.m_staticText18, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		self.txtctrlMuestras = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer5.Add( self.txtctrlMuestras, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
+		gSizer5.Add( self.txtctrlMuestras, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.RIGHT, 5 )
 		
 		
 		bSizer7.Add( gSizer5, 0, wx.EXPAND, 5 )
@@ -1172,16 +1172,25 @@ class frmAnalog ( wx.Frame ):
 		self.Centre( wx.BOTH )
 		
 		# Connect Events
-		self.dlg_analog_rad_4zonas.Bind( wx.EVT_RADIOBUTTON, self.On4zonas )
-		self.dlg_analog_rad_valorADC.Bind( wx.EVT_RADIOBUTTON, self.OnValorADC )
+		self.radbtn4zonas.Bind( wx.EVT_RADIOBUTTON, self.On4zonas )
+		self.radbtnValorADC.Bind( wx.EVT_RADIOBUTTON, self.OnValorADC )
 		self.txtctrlAsup.Bind( wx.EVT_CHAR, self.OnChar )
+		self.txtctrlAsup.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
+		self.txtctrlAsup.Bind( wx.EVT_TEXT_ENTER, self.OnEnter )
 		self.txtctrlAinf.Bind( wx.EVT_CHAR, self.OnChar )
+		self.txtctrlAinf.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
 		self.txtctrlBsup.Bind( wx.EVT_CHAR, self.OnChar )
+		self.txtctrlBsup.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
 		self.txtctrlBinf.Bind( wx.EVT_CHAR, self.OnChar )
+		self.txtctrlBinf.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
 		self.txtctrlCsup.Bind( wx.EVT_CHAR, self.OnChar )
+		self.txtctrlCsup.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
 		self.txtctrlCinf.Bind( wx.EVT_CHAR, self.OnChar )
+		self.txtctrlCinf.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
 		self.txtctrlDsup.Bind( wx.EVT_CHAR, self.OnChar )
+		self.txtctrlDsup.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
 		self.txtctrlDinf.Bind( wx.EVT_CHAR, self.OnChar )
+		self.txtctrlDinf.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
 		self.btnInformacion.Bind( wx.EVT_BUTTON, self.OnInfo )
 		self.txtctrlTiempo.Bind( wx.EVT_CHAR, self.OnChar )
 		self.txtctrlMuestras.Bind( wx.EVT_CHAR, self.OnChar )
@@ -1202,6 +1211,19 @@ class frmAnalog ( wx.Frame ):
 	
 	def OnChar( self, event ):
 		event.Skip()
+	
+	def OnKillFocus( self, event ):
+		event.Skip()
+	
+	def OnEnter( self, event ):
+		event.Skip()
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

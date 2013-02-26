@@ -1322,6 +1322,26 @@ class mifrmAnalog ( gui.frmAnalog ):
     
     def OnChar( self, event ):
         EsNumero( event)
+    
+    def OnKillFocus ( self, event):
+        txtctrl = event.GetEventObject()
+        texto = int(txtctrl.GetString(0,-1))
+        if texto > 100:
+            dlg = wx.MessageDialog(self, u"Insertar valor entre 0 y 100",\
+                caption="Editar nivel",\
+                pos=wx.DefaultPosition)
+            dlg.ShowModal()
+            txtctrl.SetFocus()
+            txtctrl.SetValue("")
+            print texto
+        
+    def OnEnter( self , event):
+        numero = event.GetString()
+        print numero
+        
+        if int(numero)<100:
+            event.Skip()
+            
 
 class miFrameZonas(gui.FrameZonas):
     
@@ -1339,7 +1359,7 @@ def EsNumero( event):
          if chr(keycode).isdigit():
              # Valid alphanumeric character
              event.Skip()
-         elif keycode < 31 or keycode == 127:
+         elif keycode < 31 or keycode == 127 or keycode == '\n':
              event.Skip()
     elif keycode > 255:
         event.Skip()
