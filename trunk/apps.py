@@ -143,13 +143,17 @@ ValoresEntradas = {}
 for i in Entradas:
     ValoresEntradas[i] = [muestras, tiempo]
 
-
+PorZonas = 0
+ValorADC = 1    
+nZonas = ("Asup","Ainf","Bsup","Binf","Csup","Cinf","Dsup","Dinf")        
 Analogica = {"Asup":100,"Ainf":90,"Bsup":80,"Binf":70,"Csup":60,"Cinf":50,\
-	"Dsup":40,"Dinf":30,"tiempo":5, "muestras":5}
+	"Dsup":40,"Dinf":30,"tiempo":5, "muestras":5, "modo":PorZonas,"comentarios":""}
+
+#Acerca del modo : 0 modo 4 zonas, 1 modo valor ADC.
 
        
 def main():
-    pass
+    print u"Este módulo forma parte de generador.py"
 
 if __name__ == '__main__':
 	main()

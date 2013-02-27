@@ -58,8 +58,8 @@ class frmPpal ( wx.Frame ):
 		
 		self.m_menubar1.Append( self.m_variables, u"Va&riables" ) 
 		
-		self.m_programas = wx.Menu()
-		self.m_menubar1.Append( self.m_programas, u"&Programas" ) 
+		self.m_aplicaciones = wx.Menu()
+		self.m_menubar1.Append( self.m_aplicaciones, u"A&plicaciones" ) 
 		
 		self.m_drivers = wx.Menu()
 		self.m_drivers_analog = wx.MenuItem( self.m_drivers, wx.ID_ANY, u"Entrada Analógica", wx.EmptyString, wx.ITEM_NORMAL )
@@ -67,22 +67,18 @@ class frmPpal ( wx.Frame ):
 		
 		self.m_menubar1.Append( self.m_drivers, u"&Drivers" ) 
 		
-		self.m_ventana = wx.Menu()
-		self.m_menubar1.Append( self.m_ventana, u"&Ventana" ) 
-		
-		self.m_ayuda = wx.Menu()
-		self.m_menubar1.Append( self.m_ayuda, u"A&yuda" ) 
-		
 		self.SetMenuBar( self.m_menubar1 )
 		
 		bSizer32 = wx.BoxSizer( wx.VERTICAL )
 		
 		self.m_button22 = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button22.Hide()
+		
 		bSizer32.Add( self.m_button22, 0, wx.ALL, 5 )
 		
 		self.scroolled = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
 		self.scroolled.SetScrollRate( 5, 5 )
-		self.sizerbotones = wx.BoxSizer( wx.VERTICAL )
+		self.sizerbotones = wx.GridSizer( 0, 2, 0, 0 )
 		
 		
 		self.scroolled.SetSizer( self.sizerbotones )
@@ -315,17 +311,17 @@ class frmEditByte ( wx.Frame ):
 class frmEditApp  ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Editar Programa", pos = wx.DefaultPosition, size = wx.Size( 553,418 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Editar Aplicación", pos = wx.DefaultPosition, size = wx.Size( 553,418 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
 		bSizer4 = wx.BoxSizer( wx.VERTICAL )
 		
-		sbSizer16 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Datos del Programa" ), wx.VERTICAL )
+		sbSizer16 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Datos de la aplicación" ), wx.VERTICAL )
 		
 		bSizer25 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.textoPrograma = wx.StaticText( self, wx.ID_ANY, u"Programa Nº:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.textoPrograma = wx.StaticText( self, wx.ID_ANY, u"Aplicación Nº:", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.textoPrograma.Wrap( -1 )
 		bSizer25.Add( self.textoPrograma, 0, wx.ALL, 5 )
 		
@@ -360,14 +356,14 @@ class frmEditApp  ( wx.Frame ):
 		
 		bSizer26 = wx.BoxSizer( wx.HORIZONTAL )
 		
-		self.frm_edit_btn_delprog = wx.Button( self, wx.ID_ANY, u"Eliminar Programa", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer26.Add( self.frm_edit_btn_delprog, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.frm_edit_btn_delapp = wx.Button( self, wx.ID_ANY, u"Eliminar Aplicación", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer26.Add( self.frm_edit_btn_delapp, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		
 		bSizer26.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
-		self.frm_edit_btn_guardarprog = wx.Button( self, wx.ID_ANY, u"&Guardar Programa", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer26.Add( self.frm_edit_btn_guardarprog, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.frm_edit_btn_guardarapp = wx.Button( self, wx.ID_ANY, u"&Guardar aplicación", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer26.Add( self.frm_edit_btn_guardarapp, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		self.frm_edit_btn_cerrar = wx.Button( self, wx.ID_ANY, u"&Cerrar", wx.Point( -1,-1 ), wx.DefaultSize, 0 )
 		bSizer26.Add( self.frm_edit_btn_cerrar, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
@@ -391,8 +387,8 @@ class frmEditApp  ( wx.Frame ):
 		self.frm_edit_btn_editarestado.Bind( wx.EVT_BUTTON, self.OnEditarEstado )
 		self.frm_edit_btn_copiarestado.Bind( wx.EVT_BUTTON, self.OnDuplicarEstado )
 		self.frm_edit_btn_delestado.Bind( wx.EVT_BUTTON, self.OnEliminarEstado )
-		self.frm_edit_btn_delprog.Bind( wx.EVT_BUTTON, self.OnEliminarPrograma )
-		self.frm_edit_btn_guardarprog.Bind( wx.EVT_BUTTON, self.OnGuardarPrograma )
+		self.frm_edit_btn_delapp.Bind( wx.EVT_BUTTON, self.OnEliminarApp )
+		self.frm_edit_btn_guardarapp.Bind( wx.EVT_BUTTON, self.OnGuardarApp )
 		self.frm_edit_btn_cerrar.Bind( wx.EVT_BUTTON, self.OnClose )
 	
 	def __del__( self ):
@@ -416,10 +412,10 @@ class frmEditApp  ( wx.Frame ):
 	def OnEliminarEstado( self, event ):
 		event.Skip()
 	
-	def OnEliminarPrograma( self, event ):
+	def OnEliminarApp( self, event ):
 		event.Skip()
 	
-	def OnGuardarPrograma( self, event ):
+	def OnGuardarApp( self, event ):
 		event.Skip()
 	
 	
@@ -1036,10 +1032,10 @@ class frmAnalog ( wx.Frame ):
 		
 		sbSizer12 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Modo de funcionamiento" ), wx.VERTICAL )
 		
-		self.radbtn4zonas = wx.RadioButton( self, wx.ID_ANY, u"Utilizar 4 zonas", wx.DefaultPosition, wx.DefaultSize, wx.RB_GROUP )
+		self.radbtn4zonas = wx.RadioButton( self, wx.ID_ANY, u"Utilizar 4 zonas", wx.DefaultPosition, wx.DefaultSize, 0 )
 		sbSizer12.Add( self.radbtn4zonas, 0, wx.ALL, 5 )
 		
-		self.radbtnValorADC = wx.RadioButton( self, wx.ID_ANY, u"Obtener valor ADC", wx.DefaultPosition, wx.DefaultSize, wx.RB_GROUP )
+		self.radbtnValorADC = wx.RadioButton( self, wx.ID_ANY, u"Obtener valor ADC", wx.DefaultPosition, wx.DefaultSize, 0 )
 		sbSizer12.Add( self.radbtnValorADC, 0, wx.ALL, 5 )
 		
 		
@@ -1153,8 +1149,8 @@ class frmAnalog ( wx.Frame ):
 		
 		sbSizer14 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Comentario" ), wx.VERTICAL )
 		
-		self.m_textCtrl17 = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
-		sbSizer14.Add( self.m_textCtrl17, 1, wx.ALL|wx.EXPAND, 5 )
+		self.txtctrlComentarios = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
+		sbSizer14.Add( self.txtctrlComentarios, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
 		bSizer7.Add( sbSizer14, 1, wx.EXPAND, 5 )
@@ -1178,28 +1174,41 @@ class frmAnalog ( wx.Frame ):
 		self.Centre( wx.BOTH )
 		
 		# Connect Events
+		self.Bind( wx.EVT_CLOSE, self.OnClose )
 		self.radbtn4zonas.Bind( wx.EVT_RADIOBUTTON, self.On4zonas )
 		self.radbtnValorADC.Bind( wx.EVT_RADIOBUTTON, self.OnValorADC )
 		self.spinAsup.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
+		self.spinAsup.Bind( wx.EVT_SPINCTRL, self.OnSpin )
 		self.spinAinf.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
+		self.spinAinf.Bind( wx.EVT_SPINCTRL, self.OnSpin )
 		self.spinBsup.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
+		self.spinBsup.Bind( wx.EVT_SPINCTRL, self.OnSpin )
 		self.spinBinf.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
+		self.spinBinf.Bind( wx.EVT_SPINCTRL, self.OnSpin )
 		self.spinCsup.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
+		self.spinCsup.Bind( wx.EVT_SPINCTRL, self.OnSpin )
 		self.spinCinf.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
+		self.spinCinf.Bind( wx.EVT_SPINCTRL, self.OnSpin )
 		self.spinDsup.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
+		self.spinDsup.Bind( wx.EVT_SPINCTRL, self.OnSpin )
 		self.spinDinf.Bind( wx.EVT_KILL_FOCUS, self.OnKillFocus )
+		self.spinDinf.Bind( wx.EVT_SPINCTRL, self.OnSpin )
 		self.btnInformacion.Bind( wx.EVT_BUTTON, self.OnInfo )
 		self.txtctrlTiempo.Bind( wx.EVT_CHAR, self.OnChar )
 		self.txtctrlMuestras.Bind( wx.EVT_CHAR, self.OnChar )
+		self.txtctrlComentarios.Bind( wx.EVT_CHAR, self.OnCambios )
 		self.frm_analog_btnGuardar.Bind( wx.EVT_BUTTON, self.OnGuardar )
 		self.frm_analog_btnCargarDefault.Bind( wx.EVT_BUTTON, self.OnCargarDefault )
-		self.frm_analog_btnCerrar.Bind( wx.EVT_BUTTON, self.OnCerrar )
+		self.frm_analog_btnCerrar.Bind( wx.EVT_BUTTON, self.OnClose )
 	
 	def __del__( self ):
 		pass
 	
 	
 	# Virtual event handlers, overide them in your derived class
+	def OnClose( self, event ):
+		event.Skip()
+	
 	def On4zonas( self, event ):
 		event.Skip()
 	
@@ -1208,6 +1217,16 @@ class frmAnalog ( wx.Frame ):
 	
 	def OnKillFocus( self, event ):
 		event.Skip()
+	
+	def OnSpin( self, event ):
+		event.Skip()
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
@@ -1223,14 +1242,15 @@ class frmAnalog ( wx.Frame ):
 		event.Skip()
 	
 	
+	def OnCambios( self, event ):
+		event.Skip()
+	
 	def OnGuardar( self, event ):
 		event.Skip()
 	
 	def OnCargarDefault( self, event ):
 		event.Skip()
 	
-	def OnCerrar( self, event ):
-		event.Skip()
 	
 
 ###########################################################################

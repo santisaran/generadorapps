@@ -35,23 +35,20 @@ for i in Analogica.keys():
 
 
 
-class MiFrame(gui.frmPpal):
+class MiFrame(gui.frmPpal,wx.MDIParentFrame):
     """Frame principal"""
     def __init__(self):
-        gui.frmPpal.__init__(self, None )
-        self.programas = []
-        #if shelf.has_key("programas"):
-        #    self.programas = shelf["programas"]
-        #self.numeroAppActual = 0
+        super(MiFrame,self).__init__(None)
+        self.aplicaciones = []
         self.AppMenuItems = {}
         for i in range(Cantidad_Apps):
-            self.programas.append(Aplicacion(i,""))
+            self.aplicaciones.append(Aplicacion(i,""))
 #creo una copia de el diccionario Aplicación donde voy a trabajar
-            self.programas[i].AppNum = i
-            item = wx.MenuItem( self.m_programas, wx.ID_ANY, \
-                u"Programa %0.2d: %s"%(i,self.programas[i].Nombre) ,\
+            self.aplicaciones[i].AppNum = i
+            item = wx.MenuItem( self.m_aplicaciones, wx.ID_ANY, \
+                u"Aplicación %0.2d: %s"%(i,self.aplicaciones[i].Nombre) ,\
                 wx.EmptyString, wx.ITEM_NORMAL )
-            self.m_programas.AppendItem(item)
+            self.m_aplicaciones.AppendItem(item)
             self.AppMenuItems[i] = item
             self.Bind ( wx.EVT_MENU, self.OnAbrirPrograma, id = item.GetId() )
             item.Enable ( True )
@@ -59,15 +56,17 @@ class MiFrame(gui.frmPpal):
                 u"Aplicacion: %0.2d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
             self.sizerbotones.Add( boton, 0, wx.ALL, 5 )
             boton.Bind(wx.EVT_BUTTON, self.OnImprimirApp)
-        item = wx.MenuItem( self.m_programas, wx.ID_ANY, u"Copiar Programa",\
+        item = wx.MenuItem( self.m_aplicaciones, wx.ID_ANY, u"Copiar Aplicación",\
             wx.EmptyString, wx.ITEM_NORMAL )
-        self.m_programas.AppendItem(item)
+        self.m_aplicaciones.AppendItem(item)
         self.Bind ( wx.EVT_MENU, self.OnCopiarPrograma, id = item.GetId() )
         self.sizerbotones.Fit( self.scroolled )
         for i in Entradas:
             item = wx.MenuItem( self.m_drivers, wx.ID_ANY, i, wx.EmptyString, wx.ITEM_NORMAL )
             self.m_drivers.AppendItem( item )
             self.Bind( wx.EVT_MENU, self.OnDriver, id = item.GetId() )
+        self.Entradas = {}
+        
 
     def DisableDriverSubMenu(self,elemento):
         pass
@@ -112,14 +111,15 @@ class MiFrame(gui.frmPpal):
         win.Show()
 
     def OnTest(self, event):
-        for i in self.programas:
+        self.GetActiveChild()
+        for i in self.aplicaciones:
             print i
 
     def OnAbrirPrograma(self,event):
         id = event.GetId()
         item = self.GetMenuBar().FindItemById(id)
-        for i in self.programas:
-            if u"Programa %0.2d: %s"%(i.AppNum,i.Nombre) ==item.GetText():
+        for i in self.aplicaciones:
+            if u"Aplicación %0.2d: %s"%(i.AppNum,i.Nombre) ==item.GetText():
                 win = mifrmEditApp(self,i)
                 win.Show(True)
                 item.Enable(False)
@@ -128,10 +128,10 @@ class MiFrame(gui.frmPpal):
     def OnImprimirApp(self, event):
         boton = event.GetEventObject()
         numero = int(boton.GetLabel()[-2:])
-        print u"\n\naplicación %d: %s"% (self.programas[numero].AppNum\
-            ,self.programas[numero].Nombre)
+        print u"\n\naplicación %d: %s"% (self.aplicaciones[numero].AppNum\
+            ,self.aplicaciones[numero].Nombre)
         for i in range(Cantidad_Estados):
-            print str(self.programas[numero].Estados[i].Nombre) + "\n"
+            print str(self.aplicaciones[numero].Estados[i].Nombre) + "\n"
 
     def OnCopiarPrograma(self, event):
         dlg = miDlgCopiarApp(self)
@@ -149,13 +149,13 @@ class MiFrame(gui.frmPpal):
 ########################################################################
 
 
-class mifrmEditApp(gui.frmEditApp):
+class mifrmEditApp(gui.frmEditApp,wx.MDIChildFrame):
 
     """Frame para editar una app, recibe la app a editar"""
 
     def __init__(self,parent,App):
 
-        gui.frmEditApp.__init__(self,parent)
+        super(mifrmEditApp,self).__init__(parent)
         self.padre = parent
         self.tempApp = App.copy()
         # Crea una copia de la app actual
@@ -204,14 +204,13 @@ class mifrmEditApp(gui.frmEditApp):
         sel = self.listEstados.GetSelection()
         if sel != -1:
             self.Cambios = False
-            print "Borrando aplicación %d:"%sel
             self.tempApp.Estados[sel] = Estado()
             self.EstadosDic[sel].opened = False
             self.listEstados.Delete(sel)
             self.listEstados.Insert( "%0.2d :"%sel, sel )
 
 
-    def OnEliminarPrograma( self, event ):
+    def OnEliminarApp( self, event ):
 
         dlg = wx.MessageDialog(self, u"Desea borrar la\nAplicación actual?",\
             caption="Borrar Aplicación",\
@@ -221,26 +220,26 @@ class mifrmEditApp(gui.frmEditApp):
         if val == wx.ID_YES:
             num = self.tempApp.AppNum
             self.tempApp = Aplicacion(num,"")
-            self.padre.programas[num] = self.tempApp
+            self.padre.aplicaciones[num] = self.tempApp
             print u"Eliminada App: %d: %s"%\
                 (self.tempApp.AppNum,self.tempApp.Nombre)
             self.padre.AppMenuItems[self.tempApp.AppNum].SetText(\
-                u"Programa %0.2d: %s"%(self.tempApp.AppNum,self.tempApp.Nombre))
+                u"Aplicación %0.2d: %s"%(self.tempApp.AppNum,self.tempApp.Nombre))
             self.padre.AppMenuItems[num].Enable()
             self.Destroy()
 
 
-    def OnGuardarPrograma( self, event ):
+    def OnGuardarApp( self, event ):
         self.Guardar()
 
     def OnCambiarNombre( self, event ):
         self.Cambios = True
         text = self.tempApp.Nombre
-        renamed = wx.GetTextFromUser('Renombrar Programa', 'Renombrar', text)
+        renamed = wx.GetTextFromUser(u"Renombrar Aplicación", "Renombrar", text)
         if renamed != '':
             self.tempApp.Nombre = renamed
             #item = self.AppMenuItems[self.tempApp.AppNum]
-            self.textoPrograma.SetLabel("Programa %d: "%self.tempApp.AppNum+renamed)
+            self.textoPrograma.SetLabel(u"Aplicación %d: "%self.tempApp.AppNum+renamed)
 
 
     def OnClose(self,event):
@@ -267,18 +266,18 @@ class mifrmEditApp(gui.frmEditApp):
          #   "Comentario" : ""}
 
     def Guardar(self):
-        self.padre.programas[self.tempApp.AppNum] = self.tempApp.copy()
+        self.padre.aplicaciones[self.tempApp.AppNum] = self.tempApp.copy()
         self.padre.AppMenuItems[self.tempApp.AppNum].SetText(\
-            u"Programa %0.2d: %s"%(self.tempApp.AppNum,self.tempApp.Nombre))
+            u"Aplicación %0.2d: %s"%(self.tempApp.AppNum,self.tempApp.Nombre))
         self.Cambios = False
 
 
 
 ########################################################################
 ########################################################################
-##############                                   #######################
-##############   Edición del Frame Bloques       #######################
-##############                                   #######################
+################                                   #####################
+################     Edición del Frame Bloques     #####################
+################                                   #####################
 ########################################################################
 ########################################################################
 
@@ -288,7 +287,9 @@ class mifrmBloques( gui.frmBloques):
 
         gui.frmBloques.__init__ ( self, parent)
         self.padre = parent
-        self.notBloque.estado = numEstado
+        self.notBloque.NumEstado = numEstado
+        self.notBloque.Estado = self.padre.tempApp.Estados[numEstado].copy()
+        
         self.Title = "Sin Nombre"
         self.notBloque.Modificado = False
         for i in range(Cantidad_Bloques):
@@ -296,14 +297,15 @@ class mifrmBloques( gui.frmBloques):
             win = mipanelBloque( self.notBloque, i , self.padre )
             self.notBloque.AddPage(win,"Bloque: %d"%i)
         self.padre.SCTotal.append("")
+        
         # la lista SCTotal tiene en total Cantidad_Bloques + 1 elementos.
         win = mipanelCondicion(self.notBloque,Cantidad_Bloques,self.padre)
         self.notBloque.AddPage(win,"Condicion")
         #Cargar el valor actual de el nombre del estado
         self.txtctrlTitulo.SetValue(\
-            self.padre.tempApp.Estados[self.notBloque.estado].Nombre)
+            self.notBloque.Estado.Nombre)        
         self.txtctrlComentario.SetValue(\
-            self.padre.tempApp.Estados[self.notBloque.estado].Comentario)
+            self.notBloque.Estado.Comentario)
 
 
     def OnGuardar( self, event ):
@@ -315,15 +317,17 @@ class mifrmBloques( gui.frmBloques):
         #self.padre.tempApp.Estados[self.notBloque.estado] = \
         #    self.padre.tempApp.Estados[self.notBloque.estado].copy()
         #nombre del estado
-        nombre = "%0.2d"%self.notBloque.estado + " : " + self.Title
-        self.padre.EstadosDic[self.notBloque.estado].opened = True
-        self.padre.listEstados.Delete(self.notBloque.estado)
-        self.padre.listEstados.Insert(nombre, self.notBloque.estado)
-        self.padre.EstadosDic[self.notBloque.estado].Nombre = self.Title
-        self.padre.EstadosDic[self.notBloque.estado].opened = True
+        self.padre.tempApp.Estados[self.notBloque.NumEstado] =\
+            self.notBloque.Estado.copy()
+        nombre = "%0.2d"%self.notBloque.NumEstado + " : " + self.Title
+        self.padre.EstadosDic[self.notBloque.NumEstado].opened = True
+        self.padre.listEstados.Delete(self.notBloque.NumEstado)
+        self.padre.listEstados.Insert(nombre, self.notBloque.NumEstado)
+        self.padre.EstadosDic[self.notBloque.NumEstado].Nombre = self.Title
+        self.padre.EstadosDic[self.notBloque.NumEstado].opened = True
         self.notBloque.Modificado = False
         self.comentario = self.txtctrlComentario.GetValue()
-        self.padre.tempApp.Estados[self.notBloque.estado].Comentario = self.comentario
+        self.padre.tempApp.Estados[self.notBloque.NumEstado].Comentario = self.comentario
 
 
     def OnClose ( self , event ):
@@ -338,15 +342,15 @@ class mifrmBloques( gui.frmBloques):
             val = dlg.ShowModal()
             if val == wx.ID_YES:
                 self.Guardar()
-        self.padre.EstadosDic[self.notBloque.estado].opened = False
-        self.padre.EstadosDic[self.notBloque.estado].ventana = None
+        self.padre.EstadosDic[self.notBloque.NumEstado].opened = False
+        self.padre.EstadosDic[self.notBloque.NumEstado].ventana = None
         self.Destroy()
 
 
     def OnTitulo( self, event ):
         self.notBloque.Modificado = True
         self.Title = self.txtctrlTitulo.GetValue()
-        self.padre.tempApp.Estados[self.notBloque.estado].Nombre = self.Title
+        self.notBloque.Estado.Nombre = self.Title
 
 ########################################################################
 ########################################################################
@@ -364,8 +368,7 @@ class mipanelBloque(gui.panelBloque):
         self.numero = numero
         self.padre  = parent
         self.frmEditApp = frmEditApp
-        self.ValorBloque = frmEditApp.tempApp.Estados[self.padre.estado].Bloques[numero]
-
+        self.ValorBloque = frmEditApp.tempApp.Estados[self.padre.NumEstado].Bloques[numero]
         self.Tipo = (self.ValorBloque & 0xff000000)>>24
         self.Guardar = (self.ValorBloque & 0x00ff0000)>>16
         self.Par2 = (self.ValorBloque & 0x0000ff00)>>8
@@ -420,8 +423,8 @@ class mipanelBloque(gui.panelBloque):
             self.GeneradoresCodigo[GetTexto(self.choiceAccion)]()
         self.padre.Modificado = True
         #CARGA EL VALOR DEL BLOQUE
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero] = self.ValorBloque
-        #print "0x%X"%self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero]
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
+
 
 
     def OnChoiceAccion( self, event ):
@@ -580,7 +583,7 @@ class mipanelBloque(gui.panelBloque):
         para la función Null
         """
         self.ValorBloque = Bloque_Null<<24
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero] = self.ValorBloque
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
         return None
 
     def SCIncrementar(self):
@@ -593,7 +596,7 @@ class mipanelBloque(gui.panelBloque):
         self.ValorBloque = ((Bloque_Incrementar<<24)|\
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
             int(self.choiceParametro1.GetCurrentSelection()))
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero] = self.ValorBloque
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
         return cadena
 
     def SCDecrementar(self):
@@ -606,7 +609,7 @@ class mipanelBloque(gui.panelBloque):
         self.ValorBloque = ((Bloque_Decrementar<<24)|\
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
             int(self.choiceParametro1.GetCurrentSelection()))
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero] = self.ValorBloque
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
         return cadena
 
     def SCAND(self):
@@ -621,7 +624,7 @@ class mipanelBloque(gui.panelBloque):
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
             int(self.choiceParametro1.GetCurrentSelection())|\
             int(self.choiceParametro2.GetCurrentSelection()<<8))
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero] = self.ValorBloque
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
         return cadena
 
     def SCOR(self):
@@ -636,7 +639,7 @@ class mipanelBloque(gui.panelBloque):
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
             int(self.choiceParametro1.GetCurrentSelection())|\
             int(self.choiceParametro2.GetCurrentSelection()<<8))
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero] = self.ValorBloque
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
         return cadena
 
     def SCNOT(self):
@@ -649,7 +652,7 @@ class mipanelBloque(gui.panelBloque):
         self.ValorBloque = ((Bloque_NOT_BIT<<24)|\
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
             int(self.choiceParametro1.GetCurrentSelection()))
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero] = self.ValorBloque
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
         return cadena
 
     def SCSumar(self):
@@ -664,7 +667,7 @@ class mipanelBloque(gui.panelBloque):
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
             int(self.choiceParametro1.GetCurrentSelection())|\
             int(self.choiceParametro2.GetCurrentSelection()<<8))
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero] = self.ValorBloque
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
         return cadena
 
     def SCRestar(self):
@@ -679,7 +682,7 @@ class mipanelBloque(gui.panelBloque):
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
             int(self.choiceParametro1.GetCurrentSelection())|\
             int(self.choiceParametro2.GetCurrentSelection()<<8))
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero] = self.ValorBloque
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
         return cadena
 
     def SCInvertir(self):
@@ -692,7 +695,7 @@ class mipanelBloque(gui.panelBloque):
         self.ValorBloque = ((Bloque_Invertir_Reg<<24)|\
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
             int(self.choiceParametro1.GetCurrentSelection()))
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero] = self.ValorBloque
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
         return cadena
 
     def SCTransmitir(self):
@@ -703,7 +706,7 @@ class mipanelBloque(gui.panelBloque):
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
             int(self.choiceParametro1.GetCurrentSelection())|\
             int(self.choiceParametro2.GetCurrentSelection()<<8))
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero] = self.ValorBloque
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
         return None
 
     def SCSetBit(self):
@@ -714,7 +717,7 @@ class mipanelBloque(gui.panelBloque):
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = ((Bloque_SetBit<<24)|\
             int(self.choiceParametro2.GetCurrentSelection()<<8))
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero] = self.ValorBloque
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
 
         return cadena
 
@@ -726,7 +729,7 @@ class mipanelBloque(gui.panelBloque):
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = ((Bloque_ClrBit<<24)|\
             int(self.choiceParametro1.GetCurrentSelection()))
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero] = self.ValorBloque
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
         return cadena
 
     def SCClrReg(self):
@@ -737,7 +740,7 @@ class mipanelBloque(gui.panelBloque):
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = ((Bloque_ClrReg<<24)|\
             int(self.choiceParametro1.GetCurrentSelection()))
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero] = self.ValorBloque
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
         return cadena
 
 
@@ -751,7 +754,7 @@ class mipanelBloque(gui.panelBloque):
         self.ValorBloque = ((Bloque_CopiarRegistro<<24)|\
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
             int(self.choiceParametro1.GetCurrentSelection()))
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Bloques[self.numero] = self.ValorBloque
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
         return cadena
 
 ########################################################################
@@ -776,7 +779,7 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.choiceParametro1.Enable ( False )
         self.choiceParametro2.Enable ( False )
         self.choiceEstadoTrue.Enable ( False )
-        self.choiceEstadoFalse.Enable ( False )
+        self.choiceEstadoFalse.Enable( False )
         self.ValorCondiciones = [Condicion_NULL,0,0]
         self.ValorResultados = [0,0]
         #self.SCTotal = self.frmEditApp.SCTotal
@@ -798,20 +801,20 @@ class mipanelCondicion ( gui.panelCondicion ):
                         "Bit_True"  : self.SCBitTrue,
                         "Bit_False" : self.SCBitFalse
                         }
-
+        print self.padre.Estado.Condiciones[0]
         self.Acciones[CondicionesPosibles[\
-            self.frmEditApp.tempApp.Estados[self.padre.estado].Condiciones[0]]]()
+            self.padre.Estado.Condiciones[0]]]()
 
         self.choiceAccion.SetSelection (\
-            frmEditApp.tempApp.Estados[self.padre.estado].Condiciones[0])
+            frmEditApp.tempApp.Estados[self.padre.NumEstado].Condiciones[0])
         self.choiceParametro1.SetSelection (\
-            frmEditApp.tempApp.Estados[self.padre.estado].Condiciones[1])
+            frmEditApp.tempApp.Estados[self.padre.NumEstado].Condiciones[1])
         self.choiceParametro2.SetSelection (\
-            frmEditApp.tempApp.Estados[self.padre.estado].Condiciones[2])
+            frmEditApp.tempApp.Estados[self.padre.NumEstado].Condiciones[2])
         self.choiceEstadoTrue.SetSelection (\
-            frmEditApp.tempApp.Estados[self.padre.estado].Resultados[0])
+            frmEditApp.tempApp.Estados[self.padre.NumEstado].Resultados[0])
         self.choiceEstadoFalse.SetSelection (\
-            frmEditApp.tempApp.Estados[self.padre.estado].Resultados[1])
+            frmEditApp.tempApp.Estados[self.padre.NumEstado].Resultados[1])
 
         self.padre.Modificado = False
 
@@ -837,8 +840,8 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.ValorCondiciones[2] = self.choiceParametro2.GetCurrentSelection()
         self.ValorResultados[0] = self.choiceEstadoTrue.GetCurrentSelection()
         self.ValorResultados[1] = self.choiceEstadoFalse.GetCurrentSelection()
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Condiciones = self.ValorCondiciones[:]
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Resultados = self.ValorResultados[:]
+        self.padre.Estado.Condiciones = self.ValorCondiciones[:]
+        self.padre.Estado.Resultados = self.ValorResultados[:]
         return cadena
 
     def SCMenor(self):
@@ -854,8 +857,8 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.ValorCondiciones[2] = self.choiceParametro2.GetCurrentSelection()
         self.ValorResultados[0] = self.choiceEstadoTrue.GetCurrentSelection()
         self.ValorResultados[1] = self.choiceEstadoFalse.GetCurrentSelection()
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Condiciones = self.ValorCondiciones[:]
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Resultados = self.ValorResultados[:]
+        self.padre.Estado.Condiciones = self.ValorCondiciones[:]
+        self.padre.Estado.Resultados = self.ValorResultados[:]
         return cadena
 
     def SCIgual(self):
@@ -871,8 +874,8 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.ValorCondiciones[2] = self.choiceParametro2.GetCurrentSelection()
         self.ValorResultados[0] = self.choiceEstadoTrue.GetCurrentSelection()
         self.ValorResultados[1] = self.choiceEstadoFalse.GetCurrentSelection()
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Condiciones = self.ValorCondiciones[:]
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Resultados = self.ValorResultados[:]
+        self.padre.Estado.Condiciones = self.ValorCondiciones[:]
+        self.padre.Estado.Resultados = self.ValorResultados[:]
         return cadena
 
     def SCBitTrue(self):
@@ -887,8 +890,8 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.ValorCondiciones[2] = 0
         self.ValorResultados[0] = self.choiceEstadoTrue.GetCurrentSelection()
         self.ValorResultados[1] = self.choiceEstadoFalse.GetCurrentSelection()
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Condiciones = self.ValorCondiciones[:]
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Resultados = self.ValorResultados[:]
+        self.padre.Estado.Condiciones = self.ValorCondiciones[:]
+        self.padre.Estado.Resultados = self.ValorResultados[:]
         return cadena
 
     def SCBitFalse(self):
@@ -903,8 +906,8 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.ValorCondiciones[2] = 0
         self.ValorResultados[0] = self.choiceEstadoTrue.GetCurrentSelection()
         self.ValorResultados[1] = self.choiceEstadoFalse.GetCurrentSelection()
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Condiciones = self.ValorCondiciones[:]
-        self.frmEditApp.tempApp.Estados[self.padre.estado].Resultados = self.ValorResultados[:]
+        self.padre.Estado.Condiciones = self.ValorCondiciones[:]
+        self.padre.Estado.Resultados = self.ValorResultados[:]
         return cadena
 
     def ActualizarSeudoCodigo(self):
@@ -915,6 +918,7 @@ class mipanelCondicion ( gui.panelCondicion ):
             if self.frmEditApp.SCTotal[i]:
                 self.txtctrlSeudo.AppendText("Bloque "+str(i)+": \n\t"+ \
                     self.frmEditApp.SCTotal[i] + "\n\n")
+        print "condicion"
         if self.frmEditApp.SCTotal[-1]:
             self.txtctrlSeudo.AppendText("Condicion: \n" +\
                 self.frmEditApp.SCTotal[-1])
@@ -929,13 +933,7 @@ class mipanelCondicion ( gui.panelCondicion ):
 
 
     def OnEnterWindow( self, event ):
-        self.txtctrlSeudo.SetValue("")
-        for i in range(len(self.frmEditApp.SCTotal)-1):
-            if self.frmEditApp.SCTotal[i]:
-                self.txtctrlSeudo.AppendText("Bloque "+str(i)+": \n\t"+ \
-                    self.frmEditApp.SCTotal[i] + "\n\n")
-        if self.frmEditApp.SCTotal[-1]:
-            self.txtctrlSeudo.AppendText(u"Condición: \n" + self.frmEditApp.SCTotal[-1])
+        self.ActualizarSeudoCodigo()
 
 
     def BloqueNull(self):
@@ -1216,10 +1214,10 @@ class miDlgCopiarApp ( gui.DialogoCopiarApp ):
                 caption="Error al copiar", style=wx.OK, pos=wx.DefaultPosition)
             dlg.ShowModal()
         else:
-            num = self.padre.programas[selA].AppNum
-            self.padre.programas[selA] = self.padre.programas[selB].copy()
-            self.padre.programas[selA].AppNum = num
-            self.padre.AppMenuItems[num].SetText(u"Programa %0.2d: %s"%(num,self.padre.programas[selA].Nombre))
+            num = self.padre.aplicaciones[selA].AppNum
+            self.padre.aplicaciones[selA] = self.padre.aplicaciones[selB].copy()
+            self.padre.aplicaciones[selA].AppNum = num
+            self.padre.AppMenuItems[num].SetText(u"Programa %0.2d: %s"%(num,self.padre.aplicaciones[selA].Nombre))
             self.txtctrlCopia.AppendText("Copiado %s en %s\n"%(selB,selA))
             self.CargarChoices()
           
@@ -1228,7 +1226,7 @@ class miDlgCopiarApp ( gui.DialogoCopiarApp ):
     
     def CargarChoices(self):
         choices = []
-        for i in self.padre.programas:
+        for i in self.padre.aplicaciones:
             choices.append("%0.2d: %s"%(i.AppNum,i.Nombre))
         self.choiceAppA.SetItems(choices)
         self.choiceAppB.SetItems(choices)
@@ -1283,8 +1281,9 @@ class mifrmAnalog ( gui.frmAnalog ):
     
     def __init__( self, parent ):
         gui.frmAnalog.__init__ ( self, parent)
+        self.padre = parent
         global miAnalogica
-        self.nZonas = ("Asup","Ainf","Bsup","Binf","Csup","Cinf","Dsup","Dinf")        
+        self.tempAnalogica = miAnalogica.copy()
         self.zonas = {\
             "Asup":[self.spinAsup,0],\
             "Ainf":[self.spinAinf,0],\
@@ -1296,40 +1295,87 @@ class mifrmAnalog ( gui.frmAnalog ):
             "Dinf":[self.spinDinf,0]\
             }
         for zona in self.zonas.keys():
-            self.zonas[zona][1] = miAnalogica[zona]
+            self.zonas[zona][1] = self.tempAnalogica[zona]
         for zona in self.zonas.keys():
             self.zonas[zona][0].SetValue(\
                 self.zonas[zona][1])
-
-        self.txtctrlMuestras.SetValue(str(miAnalogica["muestras"]))
-        self.txtctrlTiempo.SetValue(str(miAnalogica["tiempo"]))
+        self.txtctrlMuestras.SetValue(str(self.tempAnalogica["muestras"]))        
+        self.txtctrlTiempo.SetValue(str(self.tempAnalogica["tiempo"]))
+        self.txtctrlComentarios.SetValue(self.tempAnalogica["comentarios"]) 
+        self.cambios = False
 
     def On4zonas( self, event ):
-        self.radbtnValorADC.Enable(False)
-        event.Skip()
+        for zona in self.zonas.keys():
+            self.zonas[zona][0].Enable(True)
+        self.cambios = True
+        self.radbtnValorADC.SetValue(False)
+        #event.Skip()
     
     def OnValorADC( self, event ):
-        self.radbtn4zonas.Enable(False)
+        for zona in self.zonas.keys():
+            self.zonas[zona][0].Enable(False)
+        self.cambios = True        
+        self.radbtn4zonas.SetValue(False)
     
     def OnGuardar( self, event ):
+        self.Guardar()
+        
+    def Guardar(self):        
         if not self.DatosValidos():
             dlg = wx.MessageDialog(self, u"Límites de zonas\nincorrectos",\
                 caption="Error al guardar", style=wx.OK, pos=wx.DefaultPosition)
             dlg.ShowModal()    
-
+        else: 
+            global miAnalogica
+            miAnalogica = self.tempAnalogica.copy()
+            self.cambios = False
+            self.leerDatos()
+            
+            
     def OnCargarDefault( self, event ):
-        event.Skip()
+        self.cambios = True
+        global Analogica        
+        self.tempAnalogica = Analogica.copy()
+        for zona in self.zonas.keys():
+            self.zonas[zona][1] = self.tempAnalogica[zona]
+        for zona in self.zonas.keys():
+            self.zonas[zona][0].SetValue(\
+                self.zonas[zona][1])
+        self.txtctrlMuestras.SetValue(str(self.tempAnalogica["muestras"]))
+        self.txtctrlTiempo.SetValue(str(self.tempAnalogica["tiempo"]))
+        self.txtctrlComentarios.SetValue("")
     
-    def OnCerrar( self, event ):
-        event.Skip()
+    def OnClose( self, event ):
+        if not self.cambios:
+            self.padre.m_drivers_analog.Enable(True)
+            self.Destroy()
+        else:
+            dlg = wx.MessageDialog(self, u"Guardar cambios?",\
+                caption=u"Cerrar Edición Analógica",
+                style=wx.YES | wx.NO,
+                pos=wx.DefaultPosition)
+            val = dlg.ShowModal()
+            if val == wx.ID_YES:
+                self.Guardar()
+            self.Destroy()
+            self.padre.m_drivers_analog.Enable(True)
       
     def OnInfo( self, event ):
         win = miFrameZonas(self)
         win.Show()
+
+    def OnCambios (self, event):
+        self.cambios = True
+        event.Skip()
     
     def OnChar( self, event ):
+        self.cambios = True
         EsNumero( event)      
             
+    def OnSpin ( self, event ):
+        self.cambios = True
+        event.Skip()
+    
     def DatosValidos( self ):
 
         self.leerDatos()
@@ -1349,6 +1395,18 @@ class mifrmAnalog ( gui.frmAnalog ):
         for zona in self.zonas.keys():
             valor = self.zonas[zona][0].GetValue()
             self.zonas[zona][1] = 0 if (valor == "") else int(valor)
+            self.tempAnalogica[zona]=self.zonas[zona][1]
+
+        tiempo = self.txtctrlTiempo.GetValue()
+        self.tempAnalogica["tiempo"] = 0 if tiempo == "" else int(tiempo)
+
+        muestras = self.txtctrlMuestras.GetValue()
+        self.tempAnalogica["muestras"] = 0 if muestras == "" else int(muestras)
+
+        self.tempAnalogica["modo"] = PorZonas if self.radbtn4zonas.IsEnabled()\
+            else ValorADC
+
+        self.tempAnalogica["comentarios"] = self.txtctrlComentarios.GetValue()
         
     def OnEnter( self , event):
         pass
