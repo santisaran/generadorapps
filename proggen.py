@@ -9,6 +9,7 @@
 from struct import pack,unpack
 from apps import *
 
+
 def main():
 	cadena = ""
 	salida = open("\\users\\santiago\\documents\\proyectos\\AtoP\\soft\\progcyloc.prg",'w')
@@ -62,11 +63,12 @@ def main():
 				cadena = cadena + "TipoBloque=2"+"\n"
 				cadena = cadena + "Comentario="+"\n"
 
-	
-	listaEstados = [chr(0xAA),chr(0),chr(tipoEstado),chr(i)]
-	listaBloques = [chr(0xAA),chr(0),chr(tipoBloque),]
-	lista = [chr(0xAA),chr(0),chr(tipoCondiciones),]
-	lista = [chr(0xAA),chr(0),chr(tipoResultados),]
+	for i in Cantidad_Estados:
+		listaEstados = [chr(0xAA),chr(0),chr(tipoEstado),chr(i)]
+		for j in Cantidad_Bloques:
+			listaBloques = [chr(0xAA),chr(0),chr(tipoBloque),]
+		listaCondiciones = [chr(0xAA),chr(0),chr(tipoCondiciones),]
+		listaResultados = [chr(0xAA),chr(0),chr(tipoResultados),]
 	return 0
 
 if __name__ == '__main__':
