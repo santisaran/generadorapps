@@ -45,7 +45,7 @@
             <property name="size">597,496</property>
             <property name="style">wxDEFAULT_FRAME_STYLE</property>
             <property name="subclass"></property>
-            <property name="title">Generador de Programas</property>
+            <property name="title">Generador de Programas: </property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
             <property name="window_name"></property>
@@ -131,7 +131,7 @@
                 <event name="OnSetFocus"></event>
                 <event name="OnSize"></event>
                 <event name="OnUpdateUI"></event>
-                <object class="wxMenu" expanded="0">
+                <object class="wxMenu" expanded="1">
                     <property name="label">&amp;Archivo</property>
                     <property name="name">m_archivo</property>
                     <property name="permission">protected</property>
@@ -147,7 +147,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut">Ctrl+N</property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection"></event>
+                        <event name="OnMenuSelection">OnNuevoPrograma</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="wxMenuItem" expanded="0">
@@ -162,7 +162,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut">Ctrl+O</property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection"></event>
+                        <event name="OnMenuSelection">OnAbrirPrograma</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="wxMenuItem" expanded="0">
@@ -177,7 +177,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut">Ctrl+S</property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection"></event>
+                        <event name="OnMenuSelection">OnGuardarPrograma</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="wxMenuItem" expanded="0">
@@ -192,7 +192,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection"></event>
+                        <event name="OnMenuSelection">OnGuardarComo</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="separator" expanded="0">
@@ -211,7 +211,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection"></event>
+                        <event name="OnMenuSelection">OnGenerar</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                     <object class="separator" expanded="0">
@@ -230,7 +230,7 @@
                         <property name="permission">none</property>
                         <property name="shortcut">Ctrl+Q</property>
                         <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection"></event>
+                        <event name="OnMenuSelection">OnSalir</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                 </object>
