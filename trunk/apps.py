@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import copy
+from struct import pack,unpack
 #Defines compartidos con C si se hace modificación, hace la misma modificación en el codigo c
 Estados = ( "ESTADO0","ESTADO1","ESTADO2","ESTADO3","ESTADO4","ESTADO5","ESTADO6",\
     "ESTADO7","ESTADO8","ESTADO9")
@@ -151,7 +152,36 @@ Analogica = {"Asup":100,"Ainf":90,"Bsup":80,"Binf":70,"Csup":60,"Cinf":50,\
 
 #Acerca del modo : 0 modo 4 zonas, 1 modo valor ADC.
 
-       
+Header_App = 0x01
+Header_Bloques = 0x02
+Header_Estado = 0x03
+Header_Condicion = 0x04
+Header_Resultado = 0x05
+
+
+def GenerarBin(programa):
+	binario = ""
+	for app in programa:
+		binario = binario + pack('BB',0xAA,Header_App)
+		binario = binario + pack('B',app.AppNum)
+		binario = binario + pack('B',app.EstadoActual)
+		for i,estado in enumerate(app.Estados):
+			binario = binario + pack('BB',0xAA,Header_Estado)
+			binario = binario + pack('BB' ,0xAA,Header_Bloques)
+			for j in Cantidad_Bloques:
+				estado.Bloques
+			estado.Condiciones
+			estado.Resultados
+		
+		
+
+for i in Cantidad_Estados:
+	listaEstados = [chr(0xAA),chr(0),chr(tipoEstado),chr(i)]
+	for j in Cantidad_Bloques:
+		listaBloques = [chr(0xAA),chr(0),chr(tipoBloque),]
+	listaCondiciones = [chr(0xAA),chr(0),chr(tipoCondiciones),]
+	listaResultados = [chr(0xAA),chr(0),chr(tipoResultados),]
+
 def main():
     print u"Este módulo forma parte de generador.py"
 

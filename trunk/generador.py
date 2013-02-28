@@ -13,6 +13,10 @@ import shelve
 
 from apps import *
 
+
+global DIRACTUAL
+#DIRACTUAL = os.getenv("HOME")
+DIRACTUAL = os.getcwd()
 #Variables globales
 global miEstados    
 # Nombres de la lista de estados posibles 
@@ -51,8 +55,12 @@ global NombreArchivo
 NombreArchivo = ""
 
 #Tipos de archivo que muestran los diálos abrir/guardar
-wildcard = "Archivo Programa Cyloc (*.cyl|*.cly|"\
+wildcard = "Archivo Programa Cyloc (*.cyl)|*.cyl|"\
            "Todos los archivos (*.*)|*.*"
+           
+binwildcard = "Archivo binario Cyloc (*.cb)|*.cb|"\
+            "Todos los archivos (*.*)|*.*"
+           
 
 class MiFrame(gui.frmPpal):
     """Frame principal"""
@@ -82,12 +90,18 @@ class MiFrame(gui.frmPpal):
             wx.EmptyString, wx.ITEM_NORMAL )
         self.m_aplicaciones.AppendItem(item)
         self.Bind ( wx.EVT_MENU, self.OnCopiarApp, id = item.GetId() )
+  
+        
         self.sizerbotones.Fit( self.scroolled )
         for i in Entradas:
             item = wx.MenuItem( self.m_drivers, wx.ID_ANY, i,\
                 wx.EmptyString, wx.ITEM_NORMAL )
             self.m_drivers.AppendItem( item )
-            self.Bind( wx.EVT_MENU, self.OnDriver, id = item.GetId() )
+            self.Bind ( wx.EVT_MENU, self.OnDriver, id = item.GetId() )
+        item = wx.MenuItem ( self.m_drivers , wx.ID_ANY, u"Cargar desde archivo...",\
+            wx.EmptyString, wx.ITEM_NORMAL ) 
+        self.m_drivers.AppendItem ( item )
+        self.Bind ( wx.EVT_MENU, self.OnCopiarDesde, id = item.GetId() )
         self.Entradas = {}
 
     def AgregarVentana(self):
@@ -113,6 +127,7 @@ class MiFrame(gui.frmPpal):
         win = mifrmEditBit(self,item)
         win.Show()
 
+
     def OnDriverAnalog( self, event ):
         id = event.GetId()
         item = self.GetMenuBar().FindItemById(id)
@@ -122,6 +137,7 @@ class MiFrame(gui.frmPpal):
         
         pass
 
+
     def OnDriver( self, event ):
         id = event.GetId()
         item = self.GetMenuBar().FindItemById(id)
@@ -129,10 +145,12 @@ class MiFrame(gui.frmPpal):
         item.Enable(False)
         win.Show()
 
+
     def OnTest(self, event):
         self.GetActiveChild()
         for i in self.aplicaciones:
             print i
+
 
     def OnAbrirApp(self,event):
    
@@ -144,6 +162,7 @@ class MiFrame(gui.frmPpal):
                 win.Show(True)
                 item.Enable(False)
                 return
+
 
     def OnImprimirApp(self, event):
       
@@ -159,7 +178,46 @@ class MiFrame(gui.frmPpal):
         dlg = miDlgCopiarApp(self)
         dlg.ShowModal()
         
+    def OnCopiarDesde( self, event):
+        global DIRCATUAL
+        dlg = wx.FileDialog(
+            self, message="Copiar Desde ...", defaultDir=DIRCATUAL, 
+            defaultFile="", wildcard=wildcard, style=wx.OPEN)
+            
+        dlg.SetFilterIndex(2)
+        
+        if dlg.ShowModal() == wx.ID_OK:
+            
+            path = dlg.GetPath()
+            try:
+                shelf = shelve.open(path)
+            except:
+                dlg = wx.MessageDialog(self, u"No es un archivo válido",\
+                    caption="Error al abrir archivo",\
+                    pos=wx.DefaultPosition)
+                dlg.ShowModal()
+                dlg.Destroy()
+                return
+            global miValoresEntradas
+            try: 
+                miValoresEntradas = shelf["miValoresEntradas"] 
+            except:
+                print "El archivo no tiene valores de entradas"
+                pass
+            global miAnalogica
+            try:
+                miAnalogica = shelf["miAnalogica"]
+            except:
+                print "El archivo no tiene cfg analógica"
+                pass
+            shelf.close()
+        dlg.Destroy()
+            
+            
+        
+        
     def OnNuevoPrograma ( self, event):
+        
         global Modificado
         global NombreArchivo
         self.cancel = False
@@ -193,6 +251,7 @@ class MiFrame(gui.frmPpal):
             self.CrearNuevoPrograma()
     
     def OnAbrirPrograma(self, event):
+        global DIRACTUAL
         global NombreArchivo
         self.OnNuevoPrograma(event)
         
@@ -201,7 +260,7 @@ class MiFrame(gui.frmPpal):
             pass
             
         dlg = wx.FileDialog(
-            self, message="Abrir archivo ...", defaultDir=os.getcwd(), 
+            self, message="Abrir archivo ...", defaultDir=DIRACTUAL, 
             defaultFile="", wildcard=wildcard, style=wx.OPEN)
             
         dlg.SetFilterIndex(2)
@@ -211,7 +270,18 @@ class MiFrame(gui.frmPpal):
             path = dlg.GetPath()
             NombreArchivo = path
             shelf = shelve.open(NombreArchivo)
-            self.aplicaciones = shelf["programa"]
+            try:
+                self.aplicaciones = shelf["programa"]
+                global miBits
+                miBits = shelf["bits"]
+                global miBytes 
+                miBytes = shelf["bytes"]
+                global miValoresEntradas
+                miValoresEntradas = shelf["miValoresEntradas"] 
+                global miAnalogica
+                miAnalogica = shelf["miAnalogica"]
+            except:
+                pass
             shelf.close()
             
             for i in range(Cantidad_Apps):
@@ -237,19 +307,43 @@ class MiFrame(gui.frmPpal):
             self.Title = "Generador de Programas: " + NombreArchivo.split('\\')[-1]
         else:
             NombreArchivo = self.archivoActual[:]
+    
+    def OnGenerar( self , event):
+        dlg = wx.FileDialog(
+            self, message="Generar en...", defaultDir=DIRCATUAL, 
+            defaultFile="", wildcard=binwildcard, style=wx.SAVE|wx.FD_OVERWRITE_PROMPT)
+        dlg.SetFilterIndex(2)
+        val = dlg.ShowModal()    
+        
+        if val == wx.ID_OK:
+                        
+            path = dlg.GetPath()
+            if path[-2:] != "cb":
+                                            
+                path = path + ".cb"
+            
+            binario = open(path,'w')
+            
+            
+        elif val == wx.ID_NO:
+            
+            self.Boton = wx.ID_NO
+        
+        else:
+            
+            self.Boton = wx.ID_CANCEL
 
     def Guardar(self):
-        #TODO guardar datos bit y byte en un archivo global del software
-        #TODO guardar configuracion de entradas y analogico.
         #TODO generar archivo como el anterior
         #TODO generar archivo para cyloc.
         global NombreArchivo
         global Modificado
+        global DIRCATUAL
         self.Boton = None
         if Modificado:
             if NombreArchivo == "":
                 dlg = wx.FileDialog(
-                    self, message="Salvar archivo a ...", defaultDir=os.getcwd(), 
+                    self, message="Salvar archivo a ...", defaultDir=DIRCATUAL, 
                     defaultFile="", wildcard=wildcard, style=wx.SAVE|wx.FD_OVERWRITE_PROMPT)
                 dlg.SetFilterIndex(2)
                 val = dlg.ShowModal()    
@@ -264,6 +358,14 @@ class MiFrame(gui.frmPpal):
                     NombreArchivo = path
                     shelf = shelve.open(NombreArchivo)
                     shelf["programa"] = self.aplicaciones
+                    global miBits
+                    shelf["bits"] = miBits
+                    global miBytes 
+                    shelf["bytes"] = miBytes
+                    global miValoresEntradas
+                    shelf["miValoresEntradas"] = miValoresEntradas
+                    global miAnalogica
+                    shelf["miAnalogica"] = miAnalogica
                     shelf.close()
                     Modificado = False
                     dlg.Destroy()
@@ -293,6 +395,16 @@ class MiFrame(gui.frmPpal):
             self.AppMenuItems[i].SetText(\
                 u"Aplicación %0.2d: %s"%(i,self.aplicaciones[i].Nombre))
         self.Title = "Generador de Programas: "
+        global ValoresEntradas      
+        global miValoresEntradas    
+        miValoresEntradas = {}
+        for i in ValoresEntradas.keys():
+            miValoresEntradas[i] = ValoresEntradas[i][:]            
+        global Analogica     
+        global miAnalogica
+        miAnalogica = {}
+        for i in Analogica.keys():
+            miAnalogica[i] = Analogica[i]
         
 
 
