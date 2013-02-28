@@ -17,7 +17,7 @@ import wx.xrc
 class frmPpal ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Generador de Programas", pos = wx.DefaultPosition, size = wx.Size( 597,496 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Generador de Programas: ", pos = wx.DefaultPosition, size = wx.Size( 597,496 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -93,6 +93,12 @@ class frmPpal ( wx.Frame ):
 		self.Centre( wx.BOTH )
 		
 		# Connect Events
+		self.Bind( wx.EVT_MENU, self.OnNuevoPrograma, id = self.m_file_nuevoPrograma.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnAbrirPrograma, id = self.m_file_abrirPrograma.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnGuardarPrograma, id = self.m_file_guardarPrograma.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnGuardarComo, id = self.m_file_guardarComo.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnGenerar, id = self.m_file_gen.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnSalir, id = self.m_file_salir.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnEditarBytes, id = self.m_variables_Byte.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnEditarBit, id = self.m_variables_bit.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnDriverAnalog, id = self.m_drivers_analog.GetId() )
@@ -103,6 +109,24 @@ class frmPpal ( wx.Frame ):
 	
 	
 	# Virtual event handlers, overide them in your derived class
+	def OnNuevoPrograma( self, event ):
+		event.Skip()
+	
+	def OnAbrirPrograma( self, event ):
+		event.Skip()
+	
+	def OnGuardarPrograma( self, event ):
+		event.Skip()
+	
+	def OnGuardarComo( self, event ):
+		event.Skip()
+	
+	def OnGenerar( self, event ):
+		event.Skip()
+	
+	def OnSalir( self, event ):
+		event.Skip()
+	
 	def OnEditarBytes( self, event ):
 		event.Skip()
 	

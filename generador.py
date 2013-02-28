@@ -8,68 +8,87 @@
 
 import gui
 import wx
+import os
+import shelve
+
 from apps import *
 
-#Modulo para serialización de objetos python.
-import shelve
-shelf = shelve.open("generador.dat")
-global miEstados
-miEstados = Estados[:]
-global miBits
+#Variables globales
+global miEstados    
+# Nombres de la lista de estados posibles 
+miEstados = Estados[:] 
+# Al inicio la toma del modulo apps.py
+
+global miBits       
+# Lista de nombres de Bits
 miBits = Bits[:]
-global miBytes
+
+global miBytes      
+# Lista de nombres de los Bytes
 miBytes= Bytes[:]
 
-global ValoresEntradas
-global miValoresEntradas
+global ValoresEntradas      
+#diccionario con los valores de las entradas
+global miValoresEntradas    
+#copia del diccionario, con los valores del programa actual
 miValoresEntradas = {}
 for i in ValoresEntradas.keys():
     miValoresEntradas[i] = ValoresEntradas[i][:]
     
-global Analogica
+global Analogica     
+#Diccionario con los valores de cfg de la entra analógica
 global miAnalogica
 miAnalogica = {}
 for i in Analogica.keys():
     miAnalogica[i] = Analogica[i]
 
+global Modificado    
+# Variable que indica que el programa ha sido modificado
+Modificado = False
 
+global NombreArchivo 
+# Variable con el nombre del programa actual.
+NombreArchivo = ""
 
+#Tipos de archivo que muestran los diálos abrir/guardar
+wildcard = "Archivo Programa Cyloc (*.cyl|*.cly|"\
+           "Todos los archivos (*.*)|*.*"
 
-class MiFrame(gui.frmPpal,wx.MDIParentFrame):
+class MiFrame(gui.frmPpal):
     """Frame principal"""
     def __init__(self):
         super(MiFrame,self).__init__(None)
-        self.aplicaciones = []
+        self.aplicaciones = [] 
+        # Lista con las aplicaciones actuales
         self.AppMenuItems = {}
+        # Diccionario con referencia a los item del menú Aplicaciones
+        
         for i in range(Cantidad_Apps):
             self.aplicaciones.append(Aplicacion(i,""))
-#creo una copia de el diccionario Aplicación donde voy a trabajar
-            self.aplicaciones[i].AppNum = i
+            # Crea aplicaciones vacías
             item = wx.MenuItem( self.m_aplicaciones, wx.ID_ANY, \
                 u"Aplicación %0.2d: %s"%(i,self.aplicaciones[i].Nombre) ,\
                 wx.EmptyString, wx.ITEM_NORMAL )
             self.m_aplicaciones.AppendItem(item)
             self.AppMenuItems[i] = item
-            self.Bind ( wx.EVT_MENU, self.OnAbrirPrograma, id = item.GetId() )
+            # Agrega el item al diccionario para la aplicación i
+            self.Bind ( wx.EVT_MENU, self.OnAbrirApp, id = item.GetId() )
             item.Enable ( True )
             boton = wx.Button( self.scroolled, wx.ID_ANY,\
-                u"Aplicacion: %0.2d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+                u"Aplicación: %0.2d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
             self.sizerbotones.Add( boton, 0, wx.ALL, 5 )
             boton.Bind(wx.EVT_BUTTON, self.OnImprimirApp)
         item = wx.MenuItem( self.m_aplicaciones, wx.ID_ANY, u"Copiar Aplicación",\
             wx.EmptyString, wx.ITEM_NORMAL )
         self.m_aplicaciones.AppendItem(item)
-        self.Bind ( wx.EVT_MENU, self.OnCopiarPrograma, id = item.GetId() )
+        self.Bind ( wx.EVT_MENU, self.OnCopiarApp, id = item.GetId() )
         self.sizerbotones.Fit( self.scroolled )
         for i in Entradas:
-            item = wx.MenuItem( self.m_drivers, wx.ID_ANY, i, wx.EmptyString, wx.ITEM_NORMAL )
+            item = wx.MenuItem( self.m_drivers, wx.ID_ANY, i,\
+                wx.EmptyString, wx.ITEM_NORMAL )
             self.m_drivers.AppendItem( item )
             self.Bind( wx.EVT_MENU, self.OnDriver, id = item.GetId() )
         self.Entradas = {}
-        
-
-    def DisableDriverSubMenu(self,elemento):
-        pass
 
     def AgregarVentana(self):
         pass
@@ -115,7 +134,8 @@ class MiFrame(gui.frmPpal,wx.MDIParentFrame):
         for i in self.aplicaciones:
             print i
 
-    def OnAbrirPrograma(self,event):
+    def OnAbrirApp(self,event):
+   
         id = event.GetId()
         item = self.GetMenuBar().FindItemById(id)
         for i in self.aplicaciones:
@@ -126,6 +146,7 @@ class MiFrame(gui.frmPpal,wx.MDIParentFrame):
                 return
 
     def OnImprimirApp(self, event):
+      
         boton = event.GetEventObject()
         numero = int(boton.GetLabel()[-2:])
         print u"\n\naplicación %d: %s"% (self.aplicaciones[numero].AppNum\
@@ -133,10 +154,146 @@ class MiFrame(gui.frmPpal,wx.MDIParentFrame):
         for i in range(Cantidad_Estados):
             print str(self.aplicaciones[numero].Estados[i].Nombre) + "\n"
 
-    def OnCopiarPrograma(self, event):
+    def OnCopiarApp(self, event):
+        
         dlg = miDlgCopiarApp(self)
         dlg.ShowModal()
+        
+    def OnNuevoPrograma ( self, event):
+        global Modificado
+        global NombreArchivo
+        self.cancel = False
+        if Modificado:
 
+            if NombreArchivo == "":
+            
+                dlg = wx.MessageDialog(self, u"Guardar Programa?",\
+                    caption=u"Cerrar Programa Actual",
+                    style=wx.YES | wx.NO |wx.CANCEL,
+                    pos=wx.DefaultPosition)
+            else:
+            
+                dlg = wx.MessageDialog(self, u"Guardar Cambios?",\
+                    caption=u"Cerrar Programa Actual",
+                    style=wx.YES | wx.NO | wx.CANCEL,
+                    pos=wx.DefaultPosition)
+                
+            val = dlg.ShowModal()
+            dlg.Destroy()
+            
+            if val == wx.ID_YES:
+                self.Guardar()
+            
+                if self.Boton == wx.ID_CANCEL:
+                   return
+                self.CrearNuevoPrograma()
+            elif val == wx.ID_NO:
+                self.CrearNuevoPrograma()   
+        else:
+            self.CrearNuevoPrograma()
+    
+    def OnAbrirPrograma(self, event):
+        global NombreArchivo
+        self.OnNuevoPrograma(event)
+        
+        if self.cancel:
+            
+            pass
+            
+        dlg = wx.FileDialog(
+            self, message="Abrir archivo ...", defaultDir=os.getcwd(), 
+            defaultFile="", wildcard=wildcard, style=wx.OPEN)
+            
+        dlg.SetFilterIndex(2)
+        
+        if dlg.ShowModal() == wx.ID_OK:
+            
+            path = dlg.GetPath()
+            NombreArchivo = path
+            shelf = shelve.open(NombreArchivo)
+            self.aplicaciones = shelf["programa"]
+            shelf.close()
+            
+            for i in range(Cantidad_Apps):
+                self.AppMenuItems[i].SetText(\
+                    u"Aplicación %0.2d: %s"%(i,self.aplicaciones[i].Nombre))
+
+            dlg.Destroy()
+
+    def OnGuardarPrograma(self,event):
+        global NombreArchivo
+        self.Guardar()
+        self.Title = "Generador de Programas: " + NombreArchivo.split('\\')[-1]
+        
+    def OnGuardarComo( self, event ):
+        global Modificado
+        global NombreArchivo
+        self.archivoActual = NombreArchivo[:]
+        NombreArchivo = ""
+        Modificado = True
+        self.Guardar()
+        print NombreArchivo
+        if self.Boton == wx.ID_OK:
+            self.Title = "Generador de Programas: " + NombreArchivo.split('\\')[-1]
+        else:
+            NombreArchivo = self.archivoActual[:]
+
+    def Guardar(self):
+        #TODO guardar datos bit y byte en un archivo global del software
+        #TODO guardar configuracion de entradas y analogico.
+        #TODO generar archivo como el anterior
+        #TODO generar archivo para cyloc.
+        global NombreArchivo
+        global Modificado
+        self.Boton = None
+        if Modificado:
+            if NombreArchivo == "":
+                dlg = wx.FileDialog(
+                    self, message="Salvar archivo a ...", defaultDir=os.getcwd(), 
+                    defaultFile="", wildcard=wildcard, style=wx.SAVE|wx.FD_OVERWRITE_PROMPT)
+                dlg.SetFilterIndex(2)
+                val = dlg.ShowModal()    
+                if val == wx.ID_OK:
+                        
+                    path = dlg.GetPath()
+                        
+                    if path[-3:] != "cyl":
+                            
+                        path = path + ".cyl"
+                    
+                    NombreArchivo = path
+                    shelf = shelve.open(NombreArchivo)
+                    shelf["programa"] = self.aplicaciones
+                    shelf.close()
+                    Modificado = False
+                    dlg.Destroy()
+                    self.Boton = wx.ID_OK
+                    
+                elif val == wx.ID_NO:
+                    self.Boton = wx.ID_NO
+                    
+                else:
+                    self.Boton = wx.ID_CANCEL
+                    
+            else:                             
+                    
+                shelf = shelve.open(NombreArchivo)
+                shelf["programa"] = self.aplicaciones
+                shelf.close()
+        
+    
+    def CrearNuevoPrograma(self):
+        global Modificado
+        Modificado = False
+        global NombreArchivo 
+        NombreArchivo = ""
+        self.aplicaciones = []
+        for i in range(Cantidad_Apps):
+            self.aplicaciones.append(Aplicacion(i,""))
+            self.AppMenuItems[i].SetText(\
+                u"Aplicación %0.2d: %s"%(i,self.aplicaciones[i].Nombre))
+        self.Title = "Generador de Programas: "
+        
 
 
 
@@ -149,7 +306,7 @@ class MiFrame(gui.frmPpal,wx.MDIParentFrame):
 ########################################################################
 
 
-class mifrmEditApp(gui.frmEditApp,wx.MDIChildFrame):
+class mifrmEditApp(gui.frmEditApp):
 
     """Frame para editar una app, recibe la app a editar"""
 
@@ -161,7 +318,7 @@ class mifrmEditApp(gui.frmEditApp,wx.MDIChildFrame):
         # Crea una copia de la app actual
         # Para no sobreescribir los datos originales en caso de cancelar
         self.textoPrograma.SetLabel("Programa %d: "%self.tempApp.AppNum+self.tempApp.Nombre)
-        self.SCTotal = []   # lista con el texto total de seudo código.
+        #self.SCTotal = []   # lista con el texto total de seudo código.
         self.Title = self.tempApp.Nombre
         self.EstadosDic = {}
         self.Cambios = False
@@ -254,23 +411,13 @@ class mifrmEditApp(gui.frmEditApp,wx.MDIChildFrame):
         self.padre.AppMenuItems[self.tempApp.AppNum].Enable(True)
         self.Destroy()
 
-
-    def HacerEstadoNull(self,estado):
-        pass
-        #self.app.Estados
-        #Aplicacion.Estados[estado] = \
-         #   {"Bloques" : [0 for i in range(Cantidad_Bloques)],\
-          #  "Condiciones" : [0,0,0],\
-       #     "Resultados" : [0,0],\
-        #    "Nombre" : "",\
-         #   "Comentario" : ""}
-
     def Guardar(self):
         self.padre.aplicaciones[self.tempApp.AppNum] = self.tempApp.copy()
         self.padre.AppMenuItems[self.tempApp.AppNum].SetText(\
             u"Aplicación %0.2d: %s"%(self.tempApp.AppNum,self.tempApp.Nombre))
         self.Cambios = False
-
+        global Modificado
+        Modificado = True
 
 
 ########################################################################
@@ -289,14 +436,14 @@ class mifrmBloques( gui.frmBloques):
         self.padre = parent
         self.notBloque.NumEstado = numEstado
         self.notBloque.Estado = self.padre.tempApp.Estados[numEstado].copy()
-        
+        self.notBloque.SCTotal = []
         self.Title = "Sin Nombre"
         self.notBloque.Modificado = False
         for i in range(Cantidad_Bloques):
-            self.padre.SCTotal.append("")
+            self.notBloque.SCTotal.append("")
             win = mipanelBloque( self.notBloque, i , self.padre )
             self.notBloque.AddPage(win,"Bloque: %d"%i)
-        self.padre.SCTotal.append("")
+        self.notBloque.SCTotal.append("")
         
         # la lista SCTotal tiene en total Cantidad_Bloques + 1 elementos.
         win = mipanelCondicion(self.notBloque,Cantidad_Bloques,self.padre)
@@ -326,6 +473,8 @@ class mifrmBloques( gui.frmBloques):
         self.padre.EstadosDic[self.notBloque.NumEstado].Nombre = self.Title
         self.padre.EstadosDic[self.notBloque.NumEstado].opened = True
         self.notBloque.Modificado = False
+        global Modificado
+        Modificado = True
         self.comentario = self.txtctrlComentario.GetValue()
         self.padre.tempApp.Estados[self.notBloque.NumEstado].Comentario = self.comentario
 
@@ -419,7 +568,7 @@ class mipanelBloque(gui.panelBloque):
         self.padre.Modificado = False
 
     def ActualizarSeudoCodigo(self):
-        self.frmEditApp.SCTotal[self.numero] = \
+        self.padre.SCTotal[self.numero] = \
             self.GeneradoresCodigo[GetTexto(self.choiceAccion)]()
         self.padre.Modificado = True
         #CARGA EL VALOR DEL BLOQUE
@@ -428,7 +577,6 @@ class mipanelBloque(gui.panelBloque):
 
 
     def OnChoiceAccion( self, event ):
-
         self.padre.Modificado = True
         self.txtctrlSeudo.SetValue("")
         self.Acciones.get(event.GetString())()
@@ -782,7 +930,7 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.choiceEstadoFalse.Enable( False )
         self.ValorCondiciones = [Condicion_NULL,0,0]
         self.ValorResultados = [0,0]
-        #self.SCTotal = self.frmEditApp.SCTotal
+        #self.SCTotal = self.padre.SCTotal
         #self.Condicion = frmEditApp.app.Estados[0].Condiciones
         self.Acciones = {
                         "NULL"      : self.BloqueNull,
@@ -911,17 +1059,16 @@ class mipanelCondicion ( gui.panelCondicion ):
         return cadena
 
     def ActualizarSeudoCodigo(self):
-        self.frmEditApp.SCTotal[self.numero] = self.GeneradoresCodigo[GetTexto(self.choiceAccion)]()
+        self.padre.SCTotal[self.numero] = self.GeneradoresCodigo[GetTexto(self.choiceAccion)]()
         self.padre.Modificado = True
         self.txtctrlSeudo.SetValue("")
-        for i in range(len(self.frmEditApp.SCTotal)-1):
-            if self.frmEditApp.SCTotal[i]:
+        for i in range(len(self.padre.SCTotal)-1):
+            if self.padre.SCTotal[i]:
                 self.txtctrlSeudo.AppendText("Bloque "+str(i)+": \n\t"+ \
-                    self.frmEditApp.SCTotal[i] + "\n\n")
-        print "condicion"
-        if self.frmEditApp.SCTotal[-1]:
+                    self.padre.SCTotal[i] + "\n\n")
+        if self.padre.SCTotal[-1]:
             self.txtctrlSeudo.AppendText("Condicion: \n" +\
-                self.frmEditApp.SCTotal[-1])
+                self.padre.SCTotal[-1])
 
 
     def OnChoiceComparacion( self, event ):
@@ -1048,6 +1195,8 @@ class  mifrmEntrada (gui.frmEntrada):
         self.tiempo   = self.txtctrlTiempo.GetValue()
         miValoresEntradas[self.item.GetText()][0] = self.muestras
         miValoresEntradas[self.item.GetText()][1] = self.tiempo
+        global Modificado
+        Modificado = True
 
     def OnCerrar( self, event ):
         global miValoresEntradas
@@ -1121,6 +1270,8 @@ class mifrmEditBit ( gui.frmEditBit ):
     def OnEditBit( self, event ):
         global miBits
         miBits = self.miBits[:]
+        global Modificado
+        Modificado = True
 
     def OnUndoBit( self, event ):
         global miBits
@@ -1159,6 +1310,8 @@ class mifrmEditByte ( gui.frmEditByte ):
     def OnEditByte( self, event ):
         global miBytes
         miBytes = self.miBytes[:]
+        global Modificado
+        Modificado = True
 
     def OnUndoByte( self, event ):
         global miBytes
@@ -1220,6 +1373,8 @@ class miDlgCopiarApp ( gui.DialogoCopiarApp ):
             self.padre.AppMenuItems[num].SetText(u"Programa %0.2d: %s"%(num,self.padre.aplicaciones[selA].Nombre))
             self.txtctrlCopia.AppendText("Copiado %s en %s\n"%(selB,selA))
             self.CargarChoices()
+            global Modificado
+            Modificado = True
           
     def OnCerrar( self, event ):
         self.Destroy()
@@ -1330,6 +1485,8 @@ class mifrmAnalog ( gui.frmAnalog ):
             miAnalogica = self.tempAnalogica.copy()
             self.cambios = False
             self.leerDatos()
+            global Modificado
+            Modificado = True
             
             
     def OnCargarDefault( self, event ):
@@ -1443,4 +1600,3 @@ aplicacion = wx.App(0)
 frame_usuario = MiFrame()
 frame_usuario.Show()
 aplicacion.MainLoop()
-shelf.close()
