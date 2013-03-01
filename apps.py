@@ -162,21 +162,30 @@ Header_Resultado = 0x05
 def GenerarBin(programa):
     binario = ""
     for app in programa:
-        binario = binario + pack('BB',0xAA,Header_App)
-        binario = binario + pack('B',app.AppNum)
-        binario = binario + pack('B',app.EstadoActual)
+        binario = binario + chr(0xAA) + chr(Header_App)
+        binario = binario + chr(app.AppNum)
+        binario = binario + chr(app.EstadoActual)
         for i,estado in enumerate(app.Estados):
-            binario = binario + pack('BBH',0xAA,Header_Estado,app.AppNum*Cantidad_Estados+i)
-            binario = binario + pack('BB' ,0xAA,Header_Bloques)
-            for j,bloque in enumerate(e stado.Bloques):
+            EstadoAbs = (app.AppNum*Cantidad_Estados+i)
+            #print "Estado: " + str(EstadoAbs)
+            binario = binario + chr(0xAA) + chr(Header_Estado)
+            binario = binario + chr(EstadoAbs & 0x0FF) + chr((EstadoAbs>>8) & 0x0FF)
+            binario = binario + str(chr(0xAA)) + str(chr(Header_Bloques))
+            for j,bloque in enumerate(estado.Bloques):               
+                BloqueAbs = app.AppNum*Cantidad_Estados*Cantidad_Bloques+i*Cantidad_Bloques+j
+                #print "bloque: " + str(BloqueAbs)
+                binario = binario +  chr(BloqueAbs & 0x0FF) + chr((BloqueAbs>>8) & 0x0FF)
                 binario = binario +\
-                    pack('HI',(app.AppNum*Cantidad_Estados*Cantidad_Bloques+i*Cantidad_Bloques+j) , bloque)
-            binario = binario + pack('BB',0xAA, Header_Condicion)
+                    chr(bloque&0x0FF)+chr(bloque>>8&0x0FF)+\
+                    chr(bloque>>16&0x0FF)+chr(bloque>>24&0x0FF)
+                
+                    
+            binario = binario + chr(0xAA) + chr(Header_Condicion)
             for i in estado.Condiciones:
-                binario = binario + pack('B',i)
-            binario = binario + pack('BB',0xAA, Header_Resultado)
+                binario = binario + chr(i)
+            binario = binario + chr(0xAA) + chr(Header_Resultado)
             for i in estado.Resultados:
-                binario = binario + pack('B',i)
+                binario = binario + chr(i)
     return binario
 
 def main():
