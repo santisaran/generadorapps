@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <sys/stat.h> 
+#include <sys/stat.h>
 #include <fcntl.h>
 
 #define TAMANIOBLOQUE  512
@@ -44,93 +44,110 @@ enum{
 typedef unsigned int uint;
 typedef unsigned char uchar;
 
-int main ()
+int main (void)
 {
     int retorno;
-    int fp;
-    
+    FILE *fp;
+
     unsigned int i,j,k;
-    unsigned int numApp, numEstado, numBloque;
+    unsigned int numApp, numEstado, numBloque, app, estado, bloque;
     unsigned int index = 0;
     uchar lectura[TAMANIOBLOQUE];
     uchar Leyendo = APLICACION;
     uchar interno=0;
     uchar Sincro = 0;
-    fp = open("/home/saran/Documentos/trabajo/generadorwx/generadorapps/actual.cb",O_RDONLY);
-    retorno = read(fp,lectura,4);
-    
-    do{
+    if((fp = fopen("\\users\\santiago\\documents\\proyectos\\atop\\soft\\generadorsvn\\generadorapps\\uno.cb","rb"))<1)
+    {
+        printf("\nError al abrir archivo\n");
+    }
+
+    printf("leidos %d bytes: %02X %02X %02X %02X",retorno,lectura[0],lectura[1], lectura[2],lectura[3]);
+    do
+    {
+        retorno = fread(lectura,sizeof(uchar),4,fp);
 		if((lectura[0] == 0xAA) && (lectura[1] == (uchar)APLICACION))
 		{
 			numApp = (uint)lectura[2];
 			if(numApp < Cantidad_Apps)
 			{
-				EstadoActual_App[numApp] = lectura[4];
+				EstadoActual_App[numApp] = lectura[3];
+				printf("\nEstado Actual de App %d: %d\n",numApp,EstadoActual_App[numApp]);
 			}
 		}
 		else
 		{
-			printf("Error Aplicacion App:%d,Est:%d,Bl%d",numApp,numEstado,numBloque);
+			printf("\nError Aplicacion App: %d,Est: %d,Bl: %d",numApp,numEstado,numBloque);
 			return 1;
 		}
 		for (i=0;i<Cantidad_Estados;i++)
 		{
-			retorno = read(fp,lectura,6);
+			retorno = fread(lectura,sizeof(uchar),6,fp);
+			printf("\nleidos %d bytes: %02X %02X %02X %02X %02X %02X\n",retorno,lectura[0],lectura[1], lectura[2],lectura[3],lectura[4],lectura[5]);
 			if((lectura[0] == 0xAA) && (lectura[1] == (uchar)ESTADO)\
 				&& (lectura[4] == 0xAA) && (lectura[5] == BLOQUE) )
 			{
 				numEstado = (lectura[3]<<8)+lectura[2];
+				printf("\nNumero de estado: %d\n",numEstado);
+
 			}
 			else
-			{	
-				printf("Error ESTADO App:%d,Est:%d,Bl%d",numApp,numEstado,numBloque);
+			{
+				printf("\nError ESTADO App:%d,Est:%d,Bl%d",numApp,numEstado,numBloque);
 				return 1;
 			}
 			for(j=0;j<Cantidad_Bloques;j++)
 			{
-				retorno = read(fp,lectura,6);
-				numBloque = (lectura[1]<<8)+lectura[0];
-				if (numBloque < Cantidad_Bloques)
-				{
-					Bloques[numApp][numEstado][numBloque] = \
-						(lectura[5]<<24) +(lectura[4]<<16) +(lectura[3]<<8) +lectura[2];
-				}
+				retorno = fread(lectura,sizeof(uchar),6,fp);
+				printf("\nleidos %d bytes: %02X %02X %02X %02X %02X %02X\n",retorno,lectura[0],lectura[1], lectura[2],lectura[3],lectura[4],lectura[5]);
+				numBloque = ((uint)lectura[1]<<8)+(uint)lectura[0];
+				printf("Bloque N: %d",numBloque);
+
+				app = numBloque/(Cantidad_Estados*Cantidad_Bloques);
+                estado = (numBloque%(Cantidad_Estados*Cantidad_Bloques))/Cantidad_Bloques;
+                bloque = numBloque%(Cantidad_Estados*Cantidad_Bloques)%Cantidad_Bloques;
+
+				Bloques[app][estado][bloque] = \
+					(lectura[5]<<24) +(lectura[4]<<16) +(lectura[3]<<8) +lectura[2];
+                printf("\nBloque: %X\n",Bloques[app][estado][bloque]);
+
 			}
-			retorno = read(fp,lectura,5);
+			retorno = fread(lectura,sizeof(uchar),5,fp);
 			if((lectura[0] == 0xAA) && (lectura[1] == (uchar)CONDICION))
 			{
-				Condiciones[numApp][numEstado][0] = lectura[2];
-				Condiciones[numApp][numEstado][1] = lectura[3];
-				Condiciones[numApp][numEstado][2] = lectura[4];
+				Condiciones[app][estado][0] = lectura[2];
+				Condiciones[app][estado][1] = lectura[3];
+				Condiciones[app][estado][2] = lectura[4];
 			}
 			else
 			{
-				printf("Error CONDICION App:%d,Est:%d,Bl:%d",numApp,numEstado,numBloque);
+				printf("Error CONDICION App: %d,Est: %d,Bl: %d",numApp,numEstado,numBloque);
 				return 1;
 			}
-			retorno = read(fp,lectura,4);
+			retorno = fread(lectura,sizeof(uchar),4,fp);
 			if((lectura[0] == 0xAA) && (lectura[1] == (uchar)RESULTADO))
 			{
-				Resultado[numApp][numEstado][0] = lectura[2];
-				Resultado[numApp][numEstado][1] = lectura[3];
+				Resultado[app][estado][0] = lectura[2];
+				Resultado[app][estado][1] = lectura[3];
 			}
 			else
 			{
-				printf("error Bloques App:%d,Est:%d,Bl%d",numApp,numEstado,numBloque);
+				printf("error Bloques App: %d,Est: %d,Bl: %d",numApp,numEstado,numBloque);
 				return 1;
 			}
 		}
-	}while(numApp<Cantidad_Apps-1);
-	for (i=0;i<Cantidad_Apps;i++)
+	}
+	while((numApp<Cantidad_Apps-1)&(retorno > 0));
+
+    for (i=0;i<Cantidad_Apps;i++)
 	{
 		for(j=0;j<Cantidad_Estados;j++)
 		{
 			for(k=0;k<Cantidad_Bloques;k++)
 			{
-				printf("Bloque: %d",Bloques[i][j][k]);
+				printf("Bloque: %08X ",Bloques[i][j][k]);
 			}
 		}
 	}
-	close(fp);
+	fclose(fp);
     return 0;
 }

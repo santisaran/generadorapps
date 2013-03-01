@@ -322,8 +322,9 @@ class MiFrame(gui.frmPpal):
 
                 path = path + ".cb"
 
-            archivobinario = open(path,'w')
-            archivobinario.write(GenerarBin(self.aplicaciones))
+            archivobinario = open(path,'wb')
+            binario = GenerarBin(self.aplicaciones)
+            archivobinario.flush()
             archivobinario.close()
         elif val == wx.ID_NO:
 
