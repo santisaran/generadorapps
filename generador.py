@@ -10,7 +10,6 @@ import gui
 import wx
 import os
 import shelve
-
 from apps import *
 
 
@@ -18,59 +17,59 @@ global DIRACTUAL
 #DIRACTUAL = os.getenv("HOME")
 DIRACTUAL = os.getcwd()
 #Variables globales
-global miEstados    
-# Nombres de la lista de estados posibles 
-miEstados = Estados[:] 
+global miEstados
+# Nombres de la lista de estados posibles
+miEstados = Estados[:]
 # Al inicio la toma del modulo apps.py
 
-global miBits       
+global miBits
 # Lista de nombres de Bits
 miBits = Bits[:]
 
-global miBytes      
+global miBytes
 # Lista de nombres de los Bytes
 miBytes= Bytes[:]
 
-global ValoresEntradas      
+global ValoresEntradas
 #diccionario con los valores de las entradas
-global miValoresEntradas    
+global miValoresEntradas
 #copia del diccionario, con los valores del programa actual
 miValoresEntradas = {}
 for i in ValoresEntradas.keys():
     miValoresEntradas[i] = ValoresEntradas[i][:]
-    
-global Analogica     
+
+global Analogica
 #Diccionario con los valores de cfg de la entra analógica
 global miAnalogica
 miAnalogica = {}
 for i in Analogica.keys():
     miAnalogica[i] = Analogica[i]
 
-global Modificado    
+global Modificado
 # Variable que indica que el programa ha sido modificado
 Modificado = False
 
-global NombreArchivo 
+global NombreArchivo
 # Variable con el nombre del programa actual.
 NombreArchivo = ""
 
 #Tipos de archivo que muestran los diálos abrir/guardar
 wildcard = "Archivo Programa Cyloc (*.cyl)|*.cyl|"\
            "Todos los archivos (*.*)|*.*"
-           
+
 binwildcard = "Archivo binario Cyloc (*.cb)|*.cb|"\
             "Todos los archivos (*.*)|*.*"
-           
+
 
 class MiFrame(gui.frmPpal):
     """Frame principal"""
     def __init__(self):
         super(MiFrame,self).__init__(None)
-        self.aplicaciones = [] 
+        self.aplicaciones = []
         # Lista con las aplicaciones actuales
         self.AppMenuItems = {}
         # Diccionario con referencia a los item del menú Aplicaciones
-        
+
         for i in range(Cantidad_Apps):
             self.aplicaciones.append(Aplicacion(i,""))
             # Crea aplicaciones vacías
@@ -90,8 +89,8 @@ class MiFrame(gui.frmPpal):
             wx.EmptyString, wx.ITEM_NORMAL )
         self.m_aplicaciones.AppendItem(item)
         self.Bind ( wx.EVT_MENU, self.OnCopiarApp, id = item.GetId() )
-  
-        
+
+
         self.sizerbotones.Fit( self.scroolled )
         for i in Entradas:
             item = wx.MenuItem( self.m_drivers, wx.ID_ANY, i,\
@@ -99,7 +98,7 @@ class MiFrame(gui.frmPpal):
             self.m_drivers.AppendItem( item )
             self.Bind ( wx.EVT_MENU, self.OnDriver, id = item.GetId() )
         item = wx.MenuItem ( self.m_drivers , wx.ID_ANY, u"Cargar desde archivo...",\
-            wx.EmptyString, wx.ITEM_NORMAL ) 
+            wx.EmptyString, wx.ITEM_NORMAL )
         self.m_drivers.AppendItem ( item )
         self.Bind ( wx.EVT_MENU, self.OnCopiarDesde, id = item.GetId() )
         self.Entradas = {}
@@ -134,7 +133,7 @@ class MiFrame(gui.frmPpal):
         item.Enable(False)
         win = mifrmAnalog(self)
         win.Show()
-        
+
         pass
 
 
@@ -153,7 +152,7 @@ class MiFrame(gui.frmPpal):
 
 
     def OnAbrirApp(self,event):
-   
+
         id = event.GetId()
         item = self.GetMenuBar().FindItemById(id)
         for i in self.aplicaciones:
@@ -165,7 +164,7 @@ class MiFrame(gui.frmPpal):
 
 
     def OnImprimirApp(self, event):
-      
+
         boton = event.GetEventObject()
         numero = int(boton.GetLabel()[-2:])
         print u"\n\naplicación %d: %s"% (self.aplicaciones[numero].AppNum\
@@ -174,20 +173,20 @@ class MiFrame(gui.frmPpal):
             print str(self.aplicaciones[numero].Estados[i].Nombre) + "\n"
 
     def OnCopiarApp(self, event):
-        
+
         dlg = miDlgCopiarApp(self)
         dlg.ShowModal()
-        
+
     def OnCopiarDesde( self, event):
         global DIRCATUAL
         dlg = wx.FileDialog(
-            self, message="Copiar Desde ...", defaultDir=DIRCATUAL, 
+            self, message="Copiar Desde ...", defaultDir=DIRCATUAL,
             defaultFile="", wildcard=wildcard, style=wx.OPEN)
-            
+
         dlg.SetFilterIndex(2)
-        
+
         if dlg.ShowModal() == wx.ID_OK:
-            
+
             path = dlg.GetPath()
             try:
                 shelf = shelve.open(path)
@@ -199,8 +198,8 @@ class MiFrame(gui.frmPpal):
                 dlg.Destroy()
                 return
             global miValoresEntradas
-            try: 
-                miValoresEntradas = shelf["miValoresEntradas"] 
+            try:
+                miValoresEntradas = shelf["miValoresEntradas"]
             except:
                 print "El archivo no tiene valores de entradas"
                 pass
@@ -212,61 +211,61 @@ class MiFrame(gui.frmPpal):
                 pass
             shelf.close()
         dlg.Destroy()
-            
-            
-        
-        
+
+
+
+
     def OnNuevoPrograma ( self, event):
-        
+
         global Modificado
         global NombreArchivo
         self.cancel = False
         if Modificado:
 
             if NombreArchivo == "":
-            
+
                 dlg = wx.MessageDialog(self, u"Guardar Programa?",\
                     caption=u"Cerrar Programa Actual",
                     style=wx.YES | wx.NO |wx.CANCEL,
                     pos=wx.DefaultPosition)
             else:
-            
+
                 dlg = wx.MessageDialog(self, u"Guardar Cambios?",\
                     caption=u"Cerrar Programa Actual",
                     style=wx.YES | wx.NO | wx.CANCEL,
                     pos=wx.DefaultPosition)
-                
+
             val = dlg.ShowModal()
             dlg.Destroy()
-            
+
             if val == wx.ID_YES:
                 self.Guardar()
-            
+
                 if self.Boton == wx.ID_CANCEL:
                    return
                 self.CrearNuevoPrograma()
             elif val == wx.ID_NO:
-                self.CrearNuevoPrograma()   
+                self.CrearNuevoPrograma()
         else:
             self.CrearNuevoPrograma()
-    
+
     def OnAbrirPrograma(self, event):
         global DIRACTUAL
         global NombreArchivo
         self.OnNuevoPrograma(event)
-        
+
         if self.cancel:
-            
+
             pass
-            
+
         dlg = wx.FileDialog(
-            self, message="Abrir archivo ...", defaultDir=DIRACTUAL, 
+            self, message="Abrir archivo ...", defaultDir=DIRACTUAL,
             defaultFile="", wildcard=wildcard, style=wx.OPEN)
-            
+
         dlg.SetFilterIndex(2)
-        
+
         if dlg.ShowModal() == wx.ID_OK:
-            
+
             path = dlg.GetPath()
             NombreArchivo = path
             shelf = shelve.open(NombreArchivo)
@@ -274,16 +273,16 @@ class MiFrame(gui.frmPpal):
                 self.aplicaciones = shelf["programa"]
                 global miBits
                 miBits = shelf["bits"]
-                global miBytes 
+                global miBytes
                 miBytes = shelf["bytes"]
                 global miValoresEntradas
-                miValoresEntradas = shelf["miValoresEntradas"] 
+                miValoresEntradas = shelf["miValoresEntradas"]
                 global miAnalogica
                 miAnalogica = shelf["miAnalogica"]
             except:
                 pass
             shelf.close()
-            
+            self.Title = "Generador de programas: " + NombreArchivo.split(os.sep)[-1]
             for i in range(Cantidad_Apps):
                 self.AppMenuItems[i].SetText(\
                     u"Aplicación %0.2d: %s"%(i,self.aplicaciones[i].Nombre))
@@ -293,8 +292,8 @@ class MiFrame(gui.frmPpal):
     def OnGuardarPrograma(self,event):
         global NombreArchivo
         self.Guardar()
-        self.Title = "Generador de Programas: " + NombreArchivo.split('\\')[-1]
-        
+        self.Title = "Generador de Programas: " + NombreArchivo.split(os.sep)[-1]
+
     def OnGuardarComo( self, event ):
         global Modificado
         global NombreArchivo
@@ -304,33 +303,34 @@ class MiFrame(gui.frmPpal):
         self.Guardar()
         print NombreArchivo
         if self.Boton == wx.ID_OK:
-            self.Title = "Generador de Programas: " + NombreArchivo.split('\\')[-1]
+            self.Title = "Generador de Programas: " + NombreArchivo.split(os.sep)[-1]
         else:
             NombreArchivo = self.archivoActual[:]
-    
+
     def OnGenerar( self , event):
+        global DIRACTUAL
         dlg = wx.FileDialog(
-            self, message="Generar en...", defaultDir=DIRCATUAL, 
+            self, message="Generar en...", defaultDir=DIRACTUAL,
             defaultFile="", wildcard=binwildcard, style=wx.SAVE|wx.FD_OVERWRITE_PROMPT)
         dlg.SetFilterIndex(2)
-        val = dlg.ShowModal()    
-        
+        val = dlg.ShowModal()
+
         if val == wx.ID_OK:
-                        
+
             path = dlg.GetPath()
             if path[-2:] != "cb":
-                                            
+
                 path = path + ".cb"
-            
-            binario = open(path,'w')
-            
-            
+
+            archivobinario = open(path,'w')
+            archivobinario.write(GenerarBin(self.aplicaciones))
+            archivobinario.close()
         elif val == wx.ID_NO:
-            
+
             self.Boton = wx.ID_NO
-        
+
         else:
-            
+
             self.Boton = wx.ID_CANCEL
 
     def Guardar(self):
@@ -338,29 +338,29 @@ class MiFrame(gui.frmPpal):
         #TODO generar archivo para cyloc.
         global NombreArchivo
         global Modificado
-        global DIRCATUAL
+        global DIRACTUAL
         self.Boton = None
         if Modificado:
             if NombreArchivo == "":
                 dlg = wx.FileDialog(
-                    self, message="Salvar archivo a ...", defaultDir=DIRCATUAL, 
+                    self, message="Salvar archivo a ...", defaultDir=DIRACTUAL,
                     defaultFile="", wildcard=wildcard, style=wx.SAVE|wx.FD_OVERWRITE_PROMPT)
                 dlg.SetFilterIndex(2)
-                val = dlg.ShowModal()    
+                val = dlg.ShowModal()
                 if val == wx.ID_OK:
-                        
+
                     path = dlg.GetPath()
-                        
+
                     if path[-3:] != "cyl":
-                            
+
                         path = path + ".cyl"
-                    
+
                     NombreArchivo = path
                     shelf = shelve.open(NombreArchivo)
                     shelf["programa"] = self.aplicaciones
                     global miBits
                     shelf["bits"] = miBits
-                    global miBytes 
+                    global miBytes
                     shelf["bytes"] = miBytes
                     global miValoresEntradas
                     shelf["miValoresEntradas"] = miValoresEntradas
@@ -370,24 +370,24 @@ class MiFrame(gui.frmPpal):
                     Modificado = False
                     dlg.Destroy()
                     self.Boton = wx.ID_OK
-                    
+
                 elif val == wx.ID_NO:
                     self.Boton = wx.ID_NO
-                    
+
                 else:
                     self.Boton = wx.ID_CANCEL
-                    
-            else:                             
-                    
+
+            else:
+
                 shelf = shelve.open(NombreArchivo)
                 shelf["programa"] = self.aplicaciones
                 shelf.close()
-        
-    
+
+
     def CrearNuevoPrograma(self):
         global Modificado
         Modificado = False
-        global NombreArchivo 
+        global NombreArchivo
         NombreArchivo = ""
         self.aplicaciones = []
         for i in range(Cantidad_Apps):
@@ -395,17 +395,17 @@ class MiFrame(gui.frmPpal):
             self.AppMenuItems[i].SetText(\
                 u"Aplicación %0.2d: %s"%(i,self.aplicaciones[i].Nombre))
         self.Title = "Generador de Programas: "
-        global ValoresEntradas      
-        global miValoresEntradas    
+        global ValoresEntradas
+        global miValoresEntradas
         miValoresEntradas = {}
         for i in ValoresEntradas.keys():
-            miValoresEntradas[i] = ValoresEntradas[i][:]            
-        global Analogica     
+            miValoresEntradas[i] = ValoresEntradas[i][:]
+        global Analogica
         global miAnalogica
         miAnalogica = {}
         for i in Analogica.keys():
             miAnalogica[i] = Analogica[i]
-        
+
 
 
 
@@ -435,10 +435,16 @@ class mifrmEditApp(gui.frmEditApp):
         self.EstadosDic = {}
         self.Cambios = False
         self.CargarLista()
+        self.choiceEstadoInicial.SetItems(Estados)
+        self.choiceEstadoInicial.SetSelection(self.tempApp.EstadoActual)
         #cargar los estados en un diccionario
 
     #diccionario de lista de estados {0:{"nombre":nombre,"opened":False/True}}
-    
+
+    def OnChoiceEstadoInicial( self, event ):
+        self.tempApp.EstadoActual = self.choiceEstadoInicial.GetSelection()
+
+
     def CargarLista(self):
         self.listEstados.Clear()
         for i in range(Cantidad_Estados):
@@ -447,7 +453,7 @@ class mifrmEditApp(gui.frmEditApp):
             self.EstadosDic[i].ventana = None
             titulo = self.EstadosDic[i].Nombre
             titulo = "%0.2d"%i + " : " + titulo
-            self.listEstados.Append(titulo)        
+            self.listEstados.Append(titulo)
 
     def OnEditarEstado( self, event ):
         self.Cambios = True
@@ -510,7 +516,6 @@ class mifrmEditApp(gui.frmEditApp):
             #item = self.AppMenuItems[self.tempApp.AppNum]
             self.textoPrograma.SetLabel(u"Aplicación %d: "%self.tempApp.AppNum+renamed)
 
-
     def OnClose(self,event):
         if self.Cambios:
             dlg = wx.MessageDialog(self, u"Guardar Aplicación?",\
@@ -556,13 +561,13 @@ class mifrmBloques( gui.frmBloques):
             win = mipanelBloque( self.notBloque, i , self.padre )
             self.notBloque.AddPage(win,"Bloque: %d"%i)
         self.notBloque.SCTotal.append("")
-        
+
         # la lista SCTotal tiene en total Cantidad_Bloques + 1 elementos.
         win = mipanelCondicion(self.notBloque,Cantidad_Bloques,self.padre)
         self.notBloque.AddPage(win,"Condicion")
         #Cargar el valor actual de el nombre del estado
         self.txtctrlTitulo.SetValue(\
-            self.notBloque.Estado.Nombre)        
+            self.notBloque.Estado.Nombre)
         self.txtctrlComentario.SetValue(\
             self.notBloque.Estado.Comentario)
 
@@ -594,7 +599,7 @@ class mifrmBloques( gui.frmBloques):
     def OnClose ( self , event ):
 
         """Quita la ventana actual de la lista de ventanas abiertas"""
-        
+
         if self.notBloque.Modificado == True:
             dlg = wx.MessageDialog(self, u"Guardar Estado?",\
             caption=u"Cerrar Edición Estado",
@@ -1299,7 +1304,7 @@ class  mifrmEntrada (gui.frmEntrada):
         self.tiempo = miValoresEntradas[self.item.GetText()][1]
         self.txtctrlMuestras.SetValue(str(self.muestras))
         self.txtctrlTiempo.SetValue(str(self.tiempo))
-        
+
 
     def OnGuardar( self, event ):
         global miValoresEntradas
@@ -1323,7 +1328,7 @@ class  mifrmEntrada (gui.frmEntrada):
         self.tiempo = miValoresEntradas[self.item.GetText()][1]
         self.txtctrlMuestras.SetValue(str(self.muestras))
         self.txtctrlTiempo.SetValue(str(self.tiempo))
-    
+
     def OnChar( self, event ):
         EsNumero ( event )
 
@@ -1482,15 +1487,15 @@ class miDlgCopiarApp ( gui.DialogoCopiarApp ):
             num = self.padre.aplicaciones[selA].AppNum
             self.padre.aplicaciones[selA] = self.padre.aplicaciones[selB].copy()
             self.padre.aplicaciones[selA].AppNum = num
-            self.padre.AppMenuItems[num].SetText(u"Programa %0.2d: %s"%(num,self.padre.aplicaciones[selA].Nombre))
+            self.padre.AppMenuItems[num].SetText(u"Aplicación %0.2d: %s"%(num,self.padre.aplicaciones[selA].Nombre))
             self.txtctrlCopia.AppendText("Copiado %s en %s\n"%(selB,selA))
             self.CargarChoices()
             global Modificado
             Modificado = True
-          
+
     def OnCerrar( self, event ):
         self.Destroy()
-    
+
     def CargarChoices(self):
         choices = []
         for i in self.padre.aplicaciones:
@@ -1498,16 +1503,16 @@ class miDlgCopiarApp ( gui.DialogoCopiarApp ):
         self.choiceAppA.SetItems(choices)
         self.choiceAppB.SetItems(choices)
 
-        
+
 class miDlgCopiarEstado ( gui.DlgCopiarEstado ):
     """Copiar un estado a otro, copia todo menos el número de estado"""
-    
+
     def __init__(self, parent):
         super(miDlgCopiarEstado,self).__init__(parent)
         self.padre = parent
         self.NumApp = parent.tempApp.AppNum
-        self.CargarChoices()        
-        
+        self.CargarChoices()
+
     def OnCopiar( self, event ):
         selA = self.choiceEstA.GetSelection()
         selB = self.choiceEstB.GetSelection()
@@ -1519,16 +1524,16 @@ class miDlgCopiarEstado ( gui.DlgCopiarEstado ):
             #num = self.padre.EstadosDic[selA].
             self.padre.tempApp.Estados[self.choices[1][selA]] = \
                 self.padre.tempApp.Estados[self.choices[1][selB]].copy()
-            
+
             self.txtctrlCopia.AppendText("Copiado %s en %s\n"%(\
                 GetTexto(self.choiceEstB),GetTexto(self.choiceEstA)))
             self.CargarChoices()
             self.padre.CargarLista()
-            
+
     def CargarChoices ( self ):
         self.choices = [[],[]]
         for i in range(Cantidad_Estados):
-            #Los estados que están siendo editados no son puestos en la 
+            #Los estados que están siendo editados no son puestos en la
             #lista.
             if not self.padre.EstadosDic[i].opened:
                 titulo = self.padre.EstadosDic[i].Nombre
@@ -1536,16 +1541,16 @@ class miDlgCopiarEstado ( gui.DlgCopiarEstado ):
                 #Agrega el nombre y el estado a la lista choices
                 self.choices[0].append(titulo)
                 self.choices[1].append(i)
-                
+
         self.choiceEstA.SetItems(self.choices[0])
         self.choiceEstB.SetItems(self.choices[0])
-    
+
     def OnCerrar( self , event ):
         self.Destroy()
-            
+
 
 class mifrmAnalog ( gui.frmAnalog ):
-    
+
     def __init__( self, parent ):
         gui.frmAnalog.__init__ ( self, parent)
         self.padre = parent
@@ -1566,9 +1571,9 @@ class mifrmAnalog ( gui.frmAnalog ):
         for zona in self.zonas.keys():
             self.zonas[zona][0].SetValue(\
                 self.zonas[zona][1])
-        self.txtctrlMuestras.SetValue(str(self.tempAnalogica["muestras"]))        
+        self.txtctrlMuestras.SetValue(str(self.tempAnalogica["muestras"]))
         self.txtctrlTiempo.SetValue(str(self.tempAnalogica["tiempo"]))
-        self.txtctrlComentarios.SetValue(self.tempAnalogica["comentarios"]) 
+        self.txtctrlComentarios.SetValue(self.tempAnalogica["comentarios"])
         self.cambios = False
 
     def On4zonas( self, event ):
@@ -1577,33 +1582,33 @@ class mifrmAnalog ( gui.frmAnalog ):
         self.cambios = True
         self.radbtnValorADC.SetValue(False)
         #event.Skip()
-    
+
     def OnValorADC( self, event ):
         for zona in self.zonas.keys():
             self.zonas[zona][0].Enable(False)
-        self.cambios = True        
+        self.cambios = True
         self.radbtn4zonas.SetValue(False)
-    
+
     def OnGuardar( self, event ):
         self.Guardar()
-        
-    def Guardar(self):        
+
+    def Guardar(self):
         if not self.DatosValidos():
             dlg = wx.MessageDialog(self, u"Límites de zonas\nincorrectos",\
                 caption="Error al guardar", style=wx.OK, pos=wx.DefaultPosition)
-            dlg.ShowModal()    
-        else: 
+            dlg.ShowModal()
+        else:
             global miAnalogica
             miAnalogica = self.tempAnalogica.copy()
             self.cambios = False
             self.leerDatos()
             global Modificado
             Modificado = True
-            
-            
+
+
     def OnCargarDefault( self, event ):
         self.cambios = True
-        global Analogica        
+        global Analogica
         self.tempAnalogica = Analogica.copy()
         for zona in self.zonas.keys():
             self.zonas[zona][1] = self.tempAnalogica[zona]
@@ -1613,7 +1618,7 @@ class mifrmAnalog ( gui.frmAnalog ):
         self.txtctrlMuestras.SetValue(str(self.tempAnalogica["muestras"]))
         self.txtctrlTiempo.SetValue(str(self.tempAnalogica["tiempo"]))
         self.txtctrlComentarios.SetValue("")
-    
+
     def OnClose( self, event ):
         if not self.cambios:
             self.padre.m_drivers_analog.Enable(True)
@@ -1628,7 +1633,7 @@ class mifrmAnalog ( gui.frmAnalog ):
                 self.Guardar()
             self.Destroy()
             self.padre.m_drivers_analog.Enable(True)
-      
+
     def OnInfo( self, event ):
         win = miFrameZonas(self)
         win.Show()
@@ -1636,15 +1641,15 @@ class mifrmAnalog ( gui.frmAnalog ):
     def OnCambios (self, event):
         self.cambios = True
         event.Skip()
-    
+
     def OnChar( self, event ):
         self.cambios = True
-        EsNumero( event)      
-            
+        EsNumero( event)
+
     def OnSpin ( self, event ):
         self.cambios = True
         event.Skip()
-    
+
     def DatosValidos( self ):
 
         self.leerDatos()
@@ -1658,9 +1663,9 @@ class mifrmAnalog ( gui.frmAnalog ):
             return True
         else:
             return False
-        
+
     def leerDatos( self ):
-        
+
         for zona in self.zonas.keys():
             valor = self.zonas[zona][0].GetValue()
             self.zonas[zona][1] = 0 if (valor == "") else int(valor)
@@ -1676,21 +1681,21 @@ class mifrmAnalog ( gui.frmAnalog ):
             else ValorADC
 
         self.tempAnalogica["comentarios"] = self.txtctrlComentarios.GetValue()
-        
+
     def OnEnter( self , event):
         pass
-            
+
 
 class miFrameZonas(gui.FrameZonas):
-    
+
     def __init__(self, parent):
         super(miFrameZonas, self).__init__(parent)
-    
+
     def OnClose( self, event ):
         self.Destroy()
-        
+
 def EsNumero( event):
-    
+
     keycode = event.GetKeyCode()
     if keycode < 255:
     # valid ASCII
@@ -1701,8 +1706,8 @@ def EsNumero( event):
              event.Skip()
     elif keycode > 255:
         event.Skip()
-    
-    
+
+
 
 def GetTexto(elec):
     return elec.GetString(elec.GetSelection())
