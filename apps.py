@@ -168,7 +168,7 @@ def GenerarBin(programa):
         for i,estado in enumerate(app.Estados):
             binario = binario + pack('BBH',0xAA,Header_Estado,app.AppNum*Cantidad_Estados+i)
             binario = binario + pack('BB' ,0xAA,Header_Bloques)
-            for j,bloque in enumerate(estado.Bloques):
+            for j,bloque in enumerate(e stado.Bloques):
                 binario = binario +\
                     pack('HI',(app.AppNum*Cantidad_Estados*Cantidad_Bloques+i*Cantidad_Bloques+j) , bloque)
             binario = binario + pack('BB',0xAA, Header_Condicion)
