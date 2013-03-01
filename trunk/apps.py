@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import copy
+
 from struct import pack,unpack
 #Defines compartidos con C si se hace modificación, hace la misma modificación en el codigo c
 Estados = ( "ESTADO0","ESTADO1","ESTADO2","ESTADO3","ESTADO4","ESTADO5","ESTADO6",\
@@ -72,21 +72,21 @@ PARAMETRO3 = 0
 # información para la generación del archivo binario.
 # lista = [AA,tamaño,tipo de dato, ]
 # el tamaño es en bytes de la lista completa (incluye AA)
-    
+
 # Hay 10 estados por aplicación, por lo que en total existen 10*20 estados = 200 estados
 # Por cada estado hay 5 bloques por lo que existen 5+200 bloques
 # Una condición de 3 bytes por estado 200 condiciones (600 bytes)
 # Un resultado  de 2 bytes por estado 200 resultados  (400 bytes)
-    
-    
+
+
 # lista = [AA,tamaño, Estado , appnº, estadoapp, appnº, estadoapp......, appnº, estadoapp]
 # lista = [AA,tamaño, Bloques,bloquenº(16bit),bloque(32bit),bloquenº(16bit),bloque(32bit),.... bloquenº(16bit),bloque(32bit)]
-# lista = [AA,tamaño, Condiciones, nº(8bit) , 
-# lista = [AA,tamaño, Resultados, 
-    
+# lista = [AA,tamaño, Condiciones, nº(8bit) ,
+# lista = [AA,tamaño, Resultados,
+
 # Tipo de dato:
 tipoEstado          = 0x00
-tipoBloque          = 0x02  
+tipoBloque          = 0x02
 tipoCondiciones     = 0x22
 tipoResultados      = 0x33
 tipoAppCompleta     = 0x44
@@ -96,7 +96,7 @@ for i in range(Cantidad_Bits_Usuario):
 Bytes = []
 for i in range(Cantidad_Bytes_Usuario):
     Bytes.append("Byte %0.3d"%i)
-        
+
 
 #Aplicacion = {"AppNum":0,"Nombre":"","EstadoActual":True,"Estados":[]}
 #for i in range(Cantidad_Estados):
@@ -107,11 +107,11 @@ class Aplicacion():
     def __init__(self,numero, nombre):
         self.AppNum = numero
         self.Nombre = nombre
-        self.EstadoActual = None
+        self.EstadoActual = 0
         self.Estados = []
         for i in range(Cantidad_Estados):
             self.Estados.append(Estado())
-    
+
     def copy(self):
         App = Aplicacion(self.AppNum,self.Nombre)
         App.EstadoActual = self.EstadoActual
@@ -119,8 +119,8 @@ class Aplicacion():
         for i in self.Estados:
             App.Estados.append(i.copy())
         return App
-        
-       
+
+
 class Estado():
             def __init__(self):
                 self.Bloques     = [Bloque_Null,Bloque_Null,Bloque_Null,Bloque_Null,Bloque_Null]
@@ -137,7 +137,7 @@ class Estado():
                 EST.Comentario = "%s"%self.Comentario
                 return EST
 muestras = 5
-tiempo = 20                
+tiempo = 20
 Entradas = (u"Contacto", u"Aux1", u"Pánico", u"Pulsador", "Porton", "CorteNA",\
     "CorteC")
 ValoresEntradas = {}
@@ -145,10 +145,10 @@ for i in Entradas:
     ValoresEntradas[i] = [muestras, tiempo]
 
 PorZonas = 0
-ValorADC = 1    
-nZonas = ("Asup","Ainf","Bsup","Binf","Csup","Cinf","Dsup","Dinf")        
+ValorADC = 1
+nZonas = ("Asup","Ainf","Bsup","Binf","Csup","Cinf","Dsup","Dinf")
 Analogica = {"Asup":100,"Ainf":90,"Bsup":80,"Binf":70,"Csup":60,"Cinf":50,\
-	"Dsup":40,"Dinf":30,"tiempo":5, "muestras":5, "modo":PorZonas,"comentarios":""}
+    "Dsup":40,"Dinf":30,"tiempo":5, "muestras":5, "modo":PorZonas,"comentarios":""}
 
 #Acerca del modo : 0 modo 4 zonas, 1 modo valor ADC.
 
@@ -160,30 +160,27 @@ Header_Resultado = 0x05
 
 
 def GenerarBin(programa):
-	binario = ""
-	for app in programa:
-		binario = binario + pack('BB',0xAA,Header_App)
-		binario = binario + pack('B',app.AppNum)
-		binario = binario + pack('B',app.EstadoActual)
-		for i,estado in enumerate(app.Estados):
-			binario = binario + pack('BB',0xAA,Header_Estado)
-			binario = binario + pack('BB' ,0xAA,Header_Bloques)
-			for j in Cantidad_Bloques:
-				estado.Bloques
-			estado.Condiciones
-			estado.Resultados
-		
-		
-
-for i in Cantidad_Estados:
-	listaEstados = [chr(0xAA),chr(0),chr(tipoEstado),chr(i)]
-	for j in Cantidad_Bloques:
-		listaBloques = [chr(0xAA),chr(0),chr(tipoBloque),]
-	listaCondiciones = [chr(0xAA),chr(0),chr(tipoCondiciones),]
-	listaResultados = [chr(0xAA),chr(0),chr(tipoResultados),]
+    binario = ""
+    for app in programa:
+        binario = binario + pack('BB',0xAA,Header_App)
+        binario = binario + pack('B',app.AppNum)
+        binario = binario + pack('B',app.EstadoActual)
+        for i,estado in enumerate(app.Estados):
+            binario = binario + pack('BBH',0xAA,Header_Estado,app.AppNum*Cantidad_Estados+i)
+            binario = binario + pack('BB' ,0xAA,Header_Bloques)
+            for j,bloque in enumerate(estado.Bloques):
+                binario = binario +\
+                    pack('HI',(app.AppNum*Cantidad_Estados*Cantidad_Bloques+i*Cantidad_Bloques+j) , bloque)
+            binario = binario + pack('BB',0xAA, Header_Condicion)
+            for i in estado.Condiciones:
+                binario = binario + pack('B',i)
+            binario = binario + pack('BB',0xAA, Header_Resultado)
+            for i in estado.Resultados:
+                binario = binario + pack('B',i)
+    return binario
 
 def main():
     print u"Este módulo forma parte de generador.py"
 
 if __name__ == '__main__':
-	main()
+    main()
