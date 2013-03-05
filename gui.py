@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*- 
 
 ###########################################################################
-## Python code generated with wxFormBuilder (version Oct  8 2012)
+## Python code generated with wxFormBuilder (version Apr 10 2012)
 ## http://www.wxformbuilder.org/
 ##
 ## PLEASE DO "NOT" EDIT THIS FILE!
@@ -44,8 +44,8 @@ class frmPpal ( wx.Frame ):
 		
 		self.m_archivo.AppendSeparator()
 		
-		self.m_file_salir = wx.MenuItem( self.m_archivo, wx.ID_ANY, u"Salir"+ u"\t" + u"Ctrl+Q", wx.EmptyString, wx.ITEM_NORMAL )
-		self.m_archivo.AppendItem( self.m_file_salir )
+		self.OnClose = wx.MenuItem( self.m_archivo, wx.ID_ANY, u"Salir"+ u"\t" + u"Ctrl+Q", wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_archivo.AppendItem( self.OnClose )
 		
 		self.m_menubar1.Append( self.m_archivo, u"&Archivo" ) 
 		
@@ -93,12 +93,13 @@ class frmPpal ( wx.Frame ):
 		self.Centre( wx.BOTH )
 		
 		# Connect Events
+		self.Bind( wx.EVT_CLOSE, self.OnCerrar )
 		self.Bind( wx.EVT_MENU, self.OnNuevoPrograma, id = self.m_file_nuevoPrograma.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnAbrirPrograma, id = self.m_file_abrirPrograma.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnGuardarPrograma, id = self.m_file_guardarPrograma.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnGuardarComo, id = self.m_file_guardarComo.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnGenerar, id = self.m_file_gen.GetId() )
-		self.Bind( wx.EVT_MENU, self.OnSalir, id = self.m_file_salir.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnCerrar, id = self.OnClose.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnEditarBytes, id = self.m_variables_Byte.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnEditarBit, id = self.m_variables_bit.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnDriverAnalog, id = self.m_drivers_analog.GetId() )
@@ -109,6 +110,9 @@ class frmPpal ( wx.Frame ):
 	
 	
 	# Virtual event handlers, overide them in your derived class
+	def OnCerrar( self, event ):
+		event.Skip()
+	
 	def OnNuevoPrograma( self, event ):
 		event.Skip()
 	
@@ -124,8 +128,6 @@ class frmPpal ( wx.Frame ):
 	def OnGenerar( self, event ):
 		event.Skip()
 	
-	def OnSalir( self, event ):
-		event.Skip()
 	
 	def OnEditarBytes( self, event ):
 		event.Skip()
@@ -156,7 +158,6 @@ class frmEditBit ( wx.Frame ):
 		gbSizer1.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
 		self.BitsTxtCtrl = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.Point( 1,0 ), wx.DefaultSize, 0 )
-		self.BitsTxtCtrl.SetMaxLength( 0 ) 
 		gbSizer1.Add( self.BitsTxtCtrl, wx.GBPosition( 0, 1 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 		
 		self.BitsSpinCtrl = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.Point( 0,0 ), wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 255, 255 )
@@ -238,7 +239,6 @@ class dlgGenProg ( wx.Dialog ):
 		bSizer2.Add( gSizer2, 1, wx.EXPAND, 5 )
 		
 		self.txtctrl_prog = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.txtctrl_prog.SetMaxLength( 0 ) 
 		bSizer2.Add( self.txtctrl_prog, 0, wx.ALL|wx.EXPAND, 5 )
 		
 		
@@ -281,7 +281,6 @@ class frmEditByte ( wx.Frame ):
 		gbSizer1.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
 		self.BytesTxtCtrl = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.Point( 1,0 ), wx.DefaultSize, 0 )
-		self.BytesTxtCtrl.SetMaxLength( 0 ) 
 		gbSizer1.Add( self.BytesTxtCtrl, wx.GBPosition( 0, 1 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 		
 		self.BytesSpinCtrl = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.Point( 0,0 ), wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 255, 1 )
@@ -497,7 +496,6 @@ class DialogoCopiarApp ( wx.Dialog ):
 		bSizer27.Add( bSizer28, 0, wx.EXPAND, 5 )
 		
 		self.txtctrlCopia = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
-		self.txtctrlCopia.SetMaxLength( 0 ) 
 		bSizer27.Add( self.txtctrlCopia, 1, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
 		
 		bSizer29 = wx.BoxSizer( wx.HORIZONTAL )
@@ -583,7 +581,6 @@ class DlgCopiarEstado ( wx.Dialog ):
 		bSizer27.Add( bSizer28, 0, wx.EXPAND, 5 )
 		
 		self.txtctrlCopia = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
-		self.txtctrlCopia.SetMaxLength( 0 ) 
 		bSizer27.Add( self.txtctrlCopia, 0, wx.EXPAND|wx.RIGHT|wx.LEFT, 5 )
 		
 		bSizer29 = wx.BoxSizer( wx.HORIZONTAL )
@@ -666,7 +663,6 @@ class frmBloques ( wx.Frame ):
 		bSizer29.Add( self.m_staticText39, 0, wx.ALL, 5 )
 		
 		self.txtctrlTitulo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_PROCESS_ENTER )
-		self.txtctrlTitulo.SetMaxLength( 0 ) 
 		bSizer29.Add( self.txtctrlTitulo, 0, wx.ALL|wx.EXPAND, 5 )
 		
 		self.m_staticText40 = wx.StaticText( self, wx.ID_ANY, u"Comentario", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -674,7 +670,6 @@ class frmBloques ( wx.Frame ):
 		bSizer29.Add( self.m_staticText40, 0, wx.ALL, 5 )
 		
 		self.txtctrlComentario = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
-		self.txtctrlComentario.SetMaxLength( 0 ) 
 		bSizer29.Add( self.txtctrlComentario, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
@@ -779,7 +774,6 @@ class panelBloque ( wx.Panel ):
 		bSizer22.Add( self.m_staticText35, 0, wx.ALL, 5 )
 		
 		self.txtctrlSeudo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
-		self.txtctrlSeudo.SetMaxLength( 0 ) 
 		bSizer22.Add( self.txtctrlSeudo, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
@@ -890,7 +884,6 @@ class panelCondicion ( wx.Panel ):
 		bSizer25.Add( self.txtctrlSeudo, 0, wx.ALL, 5 )
 		
 		self.txtctrlSeudo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE|wx.TE_READONLY )
-		self.txtctrlSeudo.SetMaxLength( 0 ) 
 		bSizer25.Add( self.txtctrlSeudo, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
@@ -949,7 +942,6 @@ class frmEntrada ( wx.Frame ):
 		bSizer26.Add( self.m_staticText48, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		self.txtctrlMuestras = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.txtctrlMuestras.SetMaxLength( 0 ) 
 		bSizer26.Add( self.txtctrlMuestras, 0, wx.ALL, 5 )
 		
 		
@@ -965,7 +957,6 @@ class frmEntrada ( wx.Frame ):
 		bSizer28.Add( self.m_staticText49, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		self.txtctrlTiempo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.txtctrlTiempo.SetMaxLength( 0 ) 
 		bSizer28.Add( self.txtctrlTiempo, 0, wx.ALL, 5 )
 		
 		
@@ -1183,7 +1174,6 @@ class frmAnalog ( wx.Frame ):
 		gSizer5.Add( self.m_staticText17, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
 		
 		self.txtctrlTiempo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.txtctrlTiempo.SetMaxLength( 0 ) 
 		gSizer5.Add( self.txtctrlTiempo, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 		
 		self.m_staticText18 = wx.StaticText( self, wx.ID_ANY, u"Cantidad de muestras\npara validar zona", wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -1191,7 +1181,6 @@ class frmAnalog ( wx.Frame ):
 		gSizer5.Add( self.m_staticText18, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
 		
 		self.txtctrlMuestras = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.txtctrlMuestras.SetMaxLength( 0 ) 
 		gSizer5.Add( self.txtctrlMuestras, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
 		
 		
@@ -1200,7 +1189,6 @@ class frmAnalog ( wx.Frame ):
 		sbSizer14 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Comentario" ), wx.VERTICAL )
 		
 		self.txtctrlComentarios = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
-		self.txtctrlComentarios.SetMaxLength( 0 ) 
 		sbSizer14.Add( self.txtctrlComentarios, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
@@ -1323,7 +1311,7 @@ class FrameZonas ( wx.Frame ):
 		
 		bSizer35.Add( self.m_staticText29, 1, wx.ALIGN_CENTER_VERTICAL|wx.BOTTOM|wx.EXPAND|wx.LEFT|wx.TOP, 5 )
 		
-		self.bitmap_ADC = wx.StaticBitmap( self, wx.ID_ANY, wx.Bitmap( u"C:\\Users\\santiago\\Documents\\Proyectos\\ATOP\\Soft\\generadorsvn\\generadorapps\\pics\\zonas.png", wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.bitmap_ADC = wx.StaticBitmap( self, wx.ID_ANY, wx.Bitmap( u"pics/zonas.png", wx.BITMAP_TYPE_ANY ), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer35.Add( self.bitmap_ADC, 0, wx.ALL|wx.EXPAND, 5 )
 		
 		
