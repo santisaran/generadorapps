@@ -108,8 +108,42 @@ class MiFrame(gui.frmPpal):
 
     #funciones de eventos en frame principal
 
-    def OnExit(self, evt):
-        self.Close(True)
+    def OnCerrar(self, event):
+        global Modificado
+        global NombreArchivo
+        self.cancel = False
+        if Modificado:
+
+            if NombreArchivo == "":
+
+                dlg = wx.MessageDialog(self, u"Guardar Programa?",\
+                    caption=u"Cerrar Programa Actual",
+                    style=wx.YES | wx.NO |wx.CANCEL,
+                    pos=wx.DefaultPosition)
+            else:
+
+                dlg = wx.MessageDialog(self, u"Guardar Cambios?",\
+                    caption=u"Cerrar Programa Actual",
+                    style=wx.YES | wx.NO | wx.CANCEL,
+                    pos=wx.DefaultPosition)
+
+            val = dlg.ShowModal()
+            dlg.Destroy()
+            
+            if val == wx.ID_YES:
+            
+                self.Guardar()
+            
+            elif val == wx.ID_NO:
+            
+                self.Destroy()
+                
+            elif val == wx.ID_CANCEL:
+                
+                return
+        
+        self.Destroy()
+        event.Skip()
 
     def OnEditarBytes( self, event ):
         id = event.GetId()
