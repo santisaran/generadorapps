@@ -149,9 +149,21 @@ class frmPpal ( wx.Frame ):
 class frmEditBit ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Editar variables  Bits", pos = wx.DefaultPosition, size = wx.Size( 441,102 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Editar variables  Bits", pos = wx.DefaultPosition, size = wx.Size( 441,293 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
+		
+		bSizer30 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.BitScroled = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
+		self.BitScroled.SetScrollRate( 5, 5 )
+		self.gridBotones = wx.GridSizer( 0, 2, 0, 0 )
+		
+		
+		self.BitScroled.SetSizer( self.gridBotones )
+		self.BitScroled.Layout()
+		self.gridBotones.Fit( self.BitScroled )
+		bSizer30.Add( self.BitScroled, 1, wx.EXPAND |wx.ALL, 0 )
 		
 		gbSizer1 = wx.GridBagSizer( 0, 0 )
 		gbSizer1.SetFlexibleDirection( wx.BOTH )
@@ -160,7 +172,7 @@ class frmEditBit ( wx.Frame ):
 		self.BitsTxtCtrl = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.Point( 1,0 ), wx.DefaultSize, 0 )
 		gbSizer1.Add( self.BitsTxtCtrl, wx.GBPosition( 0, 1 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 		
-		self.BitsSpinCtrl = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.Point( 0,0 ), wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 255, 255 )
+		self.BitsSpinCtrl = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.Point( 0,0 ), wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 255, 254 )
 		gbSizer1.Add( self.BitsSpinCtrl, wx.GBPosition( 0, 0 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.EXPAND, 5 )
 		
 		self.m_button15 = wx.Button( self, wx.ID_ANY, u"Actualizar cambios", wx.Point( 0,1 ), wx.DefaultSize, 0 )
@@ -174,7 +186,10 @@ class frmEditBit ( wx.Frame ):
 		gbSizer1.AddGrowableCol( 1 )
 		gbSizer1.AddGrowableRow( 1 )
 		
-		self.SetSizer( gbSizer1 )
+		bSizer30.Add( gbSizer1, 0, wx.EXPAND, 5 )
+		
+		
+		self.SetSizer( bSizer30 )
 		self.Layout()
 		
 		self.Centre( wx.BOTH )
@@ -272,32 +287,32 @@ class dlgGenProg ( wx.Dialog ):
 class frmEditByte ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Editar variables Byte", pos = wx.DefaultPosition, size = wx.Size( 413,101 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Editar variables Byte", pos = wx.DefaultPosition, size = wx.Size( 530,503 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
-		gbSizer1 = wx.GridBagSizer( 0, 0 )
-		gbSizer1.SetFlexibleDirection( wx.BOTH )
-		gbSizer1.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+		self.gbSizer1 = wx.GridBagSizer( 0, 0 )
+		self.gbSizer1.SetFlexibleDirection( wx.BOTH )
+		self.gbSizer1.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
 		self.BytesTxtCtrl = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.Point( 1,0 ), wx.DefaultSize, 0 )
-		gbSizer1.Add( self.BytesTxtCtrl, wx.GBPosition( 0, 1 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
+		self.gbSizer1.Add( self.BytesTxtCtrl, wx.GBPosition( 0, 1 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 		
 		self.BytesSpinCtrl = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.Point( 0,0 ), wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 255, 1 )
-		gbSizer1.Add( self.BytesSpinCtrl, wx.GBPosition( 0, 0 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.EXPAND, 5 )
+		self.gbSizer1.Add( self.BytesSpinCtrl, wx.GBPosition( 0, 0 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.EXPAND, 5 )
 		
 		self.frmEditByte_btn_Actualizar = wx.Button( self, wx.ID_ANY, u"Actualizar cambios", wx.Point( 0,1 ), wx.DefaultSize, 0 )
-		gbSizer1.Add( self.frmEditByte_btn_Actualizar, wx.GBPosition( 1, 0 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+		self.gbSizer1.Add( self.frmEditByte_btn_Actualizar, wx.GBPosition( 1, 0 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 		
 		self.frmEditByte_btn_Deshacer = wx.Button( self, wx.ID_ANY, u"Deshacer cambios", wx.Point( 1,1 ), wx.DefaultSize, 0 )
-		gbSizer1.Add( self.frmEditByte_btn_Deshacer, wx.GBPosition( 1, 1 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+		self.gbSizer1.Add( self.frmEditByte_btn_Deshacer, wx.GBPosition( 1, 1 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 		
 		
-		gbSizer1.AddGrowableCol( 0 )
-		gbSizer1.AddGrowableCol( 1 )
-		gbSizer1.AddGrowableRow( 1 )
+		self.gbSizer1.AddGrowableCol( 0 )
+		self.gbSizer1.AddGrowableCol( 1 )
+		self.gbSizer1.AddGrowableRow( 1 )
 		
-		self.SetSizer( gbSizer1 )
+		self.SetSizer( self.gbSizer1 )
 		self.Layout()
 		
 		self.Centre( wx.BOTH )
