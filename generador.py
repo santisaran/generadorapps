@@ -81,6 +81,7 @@ class MiFrame(gui.frmPpal):
             # Agrega el item al diccionario para la aplicación i
             self.Bind ( wx.EVT_MENU, self.OnAbrirApp, id = item.GetId() )
             item.Enable ( True )
+            
             boton = wx.Button( self.scroolled, wx.ID_ANY,\
                 u"Aplicación: %0.2d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
             self.sizerbotones.Add( boton, 0, wx.ALL, 5 )
@@ -1401,6 +1402,17 @@ class mifrmEditBit ( gui.frmEditBit ):
         self.item = item
         global miBits
         self.miBits = miBits[:]
+        for i in range(256):            
+            boton = wx.Button( self.BitScroled, wx.ID_ANY,\
+                u"Bit %0.2d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+            self.gridBotones.Add( boton, 0 , wx.ALL , 5 )
+            boton.Bind(wx.EVT_BUTTON, self.OnModificarTexto)   
+            texto  = wx.StaticText( self, wx.ID_ANY, u"Bit %i"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+            texto.Wrap( -1 )
+            self.gridBotones.Add( texto, 0, wx.ALL, 5 ) 
+    
+    def OnModificarTexto ( self , event ):
+        event.Skip()
 
     def OnBitSpinCtrl( self, event ):
         """ Function doc
