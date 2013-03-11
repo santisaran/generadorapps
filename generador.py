@@ -1402,14 +1402,19 @@ class mifrmEditBit ( gui.frmEditBit ):
         self.item = item
         global miBits
         self.miBits = miBits[:]
-        for i in range(256):            
-            boton = wx.Button( self.BitScroled, wx.ID_ANY,\
-                u"Bit %0.2d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
-            self.gridBotones.Add( boton, 0 , wx.ALL , 5 )
-            boton.Bind(wx.EVT_BUTTON, self.OnModificarTexto)   
-            texto  = wx.StaticText( self, wx.ID_ANY, u"Bit %i"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+        for i,valorBit in enumerate(self.miBits):
+
+            texto  = wx.StaticText( self, wx.ID_ANY, u"Bit Nº: %d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
             texto.Wrap( -1 )
-            self.gridBotones.Add( texto, 0, wx.ALL, 5 ) 
+            self.gridBotones.Add( texto, 0, wx.ALL, 5 )
+
+            textCtrl = wx.TextCtrl( self.BitScroled, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+            self.gridBotones.Add( textCtrl, 0, wx.ALL, 5 ) 
+            textCtrl.SetValue(valorBit)
+
+        self.BitScroled.SetSizer( self.gridBotones )
+        self.BitScroled.Layout()
+        self.gridBotones.Fit( self.BitScroled )
     
     def OnModificarTexto ( self , event ):
         event.Skip()

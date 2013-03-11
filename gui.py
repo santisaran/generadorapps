@@ -149,7 +149,7 @@ class frmPpal ( wx.Frame ):
 class frmEditBit ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Editar variables  Bits", pos = wx.DefaultPosition, size = wx.Size( 441,293 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Editar variables  Bits", pos = wx.DefaultPosition, size = wx.Size( 441,392 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -158,6 +158,13 @@ class frmEditBit ( wx.Frame ):
 		self.BitScroled = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
 		self.BitScroled.SetScrollRate( 5, 5 )
 		self.gridBotones = wx.GridSizer( 0, 2, 0, 0 )
+		
+		self.m_staticText29 = wx.StaticText( self.BitScroled, wx.ID_ANY, u"MyLabel", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText29.Wrap( -1 )
+		self.gridBotones.Add( self.m_staticText29, 0, wx.ALL, 5 )
+		
+		self.m_textCtrl16 = wx.TextCtrl( self.BitScroled, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.gridBotones.Add( self.m_textCtrl16, 0, wx.ALL, 5 )
 		
 		
 		self.BitScroled.SetSizer( self.gridBotones )
