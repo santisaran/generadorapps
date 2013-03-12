@@ -1,6 +1,79 @@
 # -*- coding: utf-8 -*-
 
 from struct import pack,unpack
+
+ #bits definidos en el archivo CylocDefines.h
+DefinicionesBits = (
+    ("Contacto", u"Estado de la entrada contacto", "p2.13"),
+    ("BtnPanic", u"Estado de la entrada Pánico", "p2.10"),
+    ("pulsdesact", u"Estado de la entrada pulsdesact", "p0.17"),
+    ("Puerta", u"Estado de la entrada Puerta", "p1.10"),
+    ("Porton",u"Estado de la entrada Porton", "p2.11"),
+    ("Trailer",u"Estado de la entrada Trailer", "p2.12"),
+    ("SetCorteC",u"","p1.16"),
+    ("SetCorteNA",u"","p0.25"),
+    ("Aux1in",u"","p0.01"),
+    ("Aux2in","",""),
+    ("SetCorte",u"Indica si se debe activar el rele de corte.",""),
+    ("Aux1out","",""),
+    ("Aux2out","",""),
+    ("an0Zonas",u"""True => usar zonas, False => devolver valor AD
+\t\t\tb1|b0 |zona
+\t\t\tLas zonas son 0 | 0 |a
+\t\t\t              0 | 1 |b
+\t\t\t              1 | 0 |c
+\t\t\t              1 | 1 |d""",""),
+
+    ("an0Zb0",u"indicador zona bit bajo",""),
+    ("an0Zb1",u"indicador zona bit alto",""),
+    
+    ("an0ZVal",u"True => dato de zona válido",""),
+    ("an0",u"""False, no hay datos correctos
+True, valor válido con antirrebote. (el antirrebote se define con:
+Frecan0, frecuencia de muestreo en ms de entrada analógica.
+CNTan0, Contador cuantos an0 dentro del rango.
+CfgCNTan0, Cantidad de muestras para validar valor An0. """,""),
+    
+    ("an1val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an1VALOR]",""),
+    ("an2val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an2VALOR]",""),
+    ("an3val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an3VALOR]",""),
+    ("an4val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an4VALOR]",""),
+    ("an5val", u"""True => dato válido en el vector MemoriaUsuario_Bytes[an5VALOR]""",""),
+    
+    ("LeerAn0",u"True => petición de lectura AD0.",""),
+    ("LeerAn1",u"True => petición de lectura AD1.",""),
+    ("LeerAn2",u"True => petición de lectura AD2.",""),
+    ("LeerAn3",u"True => petición de lectura AD3.",""),
+    ("LeerAn4",u"True => petición de lectura AD4.",""),
+    ("LeerAn5",u"True => petición de lectura AD5.",""),
+    
+    ("LeerXYZ","",""),
+    
+    ("Led",u"Led prendido u apagado.",""),
+    ("Destellar","",""),
+    ("CLed","",""),
+    
+    ("Aux1CfgInOut",u"Aux1 1=salida, 0=entrada",""),
+    ("Aux2CfgInOut",u"Aux2 1=salida, 0=entrada",""),
+
+    ("ErrorLed",u"Falla salida de led.",""),
+    ("ErrorCorte","",""),
+    ("ErrorAux1","","" ),
+    ("ErrorAux2","","" ),
+    
+    ("Accel_Flag_DR",u"Flag indicador de dato nuevo de aceleracion disponible",""),
+    ("Accel_Flag_Choque", u"Flag de accidente. Para mas informacion, ver Registro STAT",""),
+    
+    ("Pulsos","",""),
+    ("Buzz","",""),
+    ("AntenaGPSCorto","",""),
+    ("AntenaGPSPresente","",""),
+    ("AntenaGSMCorto","",""),
+    ("AntenaGSMPresente","","")
+)
+
+
+
 #Defines compartidos con C si se hace modificación, hace la misma modificación en el codigo c
 Estados = ( "ESTADO0","ESTADO1","ESTADO2","ESTADO3","ESTADO4","ESTADO5","ESTADO6",\
     "ESTADO7","ESTADO8","ESTADO9")
@@ -92,7 +165,11 @@ tipoResultados      = 0x33
 tipoAppCompleta     = 0x44
 Bits = []
 for i in range(Cantidad_Bits_Usuario):
-    Bits.append("Bit %0.3d"%i)
+    if len(DefinicionesBits)>i:
+        Bits.append(DefinicionesBits[i][0:2])
+    else:
+        Bits.append(["Bit %0.3d"%i,u"Sin Descripción"])
+        
 Bytes = []
 for i in range(Cantidad_Bytes_Usuario):
     Bytes.append("Byte %0.3d"%i)
