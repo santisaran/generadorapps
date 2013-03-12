@@ -56,6 +56,9 @@ class frmPpal ( wx.Frame ):
 		self.m_variables_bit = wx.MenuItem( self.m_variables, wx.ID_ANY, u"Editar variables Bit", wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_variables.AppendItem( self.m_variables_bit )
 		
+		self.mVariablesSMS = wx.MenuItem( self.m_variables, wx.ID_ANY, u"Editar Mensajes de Texto", wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_variables.AppendItem( self.mVariablesSMS )
+		
 		self.m_menubar1.Append( self.m_variables, u"Va&riables" ) 
 		
 		self.m_aplicaciones = wx.Menu()
@@ -102,6 +105,7 @@ class frmPpal ( wx.Frame ):
 		self.Bind( wx.EVT_MENU, self.OnCerrar, id = self.OnClose.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnEditarBytes, id = self.m_variables_Byte.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnEditarBit, id = self.m_variables_bit.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnEditarSMS, id = self.mVariablesSMS.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnDriverAnalog, id = self.m_drivers_analog.GetId() )
 		self.m_button22.Bind( wx.EVT_BUTTON, self.OnTest )
 	
@@ -135,6 +139,9 @@ class frmPpal ( wx.Frame ):
 	def OnEditarBit( self, event ):
 		event.Skip()
 	
+	def OnEditarSMS( self, event ):
+		event.Skip()
+	
 	def OnDriverAnalog( self, event ):
 		event.Skip()
 	
@@ -157,14 +164,9 @@ class frmEditBit ( wx.Frame ):
 		
 		self.BitScroled = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
 		self.BitScroled.SetScrollRate( 5, 5 )
-		self.gridBotones = wx.GridSizer( 0, 2, 0, 0 )
-		
-		self.m_staticText29 = wx.StaticText( self.BitScroled, wx.ID_ANY, u"MyLabel", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText29.Wrap( -1 )
-		self.gridBotones.Add( self.m_staticText29, 0, wx.ALL, 5 )
-		
-		self.m_textCtrl16 = wx.TextCtrl( self.BitScroled, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.gridBotones.Add( self.m_textCtrl16, 0, wx.ALL, 5 )
+		self.gridBotones = wx.FlexGridSizer( 0, 2, 0, 1 )
+		self.gridBotones.SetFlexibleDirection( wx.BOTH )
+		self.gridBotones.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
 		
 		self.BitScroled.SetSizer( self.gridBotones )
@@ -172,28 +174,16 @@ class frmEditBit ( wx.Frame ):
 		self.gridBotones.Fit( self.BitScroled )
 		bSizer30.Add( self.BitScroled, 1, wx.EXPAND |wx.ALL, 0 )
 		
-		gbSizer1 = wx.GridBagSizer( 0, 0 )
-		gbSizer1.SetFlexibleDirection( wx.BOTH )
-		gbSizer1.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
-		
-		self.BitsTxtCtrl = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.Point( 1,0 ), wx.DefaultSize, 0 )
-		gbSizer1.Add( self.BitsTxtCtrl, wx.GBPosition( 0, 1 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
-		
-		self.BitsSpinCtrl = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.Point( 0,0 ), wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 255, 254 )
-		gbSizer1.Add( self.BitsSpinCtrl, wx.GBPosition( 0, 0 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.EXPAND, 5 )
+		bSizer31 = wx.BoxSizer( wx.HORIZONTAL )
 		
 		self.m_button15 = wx.Button( self, wx.ID_ANY, u"Actualizar cambios", wx.Point( 0,1 ), wx.DefaultSize, 0 )
-		gbSizer1.Add( self.m_button15, wx.GBPosition( 1, 0 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+		bSizer31.Add( self.m_button15, 1, wx.ALL, 5 )
 		
 		self.m_button16 = wx.Button( self, wx.ID_ANY, u"Deshacer cambios", wx.Point( 1,1 ), wx.DefaultSize, 0 )
-		gbSizer1.Add( self.m_button16, wx.GBPosition( 1, 1 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+		bSizer31.Add( self.m_button16, 1, wx.ALL, 5 )
 		
 		
-		gbSizer1.AddGrowableCol( 0 )
-		gbSizer1.AddGrowableCol( 1 )
-		gbSizer1.AddGrowableRow( 1 )
-		
-		bSizer30.Add( gbSizer1, 0, wx.EXPAND, 5 )
+		bSizer30.Add( bSizer31, 0, wx.EXPAND, 5 )
 		
 		
 		self.SetSizer( bSizer30 )
@@ -203,8 +193,6 @@ class frmEditBit ( wx.Frame ):
 		
 		# Connect Events
 		self.Bind( wx.EVT_CLOSE, self.OnClose )
-		self.BitsTxtCtrl.Bind( wx.EVT_TEXT, self.OnText )
-		self.BitsSpinCtrl.Bind( wx.EVT_SPINCTRL, self.OnBitSpinCtrl )
 		self.m_button15.Bind( wx.EVT_BUTTON, self.OnEditBit )
 		self.m_button16.Bind( wx.EVT_BUTTON, self.OnUndoBit )
 	
@@ -216,75 +204,11 @@ class frmEditBit ( wx.Frame ):
 	def OnClose( self, event ):
 		event.Skip()
 	
-	def OnText( self, event ):
-		event.Skip()
-	
-	def OnBitSpinCtrl( self, event ):
-		event.Skip()
-	
 	def OnEditBit( self, event ):
 		event.Skip()
 	
 	def OnUndoBit( self, event ):
 		event.Skip()
-	
-
-###########################################################################
-## Class dlgGenProg
-###########################################################################
-
-class dlgGenProg ( wx.Dialog ):
-	
-	def __init__( self, parent ):
-		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Generador de Programación", pos = wx.DefaultPosition, size = wx.Size( 394,146 ), style = wx.DEFAULT_DIALOG_STYLE|wx.DIALOG_NO_PARENT )
-		
-		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
-		
-		bSizer2 = wx.BoxSizer( wx.VERTICAL )
-		
-		gSizer2 = wx.GridSizer( 0, 2, 0, 0 )
-		
-		self.m_staticText1 = wx.StaticText( self, wx.ID_ANY, u"Ingrese un título para el programa nuevo", wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_staticText1.Wrap( -1 )
-		gSizer2.Add( self.m_staticText1, 0, wx.ALL|wx.ALIGN_BOTTOM, 5 )
-		
-		self.m_genprg_btn_ok = wx.Button( self, wx.ID_ANY, u"Ok", wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer2.Add( self.m_genprg_btn_ok, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_BOTTOM, 5 )
-		
-		
-		gSizer2.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
-		
-		self.m_genprg_btn_cancel = wx.Button( self, wx.ID_ANY, u"Cancel", wx.Point( -1,-1 ), wx.DefaultSize, 0 )
-		gSizer2.Add( self.m_genprg_btn_cancel, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
-		
-		
-		bSizer2.Add( gSizer2, 1, wx.EXPAND, 5 )
-		
-		self.txtctrl_prog = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer2.Add( self.txtctrl_prog, 0, wx.ALL|wx.EXPAND, 5 )
-		
-		
-		self.SetSizer( bSizer2 )
-		self.Layout()
-		
-		self.Centre( wx.BOTH )
-		
-		# Connect Events
-		self.m_genprg_btn_ok.Bind( wx.EVT_BUTTON, self.OnGenPrgOk )
-		self.m_genprg_btn_cancel.Bind( wx.EVT_BUTTON, self.OnGenPrgCancel )
-		self.txtctrl_prog.Bind( wx.EVT_TEXT_ENTER, self.OnGenPrgOk )
-	
-	def __del__( self ):
-		pass
-	
-	
-	# Virtual event handlers, overide them in your derived class
-	def OnGenPrgOk( self, event ):
-		event.Skip()
-	
-	def OnGenPrgCancel( self, event ):
-		event.Skip()
-	
 	
 
 ###########################################################################
@@ -294,40 +218,42 @@ class dlgGenProg ( wx.Dialog ):
 class frmEditByte ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Editar variables Byte", pos = wx.DefaultPosition, size = wx.Size( 530,503 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 522,397 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
-		self.gbSizer1 = wx.GridBagSizer( 0, 0 )
-		self.gbSizer1.SetFlexibleDirection( wx.BOTH )
-		self.gbSizer1.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+		bSizer32 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.BytesTxtCtrl = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.Point( 1,0 ), wx.DefaultSize, 0 )
-		self.gbSizer1.Add( self.BytesTxtCtrl, wx.GBPosition( 0, 1 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
-		
-		self.BytesSpinCtrl = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.Point( 0,0 ), wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 255, 1 )
-		self.gbSizer1.Add( self.BytesSpinCtrl, wx.GBPosition( 0, 0 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT|wx.EXPAND, 5 )
-		
-		self.frmEditByte_btn_Actualizar = wx.Button( self, wx.ID_ANY, u"Actualizar cambios", wx.Point( 0,1 ), wx.DefaultSize, 0 )
-		self.gbSizer1.Add( self.frmEditByte_btn_Actualizar, wx.GBPosition( 1, 0 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
-		
-		self.frmEditByte_btn_Deshacer = wx.Button( self, wx.ID_ANY, u"Deshacer cambios", wx.Point( 1,1 ), wx.DefaultSize, 0 )
-		self.gbSizer1.Add( self.frmEditByte_btn_Deshacer, wx.GBPosition( 1, 1 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+		self.m_scrolledWindow3 = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
+		self.m_scrolledWindow3.SetScrollRate( 5, 5 )
+		self.gridBotones = wx.FlexGridSizer( 0, 2, 0, 0 )
+		self.gridBotones.SetFlexibleDirection( wx.BOTH )
+		self.gridBotones.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
 		
-		self.gbSizer1.AddGrowableCol( 0 )
-		self.gbSizer1.AddGrowableCol( 1 )
-		self.gbSizer1.AddGrowableRow( 1 )
+		self.m_scrolledWindow3.SetSizer( self.gridBotones )
+		self.m_scrolledWindow3.Layout()
+		self.gridBotones.Fit( self.m_scrolledWindow3 )
+		bSizer32.Add( self.m_scrolledWindow3, 1, wx.EXPAND |wx.ALL, 5 )
 		
-		self.SetSizer( self.gbSizer1 )
+		bSizer34 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.frmEditByte_btn_Actualizar = wx.Button( self, wx.ID_ANY, u"Actualizar cambios", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer34.Add( self.frmEditByte_btn_Actualizar, 1, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 5 )
+		
+		self.frmEditByte_btn_Deshacer = wx.Button( self, wx.ID_ANY, u"Deshacer cambios", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer34.Add( self.frmEditByte_btn_Deshacer, 1, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 5 )
+		
+		
+		bSizer32.Add( bSizer34, 0, wx.EXPAND, 5 )
+		
+		
+		self.SetSizer( bSizer32 )
 		self.Layout()
 		
 		self.Centre( wx.BOTH )
 		
 		# Connect Events
-		self.Bind( wx.EVT_CLOSE, self.OnClose )
-		self.BytesTxtCtrl.Bind( wx.EVT_TEXT, self.OnText )
-		self.BytesSpinCtrl.Bind( wx.EVT_SPINCTRL, self.OnByteSpinCtrl )
 		self.frmEditByte_btn_Actualizar.Bind( wx.EVT_BUTTON, self.OnEditByte )
 		self.frmEditByte_btn_Deshacer.Bind( wx.EVT_BUTTON, self.OnUndoByte )
 	
@@ -336,15 +262,6 @@ class frmEditByte ( wx.Frame ):
 	
 	
 	# Virtual event handlers, overide them in your derived class
-	def OnClose( self, event ):
-		event.Skip()
-	
-	def OnText( self, event ):
-		event.Skip()
-	
-	def OnByteSpinCtrl( self, event ):
-		event.Skip()
-	
 	def OnEditByte( self, event ):
 		event.Skip()
 	

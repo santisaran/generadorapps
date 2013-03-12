@@ -6,13 +6,15 @@
 #  Copyright 2013 santiago <spaleka@cylgem.com.ar>
 #
 
+
+#TODO usar isModified() para guardar cambios.
 import gui
 import wx
 import os
 import shelve
 from apps import *
 
-
+VERSION = 0.1
 global DIRACTUAL
 #DIRACTUAL = os.getenv("HOME")
 DIRACTUAL = os.getcwd()
@@ -82,10 +84,10 @@ class MiFrame(gui.frmPpal):
             self.Bind ( wx.EVT_MENU, self.OnAbrirApp, id = item.GetId() )
             item.Enable ( True )
             
-            boton = wx.Button( self.scroolled, wx.ID_ANY,\
-                u"Aplicación: %0.2d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
-            self.sizerbotones.Add( boton, 0, wx.ALL, 5 )
-            boton.Bind(wx.EVT_BUTTON, self.OnImprimirApp)
+            #boton = wx.Button( self.scroolled, wx.ID_ANY,\
+                #u"Aplicación: %0.2d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+            #self.sizerbotones.Add( boton, 0, wx.ALL, 5 )
+            #boton.Bind(wx.EVT_BUTTON, self.OnImprimirApp)
         item = wx.MenuItem( self.m_aplicaciones, wx.ID_ANY, u"Copiar Aplicación",\
             wx.EmptyString, wx.ITEM_NORMAL )
         self.m_aplicaciones.AppendItem(item)
@@ -343,6 +345,8 @@ class MiFrame(gui.frmPpal):
             NombreArchivo = self.archivoActual[:]
 
     def OnGenerar( self , event):
+        """Genera un archivo de configuración binario con todos los datos, 
+            debe colocarse en la tarjeta sd"""
         global DIRACTUAL
         dlg = wx.FileDialog(
             self, message="Generar en...", defaultDir=DIRACTUAL,
@@ -371,7 +375,6 @@ class MiFrame(gui.frmPpal):
 
     def Guardar(self):
         #TODO generar archivo como el anterior
-        #TODO generar archivo para cyloc.
         global NombreArchivo
         global Modificado
         global DIRACTUAL
@@ -402,6 +405,7 @@ class MiFrame(gui.frmPpal):
                     shelf["miValoresEntradas"] = miValoresEntradas
                     global miAnalogica
                     shelf["miAnalogica"] = miAnalogica
+                    shelf["version"] = VERSION
                     shelf.close()
                     Modificado = False
                     dlg.Destroy()
@@ -1397,27 +1401,42 @@ class miDlgGenError (gui.DlgGenError):
 
 class mifrmEditBit ( gui.frmEditBit ):
     """Frame para editar los nombres de los bits"""
+    
+    
     def __init__( self, parent, item):
         gui.frmEditBit.__init__ ( self, parent)
         self.item = item
         global miBits
         self.miBits = miBits[:]
+        self.BitsTextCtrl = [] #lista con los wx.TextCtrl de edición de nombre de bit.
         for i,valorBit in enumerate(self.miBits):
 
-            texto  = wx.StaticText( self, wx.ID_ANY, u"Bit Nº: %d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+            texto  = wx.StaticText( self.BitScroled, wx.ID_ANY, u"Bit Nº: %d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
             texto.Wrap( -1 )
-            self.gridBotones.Add( texto, 0, wx.ALL, 5 )
-
-            textCtrl = wx.TextCtrl( self.BitScroled, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-            self.gridBotones.Add( textCtrl, 0, wx.ALL, 5 ) 
-            textCtrl.SetValue(valorBit)
+            self.gridBotones.Add( texto, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
+            # En Windows no se puede hacer wx.TextCtrl readonly luego\
+            # de creado, por lo que debe hacerce cuando se crea:
+            if isinstance(valorBit,tuple):
+                textCtrl = wx.TextCtrl( self.BitScroled, wx.ID_ANY,\
+                    wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,  wx.TE_READONLY )    
+            else:
+                textCtrl = wx.TextCtrl( self.BitScroled, wx.ID_ANY, \
+                    wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )    
+            self.gridBotones.Add( textCtrl, 0, wx.ALL|wx.ALIGN_LEFT, 5 ) 
+            textCtrl.SetValue(valorBit[0])
+            #staticline1 = wx.StaticLine( self.BitScroled, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
+            #self.gridBotones.Add( staticline1, 1, wx.ALL|wx.EXPAND, 5 )            
+            self.BitsTextCtrl.append(textCtrl)
 
         self.BitScroled.SetSizer( self.gridBotones )
         self.BitScroled.Layout()
+        self.BitScroled.SetAutoLayout(True)
         self.gridBotones.Fit( self.BitScroled )
+    
     
     def OnModificarTexto ( self , event ):
         event.Skip()
+
 
     def OnBitSpinCtrl( self, event ):
         """ Function doc
@@ -1426,30 +1445,50 @@ class mifrmEditBit ( gui.frmEditBit ):
         @return RETURN: No
         """
         spin = self.BitsSpinCtrl.GetValue()
-        self.BitsTxtCtrl.SetValue(self.miBits[spin])
+        self.BitsTxtCtrl.SetValue(self.miBits[spin][0])
 
-    def OnText(self,event):
-        """ Function doc
-        Carga el valor ingresado (String) en el vector de bis
-        @param PARAM: event
-        @return RETURN: No
-        """
-        self.miBits[self.BitsSpinCtrl.GetValue()] = self.BitsTxtCtrl.GetValue()
 
     def OnEditBit( self, event ):
+        """guarda los cambios realizados"""
         global miBits
+        for i,txtctrl in enumerate(self.BitsTextCtrl):
+            if txtctrl.IsModified():
+                self.miBits[i][0] = txtctrl.GetValue()
+                
         miBits = self.miBits[:]
         global Modificado
         Modificado = True
 
+
     def OnUndoBit( self, event ):
         global miBits
         self.miBits = miBits[:]
-        self.BitsTxtCtrl.SetValue(self.miBits[self.BitsSpinCtrl.GetValue()])
+        for i,txtctrl in enumerate(self.BitsTextCtrl):
+            txtctrl.SetValue(self.miBits[i][0])
+
 
     def OnClose(    self, event ):
         self.item.Enable(True)
         event.Skip()
+
+
+class infoPopup(wx.PopupTransientWindow):
+    """Adds a bit of text and mouse movement to the wx.PopupWindow"""
+    def __init__(self, parent, style, log,text):
+        wx.PopupTransientWindow.__init__(self, parent, style)
+        self.log = log
+        self.SetBackgroundColour("#FFB6C1")
+        st = wx.StaticText(self, -1,text,
+                          pos=(10,10))
+        sz = st.GetBestSize()
+        self.SetSize( (sz.width+20, sz.height+20) )
+
+    def ProcessLeftDown(self, evt):
+        return False
+
+    def OnDismiss(self):
+        pass
+
 
 
 ########################################################################
