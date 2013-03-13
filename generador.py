@@ -16,6 +16,7 @@ import wx
 import os
 import shelve
 from apps import *
+from generarheader import tupleBits,tupleBytes
 
 VERSION = 0.1
 global DIRACTUAL
