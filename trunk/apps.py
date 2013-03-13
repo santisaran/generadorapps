@@ -74,81 +74,80 @@ CfgCNTan0, Cantidad de muestras para validar valor An0. """,""),
 
 DefinicionesBytes = (\
     ("FrecContacto",    u"Frecuencia de muestreo contacto"),
-    ("CNTContacto",	    u"Contador cuantos Contacto iguales"),
-    ("CfgCNTContacto",	u"Cantidad de muestras para validar Contacto"),
-    ("FrecAux1in",	   	u"Frecuencia de muestreo en ms de Aux1in"),
+    ("CNTContacto",     u"Contador cuantos Contacto iguales"),
+    ("CfgCNTContacto",  u"Cantidad de muestras para validar Contacto"),
+    ("FrecAux1in",      u"Frecuencia de muestreo en ms de Aux1in"),
     ("CfgCNTAux1in",    u"Cantidad de muestras para validar Aux1in"),
-    ("CNTAux1in",		u"Contador de Aux1in iguales"),	
-    ("FrecAux2in",	   	u"Frecuencia de muestreo en ms de Aux1in"),
-    ("CfgCNTAux2in",    u"Cantidad de muestras para validar Aux1in"),
-    ("CNTAux2in",		u"Contador de Aux1in iguales"),
-    ("FrecBtnPanic",	u"Frecuencia de muestreo en ms de btn pánico"),	
+    ("CNTAux1in",       u"Contador de Aux1in iguales"), 
+    ("FrecAux2in",      u"Frecuencia de muestreo en ms de Aux2in"),
+    ("CfgCNTAux2in",    u"Cantidad de muestras para validar Aux2in"),
+    ("CNTAux2in",       u"Contador de Aux2in iguales"),
+    ("FrecBtnPanic",    u"Frecuencia de muestreo en ms de btn pánico"), 
     ("CNTBtnPanic",     u"Contador cuantos btn pánico iguales"),
     ("CfgCNTBtnPanic",  u"Cantidad de muestras para validar btn pánico"),
-    ("Frecpulsdesact",	u"Frecuencia de muestreo en ms del puls desactivacion"),	
-    ("CNTpulsdesact",   u"Contador cuantos puls desact iguales"),	
+    ("Frecpulsdesact",  u"Frecuencia de muestreo en ms del puls desactivacion"),    
+    ("CNTpulsdesact",   u"Contador cuantos puls desact iguales"),   
     ("CfgCNTpulsdesact",u"Cantidad de muestras para validar puls desactivacion"),
-    ("Frecpuerta",		u"Frecuencia de muestreo en ms de puerta"),	
-    ("CNTpuerta",    	u"Contador cuantos puerta iguales"),	
-    ("CfgCNTpuerta", 	u"Cantidad de muestras para validar puerta"),	
-    ("Frecporton",		u"Frecuencia de muestreo en ms de portón"),	
-    ("CNTporton",    	u"Contador cuantos portón iguales"),	
-    ("CfgCNTporton", 	u"Cantidad de muestras para validar portón"),
-    ("Frectrailer",	    u"Frecuencia de muestreo en ms de trailer"),	
-    ("CNTtrailer",    	u"Contador cuantos trailer iguales"),	
-    ("CfgCNTtrailer", 	u"Cantidad de muestras para validar trailer"),	
-    ("FrecCorteNA",	    u"Frecuencia de muestreo en ms de CorteNA"),	
-    ("CNTCorteNA",    	u"Contador cuantos CorteNA iguales"),
-    ("CfgCNTCorteNA", 	u"Cantidad de muestras para validar CorteNA"),	
-    ("FrecCorteC",	    u"Frecuencia de muestreo en ms de CorteC"),	
-    ("CNTCorteC",    	u"Contador cuantos CorteC iguales"),	
-    ("CfgCNTCorteC", 	u"Cantidad de muestras para validar CorteC"),	
-    ("TiempoCorte", 	u"Tiempo entre activacion y lectura de la realimentacion"),	
+    ("Frecpuerta",      u"Frecuencia de muestreo en ms de puerta"), 
+    ("CNTpuerta",       u"Contador cuantos puerta iguales"),    
+    ("CfgCNTpuerta",    u"Cantidad de muestras para validar puerta"),   
+    ("Frecporton",      u"Frecuencia de muestreo en ms de portón"), 
+    ("CNTporton",       u"Contador cuantos portón iguales"),    
+    ("CfgCNTporton",    u"Cantidad de muestras para validar portón"),
+    ("Frectrailer",     u"Frecuencia de muestreo en ms de trailer"),    
+    ("CNTtrailer",      u"Contador cuantos trailer iguales"),   
+    ("CfgCNTtrailer",   u"Cantidad de muestras para validar trailer"),  
+    ("FrecCorteNA",     u"Frecuencia de muestreo en ms de CorteNA"),    
+    ("CNTCorteNA",      u"Contador cuantos CorteNA iguales"),
+    ("CfgCNTCorteNA",   u"Cantidad de muestras para validar CorteNA"),  
+    ("FrecCorteC",      u"Frecuencia de muestreo en ms de CorteC"), 
+    ("CNTCorteC",       u"Contador cuantos CorteC iguales"),    
+    ("CfgCNTCorteC",    u"Cantidad de muestras para validar CorteC"),   
+    ("TiempoCorte",     u"Tiempo entre activacion y lectura de la realimentacion"), 
     ("TiempoAux1",      u""),
-    ("TiempoAux2",		u""),
-    ("CorteReintentos", u""),	
-    ("Aux1Reintentos",  u""),	
-    ("Aux2Reintentos",  u""),	
-    ("Frecan0",		    u"Frecuencia de muestreo en ms de entrada analógica"),	
-    ("FrecVccTest",	    u"Frecuencia de muestreo en ms de entrada Vcc"),	
-    ("CNTan0",          u"Contador cuantos an0 dentro del rango"),	
-    ("CfgCNTan0", 		u"Cantidad de muestras para validar AD0"),	
-    ("an0VALOR",		u"Valor de la conversión para AD0"),	
-    ("an0Zai",		    u"Límite inferior zona A"),
-    ("an0Zas",			u"Límite superior zona A"),	
-    ("an0Zbi",			u"Límite inferior zona B"),	
-    ("an0Zbs",		  	u"Límite superior zona B"),	
-    ("an0Zci",			u"Límite inferior zona C"),	
-    ("an0Zcs",			u"Límite superior zona C"),	
-    ("an0Zdi",      	u"Límite inferior zona D"),	
-    ("an0Zds",			u"Límite superior zona D"),	
-    ("an1VALOR",		u"Valor de la conversión para AD1"),	
-    ("an2VALOR",		u"Valor de la conversión para AD2"),	
-    ("an3VALOR",		u"Valor de la conversión para AD3"),	
-    ("an4VALOR",		u"Valor de la conversión para AD4"),	
-    ("an5VALOR",		u"Valor de la conversión para AD5"),	
-    ("an0ZONA",		    u""),	
-    ("VccVALOR",        u""),	
-    ("FrecLed",	        u"Frecuencia de encendido ms de LED"),	
-    ("CfgCNTLed",	    u"Configuración cantidad de destellos led cada vez que es disparado"),	
-    ("CNTLed",    	    u""),	
-    ("DutyLed",	        u"porcentaje apagado encendido 50ms de paso"),	
-    ("CfgCNTCLed",""),	
-    ("TMRLed",	        u"Timer incrementado cada 1ms"),
-    ("Accel_X_MSB",	    u"MSB de la aceleracion Actual eje X"),	
-    ("Accel_X_LSB",	    u"LSB de la aceleracion Actual eje X"),	
-    ("Accel_Y_MSB",	    u"MSB de la aceleracion Actual eje Y"),
-    ("Accel_Y_LSB",	    u"LSB de la aceleracion Actual eje Y"),	
-    ("Accel_Z_MSB",	    u"MSB de la aceleracion Actual eje Z"),
-    ("Accel_Z_LSB",	    u"LSB de la aceleracion Actual eje Z"),	
-    ("Accel_StChoque",	u"Copia del registro STATE del detector de transitorios del acelerometro\nActualizado solo cuando hay un choque"),	
-    ("Frecbuzz",		u""),
-    ("CfgCNTbuzz",	    u""),	
-    ("CNTbuzz",		    u""),	
-    ("Frecoscbuzz",	    u""),
-    ("Dutyenc",		    u"")
+    ("TiempoAux2",      u""),
+    ("CorteReintentos", u""),   
+    ("Aux1Reintentos",  u""),   
+    ("Aux2Reintentos",  u""),   
+    ("Frecan0",         u"Frecuencia de muestreo en ms de entrada analógica"),  
+    ("FrecVccTest",     u"Frecuencia de muestreo en ms de entrada Vcc"),    
+    ("CNTan0",          u"Contador cuantos an0 dentro del rango"),  
+    ("CfgCNTan0",       u"Cantidad de muestras para validar AD0"),  
+    ("an0VALOR",        u"Valor de la conversión para AD0"),    
+    ("an0Zai",          u"Límite inferior zona A"),
+    ("an0Zas",          u"Límite superior zona A"), 
+    ("an0Zbi",          u"Límite inferior zona B"), 
+    ("an0Zbs",          u"Límite superior zona B"), 
+    ("an0Zci",          u"Límite inferior zona C"), 
+    ("an0Zcs",          u"Límite superior zona C"), 
+    ("an0Zdi",          u"Límite inferior zona D"), 
+    ("an0Zds",          u"Límite superior zona D"), 
+    ("an1VALOR",        u"Valor de la conversión para AD1"),    
+    ("an2VALOR",        u"Valor de la conversión para AD2"),    
+    ("an3VALOR",        u"Valor de la conversión para AD3"),    
+    ("an4VALOR",        u"Valor de la conversión para AD4"),    
+    ("an5VALOR",        u"Valor de la conversión para AD5"),    
+    ("an0ZONA",         u""),   
+    ("VccVALOR",        u""),   
+    ("FrecLed",         u"Frecuencia de encendido ms de LED"),  
+    ("CfgCNTLed",       u"Configuración cantidad de destellos led cada vez que es disparado"),  
+    ("CNTLed",          u""),   
+    ("DutyLed",         u"porcentaje apagado encendido 50ms de paso"),  
+    ("CfgCNTCLed",""),  
+    ("TMRLed",          u"Timer incrementado cada 1ms"),
+    ("Accel_X_MSB",     u"MSB de la aceleracion Actual eje X"), 
+    ("Accel_X_LSB",     u"LSB de la aceleracion Actual eje X"), 
+    ("Accel_Y_MSB",     u"MSB de la aceleracion Actual eje Y"),
+    ("Accel_Y_LSB",     u"LSB de la aceleracion Actual eje Y"), 
+    ("Accel_Z_MSB",     u"MSB de la aceleracion Actual eje Z"),
+    ("Accel_Z_LSB",     u"LSB de la aceleracion Actual eje Z"), 
+    ("Accel_StChoque",  u"Copia del registro STATE del detector de transitorios del acelerometro\nActualizado solo cuando hay un choque"),  
+    ("Frecbuzz",        u""),
+    ("CfgCNTbuzz",      u""),   
+    ("CNTbuzz",         u""),   
+    ("Frecoscbuzz",     u""),
+    ("Dutyenc",         u"")
 )
-
 
 #Defines compartidos con C si se hace modificación, hace la misma modificación en el codigo c
 Estados = ( "ESTADO0","ESTADO1","ESTADO2","ESTADO3","ESTADO4","ESTADO5","ESTADO6",\
@@ -170,6 +169,13 @@ Cantidad_Estados = 10
 Cantidad_Bloques = 5
 Cantidad_Bits_Usuario = 256
 Cantidad_Bytes_Usuario = 256
+Cantidad_SMS    = 20
+
+DefinicionesBits = DefinicionesBits + tuple([("sendSMS%d"%i,u"Envía Mensaje de Texto Nº %d"%i) for i in range(Cantidad_SMS)])
+
+SMS = []
+for i in range(Cantidad_SMS):
+    SMS.append("")
 
 #/*
 #* BLOQUES:
@@ -308,40 +314,53 @@ Analogica = {"Asup":100,"Ainf":90,"Bsup":80,"Binf":70,"Csup":60,"Cinf":50,\
 
 #Acerca del modo : 0 modo 4 zonas, 1 modo valor ADC.
 
-Header_App = 0x01
-Header_Bloques = 0x02
-Header_Estado = 0x03
-Header_Condicion = 0x04
-Header_Resultado = 0x05
+Header_App          = 0x01
+Header_Bloques      = 0x02
+Header_Estado       = 0x03
+Header_Condicion    = 0x04
+Header_Resultado    = 0x05
+Header_SMS          = 0x06
 
 
 def GenerarBin(programa):
     binario = ""
     for app in programa:
         binario = binario + chr(0xAA) + chr(Header_App)
-        binario = binario + chr(app.AppNum)
-        binario = binario + chr(app.EstadoActual)
+        #Enviar encabezado de tipo App y tamaño
+        nextstring = ""
+        nextstring += chr(app.AppNum) + chr(app.EstadoActual)
+        binario   += chr(len(nextstring)) + nextstring
+        
         for i,estado in enumerate(app.Estados):
             EstadoAbs = (app.AppNum*Cantidad_Estados+i)
             #print "Estado: " + str(EstadoAbs)
+            
             binario = binario + chr(0xAA) + chr(Header_Estado)
-            binario = binario + chr(EstadoAbs & 0x0FF) + chr((EstadoAbs>>8) & 0x0FF)
-            binario = binario + str(chr(0xAA)) + str(chr(Header_Bloques))
+            nextstring = ""
+            nextstring += chr(EstadoAbs & 0x0FF) + chr((EstadoAbs>>8) & 0x0FF)
+            binario += chr(len(nextstring)) + nextstring
+            
+            binario += str(chr(0xAA)) + str(chr(Header_Bloques))
+            nextstring = ""
             for j,bloque in enumerate(estado.Bloques):               
                 BloqueAbs = app.AppNum*Cantidad_Estados*Cantidad_Bloques+i*Cantidad_Bloques+j
-                #print "bloque: " + str(BloqueAbs)
-                binario = binario +  chr(BloqueAbs & 0x0FF) + chr((BloqueAbs>>8) & 0x0FF)
-                binario = binario +\
-                    chr(bloque&0x0FF)+chr(bloque>>8&0x0FF)+\
+                nextstring += chr(BloqueAbs & 0x0FF) + chr((BloqueAbs>>8) & 0x0FF)
+                nextstring += chr(bloque&0x0FF)+chr(bloque>>8&0x0FF)+\
                     chr(bloque>>16&0x0FF)+chr(bloque>>24&0x0FF)
-                
+            binario += chr(len(nextstring)) + nextstring
                     
             binario = binario + chr(0xAA) + chr(Header_Condicion)
+            nextstring = ""
             for i in estado.Condiciones:
-                binario = binario + chr(i)
-            binario = binario + chr(0xAA) + chr(Header_Resultado)
+                nextstring += chr(i)
+            binario += chr(len(nextstring)) + nextstring
+            
+            nextstring = ""
+            binario += chr(0xAA) + chr(Header_Resultado)
             for i in estado.Resultados:
-                binario = binario + chr(i)
+                nextstring += chr(i)
+            binario += chr(len(nextstring)) + nextstring
+            
     return binario
 
 def main():

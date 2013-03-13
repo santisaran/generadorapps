@@ -8,6 +8,9 @@
 
 
 #TODO usar isModified() para guardar cambios.
+#TODO independizar MODIFIDACO para cada ventana
+#TODO guardar SMS en binario
+
 import gui
 import wx
 import os
@@ -31,6 +34,9 @@ miBits = Bits[:]
 global miBytes
 # Lista de nombres de los Bytes
 miBytes= Bytes[:]
+
+global miSMS
+miSMS = SMS[:]
 
 global ValoresEntradas
 #diccionario con los valores de las entradas
@@ -162,6 +168,13 @@ class MiFrame(gui.frmPpal):
         item.Enable(False)
         win = mifrmEditBit(self,item)
         win.Show()
+        
+    def OnEditarSMS( self, event ):
+        id = event.GetId()
+        item = self.GetMenuBar().FindItemById(id)
+        item.Enable(False)
+        win = mifrmSMS(self, item)
+        win.Show()
 
 
     def OnDriverAnalog( self, event ):
@@ -193,7 +206,6 @@ class MiFrame(gui.frmPpal):
                 item.Enable(False)
                 return
 
-
     def OnImprimirApp(self, event):
 
         boton = event.GetEventObject()
@@ -212,9 +224,9 @@ class MiFrame(gui.frmPpal):
         dlg.ShowModal()
 
     def OnCopiarDesde( self, event):
-        global DIRCATUAL
+        global DIRACTUAL
         dlg = wx.FileDialog(
-            self, message="Copiar Desde ...", defaultDir=DIRCATUAL,
+            self, message="Copiar Desde ...", defaultDir=DIRACTUAL,
             defaultFile="", wildcard=wildcard, style=wx.OPEN)
 
         dlg.SetFilterIndex(2)
@@ -247,8 +259,6 @@ class MiFrame(gui.frmPpal):
         dlg.Destroy()
 
 
-
-
     def OnNuevoPrograma ( self, event):
 
         global Modificado
@@ -277,13 +287,18 @@ class MiFrame(gui.frmPpal):
 
                 if self.Boton == wx.ID_CANCEL:
                    return
+                   
                 self.CrearNuevoPrograma()
+                
             elif val == wx.ID_NO:
+                
                 self.CrearNuevoPrograma()
         else:
+            
             self.CrearNuevoPrograma()
 
     def OnAbrirPrograma(self, event):
+        
         global DIRACTUAL
         global NombreArchivo
         self.OnNuevoPrograma(event)
@@ -313,6 +328,8 @@ class MiFrame(gui.frmPpal):
                 miValoresEntradas = shelf["miValoresEntradas"]
                 global miAnalogica
                 miAnalogica = shelf["miAnalogica"]
+                global miSMS
+                miSMS = shelf["SMS"]
             except:
                 pass
             shelf.close()
@@ -355,15 +372,23 @@ class MiFrame(gui.frmPpal):
 
             path = dlg.GetPath()
             if path[-2:] != "cb":
-
                 path = path + ".cb"
 
             archivobinario = open(path,'wb')
             binario = GenerarBin(self.aplicaciones)
+            #Agregar Sms al binario:
+            # 0xAA, HEADER_SMS, SIZE, NºSMS, SMS
+            for i in range(Cantidad_SMS):
+                binario +=  str(chr(0xAA)) + str(chr(Header_SMS))
+                nextstring = ""
+                nextstring += unicode(chr(i)) + miSMS[i]
+                binario += chr(len(nextstring)) + nextstring
+            archivobinario.write(binario)
             archivobinario.flush()
             archivobinario.close()
+            
         elif val == wx.ID_NO:
-
+            
             self.Boton = wx.ID_NO
 
         else:
@@ -372,6 +397,7 @@ class MiFrame(gui.frmPpal):
 
     def Guardar(self):
         #TODO generar archivo como el anterior
+        #TODO ver por que no guarda sms con acentos.
         global NombreArchivo
         global Modificado
         global DIRACTUAL
@@ -394,6 +420,8 @@ class MiFrame(gui.frmPpal):
                     NombreArchivo = path
                     shelf = shelve.open(NombreArchivo)
                     shelf["programa"] = self.aplicaciones
+                    global miSMS
+                    shelf["SMS"] = miSMS
                     global miBits
                     shelf["bits"] = miBits
                     global miBytes
@@ -442,6 +470,12 @@ class MiFrame(gui.frmPpal):
         miAnalogica = {}
         for i in Analogica.keys():
             miAnalogica[i] = Analogica[i]
+        global miBits
+        miBits = Bits[:]
+        global miBytes
+        miBytes = Bytes[:]
+        global miSMS
+        miSMS = SMS[:]
 
 
 
@@ -1428,28 +1462,28 @@ class mifrmEditBit ( gui.frmEditBit ):
         self.BitsTextCtrl = [] #lista con los wx.TextCtrl de edición de nombre de bit.
         for i,valorBit in enumerate(self.miBits):
 
-            texto  = wx.StaticText( self.BitScroled, wx.ID_ANY, u"Bit Nº: %d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+            texto  = wx.StaticText( self.BitScrolled, wx.ID_ANY, u"Bit Nº: %d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
             texto.Wrap( -1 )
             self.gridBotones.Add( texto, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
             # En Windows no se puede hacer wx.TextCtrl readonly luego\
             # de creado, por lo que debe hacerce cuando se crea:
             if isinstance(valorBit,tuple):
-                textCtrl = wx.TextCtrl( self.BitScroled, wx.ID_ANY,\
+                textCtrl = wx.TextCtrl( self.BitScrolled, wx.ID_ANY,\
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,  wx.TE_READONLY )    
             else:
-                textCtrl = wx.TextCtrl( self.BitScroled, wx.ID_ANY, \
+                textCtrl = wx.TextCtrl( self.BitScrolled, wx.ID_ANY, \
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )    
-            self.gridBotones.Add( textCtrl, 0, wx.ALL|wx.ALIGN_LEFT, 5 ) 
+            self.gridBotones.Add( textCtrl, 0, wx.ALL|wx.EXPAND, 5 ) 
             textCtrl.SetValue(valorBit[0])
             textCtrl.Bind( wx.EVT_RIGHT_DOWN, self.OnBtnDerecho )
-            #staticline1 = wx.StaticLine( self.BitScroled, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
+            #staticline1 = wx.StaticLine( self.BitScrolled, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
             #self.gridBotones.Add( staticline1, 1, wx.ALL|wx.EXPAND, 5 )            
             self.BitsTextCtrl.append(textCtrl)
 
-        self.BitScroled.SetSizer( self.gridBotones )
-        self.BitScroled.Layout()
-        self.BitScroled.SetAutoLayout(True)
-        self.gridBotones.Fit( self.BitScroled )
+        self.BitScrolled.SetSizer( self.gridBotones )
+        self.BitScrolled.Layout()
+        self.BitScrolled.SetAutoLayout(True)
+        self.gridBotones.Fit( self.BitScrolled )
     
     def OnBtnDerecho ( self , event ):
         txtctrl = event.GetEventObject()
@@ -1523,26 +1557,26 @@ class mifrmEditByte ( gui.frmEditByte ):
         self.BytesTextCtrl = [] #lista con los wx.TextCtrl de edición de nombre de byte
         for i,valorByte in enumerate(self.miBytes):
 
-            texto  = wx.StaticText( self.ByteScroled, wx.ID_ANY, u"Bit Nº: %d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+            texto  = wx.StaticText( self.ByteScrolled, wx.ID_ANY, u"Bit Nº: %d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
             texto.Wrap( -1 )
             self.gridBotones.Add( texto, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
             # En Windows no se puede hacer wx.TextCtrl readonly luego\
             # de creado, por lo que debe hacerce cuando se crea:
             if isinstance(valorByte,tuple):
-                textCtrl = wx.TextCtrl( self.ByteScroled, wx.ID_ANY,\
+                textCtrl = wx.TextCtrl( self.ByteScrolled, wx.ID_ANY,\
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,  wx.TE_READONLY )    
             else:
-                textCtrl = wx.TextCtrl( self.ByteScroled, wx.ID_ANY, \
+                textCtrl = wx.TextCtrl( self.ByteScrolled, wx.ID_ANY, \
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )    
-            self.gridBotones.Add( textCtrl, 0, wx.ALL|wx.ALIGN_LEFT, 5 ) 
+            self.gridBotones.Add( textCtrl, 0, wx.ALL|wx.EXPAND, 5 ) 
             textCtrl.SetValue(valorByte[0])
             textCtrl.Bind( wx.EVT_RIGHT_DOWN, self.OnBtnDerecho )           
             self.BytesTextCtrl.append(textCtrl)
 
-        self.ByteScroled.SetSizer( self.gridBotones )
-        self.ByteScroled.Layout()
-        self.ByteScroled.SetAutoLayout(True)
-        self.gridBotones.Fit( self.ByteScroled )
+        self.ByteScrolled.SetSizer( self.gridBotones )
+        self.ByteScrolled.Layout()
+        self.ByteScrolled.SetAutoLayout(True)
+        self.gridBotones.Fit( self.ByteScrolled )
         
         
     def OnBtnDerecho ( self , event ):
@@ -1550,8 +1584,8 @@ class mifrmEditByte ( gui.frmEditByte ):
         texto = self.miBytes[self.BytesTextCtrl.index(txtctrl)][1]
         win = infoPopup(self, wx.SIMPLE_BORDER,texto)
         
-        pos = btn.ClientToScreen( (0,0) )
-        sz =  btn.GetSize()
+        pos = txtctrl.ClientToScreen( (0,0) )
+        sz =  txtctrl.GetSize()
         win.Position(pos, (0, sz[1]))
         win.Popup()
 
@@ -1578,7 +1612,26 @@ class mifrmEditByte ( gui.frmEditByte ):
         for i,txtctrl in enumerate(self.BytesTextCtrl):
             txtctrl.SetValue(self.miBytes[i][0])
 
-    def OnClose(    self, event ):
+    def OnClose( self, event ):
+        cambios = False
+        for i,txtctrl in enumerate(self.BytesTextCtrl):
+            if txtctrl.IsModified():
+                cambios = True
+                break
+        if cambios:
+            dlg = wx.MessageDialog(self, u"Guardar cambios?",\
+            caption=u"Cerrar Edición Bytes",
+            style=wx.YES | wx.NO,
+            pos=wx.DefaultPosition)
+            val = dlg.ShowModal()
+            if val == wx.ID_YES:
+                global miBytes
+                for i,txtctrl in enumerate(self.BytesTextCtrl):
+                    if txtctrl.IsModified():
+                        self.miBytes[i][0] = txtctrl.GetValue()
+                        miBytes = self.miBytes[:]
+                    
+                
         self.item.Enable(True)
         event.Skip()
 
@@ -1837,6 +1890,105 @@ class miFrameZonas(gui.FrameZonas):
     def OnClose( self, event ):
         self.Destroy()
 
+class mifrmSMS ( gui.frmSMS ):
+    """Frame para editar SMS"""
+    def __init__( self, parent , item):
+        gui.frmSMS.__init__ ( self, parent )
+        self.item = item
+        self.item.Enable(False)
+        global miSMS
+        self.miSMS = miSMS[:]
+        self.ListaSMS = []
+        for i in range(Cantidad_SMS):
+            smsnum = wx.StaticText( self.SmsScrolled, wx.ID_ANY, u"SMS %i"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+            smsnum.Wrap( -1 )
+            self.GridSms.Add( smsnum, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+            texto = wx.TextCtrl( self.SmsScrolled, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
+            texto.SetMaxLength( 160 ) 
+            texto.SetValue(self.miSMS[i])
+            self.GridSms.Add( texto, 1, wx.ALL|wx.EXPAND, 5 )
+            botonborrar = wx.Button( self.SmsScrolled, wx.ID_ANY, u"Borrar SMS", wx.DefaultPosition, wx.DefaultSize, 0 )
+            self.GridSms.Add( botonborrar, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+            botonborrar.Bind(wx.EVT_BUTTON , self.OnBorrarSMS)
+            self.ListaSMS.append([texto,botonborrar]) #Asocio el boton borrar con el texto
+        self.SmsScrolled.SetSizer( self.GridSms )
+        self.SmsScrolled.Layout()
+        self.SmsScrolled.SetAutoLayout(True)
+        self.GridSms.Fit( self.SmsScrolled )
+            
+    def OnClose( self , event ):
+        cambios = False
+        for i,[txtctrl,boton] in enumerate(self.ListaSMS):
+            if txtctrl.IsModified():
+                cambios = True
+                break
+        if cambios:
+            dlg = wx.MessageDialog(self, u"Guardar cambios?",\
+            caption=u"Cerrar Edición SMS",
+            style=wx.YES | wx.NO,
+            pos=wx.DefaultPosition)
+            val = dlg.ShowModal()
+            if val == wx.ID_YES:
+                global miSMS
+                for i,[txtctrl,boton] in enumerate(self.ListaSMS):
+                    if txtctrl.IsModified():
+                        self.miSMS[i] = txtctrl.GetValue()
+                        miSMS = self.miSMS[:]
+        
+        self.item.Enable(True)
+        self.Destroy()
+        
+    def OnBorrarSMS ( self , event ):
+        btn = event.GetEventObject()
+        for texto ,boton in self.ListaSMS:
+            if btn is boton:
+                texto.SetValue("")
+                texto.SetModified(True)
+                
+    def OnGuardarSMS( self, event ):
+        global miSMS
+        for i,[txtctrl,btn] in enumerate(self.ListaSMS):
+            if txtctrl.IsModified():
+                self.miSMS[i] = txtctrl.GetValue()
+        miSMS = self.miSMS[:]
+        global Modificado
+        Modificado = True
+        
+    def OnUndo ( self , event ) :
+        global miSMS
+        self.miSMS= miSMS[:]
+        for i,[txtctrl,btn] in enumerate(self.ListaSMS):
+            txtctrl.SetValue(self.miSMS[i])
+    
+    def OnCargarSms( self, event ):
+        global DIRACTUAL
+        dlg = wx.FileDialog(
+            self, message="Copiar Desde ...", defaultDir=DIRACTUAL,
+            defaultFile="", wildcard=wildcard, style=wx.OPEN)
+        dlg.SetFilterIndex(2)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            try:
+                shelf = shelve.open(path)
+            except:
+                dlg = wx.MessageDialog(self, u"No es un archivo válido",\
+                    caption="Error al abrir archivo",\
+                    pos=wx.DefaultPosition)
+                dlg.ShowModal()
+                dlg.Destroy()
+                return
+            global miSMS
+            try: 
+                self.miSMS = shelf["SMS"]
+                for i,[txtctrl,btn] in enumerate(self.ListaSMS):
+                    txtctrl.SetValue(self.miSMS[i])
+                    txtctrl.SetModified(True)
+            except:
+                print "El archivo no tiene Valores SMS"
+                pass
+            shelf.close()
+        dlg.Destroy()
+
 def EsNumero( event):
 
     keycode = event.GetKeyCode()
@@ -1854,6 +2006,7 @@ def EsNumero( event):
 
 def GetTexto(elec):
     return elec.GetString(elec.GetSelection())
+
 
 
 aplicacion = wx.App(0)

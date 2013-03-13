@@ -162,17 +162,18 @@ class frmEditBit ( wx.Frame ):
 		
 		bSizer30 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.BitScroled = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
-		self.BitScroled.SetScrollRate( 5, 5 )
+		self.BitScrolled = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
+		self.BitScrolled.SetScrollRate( 5, 5 )
 		self.gridBotones = wx.FlexGridSizer( 0, 2, 0, 1 )
+		self.gridBotones.AddGrowableCol( 1 )
 		self.gridBotones.SetFlexibleDirection( wx.BOTH )
 		self.gridBotones.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
 		
-		self.BitScroled.SetSizer( self.gridBotones )
-		self.BitScroled.Layout()
-		self.gridBotones.Fit( self.BitScroled )
-		bSizer30.Add( self.BitScroled, 1, wx.EXPAND |wx.ALL, 0 )
+		self.BitScrolled.SetSizer( self.gridBotones )
+		self.BitScrolled.Layout()
+		self.gridBotones.Fit( self.BitScrolled )
+		bSizer30.Add( self.BitScrolled, 1, wx.EXPAND |wx.ALL, 0 )
 		
 		bSizer31 = wx.BoxSizer( wx.HORIZONTAL )
 		
@@ -224,17 +225,18 @@ class frmEditByte ( wx.Frame ):
 		
 		bSizer32 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.ByteScroled = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
-		self.ByteScroled.SetScrollRate( 5, 5 )
+		self.ByteScrolled = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
+		self.ByteScrolled.SetScrollRate( 5, 5 )
 		self.gridBotones = wx.FlexGridSizer( 0, 2, 0, 0 )
+		self.gridBotones.AddGrowableCol( 1 )
 		self.gridBotones.SetFlexibleDirection( wx.BOTH )
 		self.gridBotones.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
 		
-		self.ByteScroled.SetSizer( self.gridBotones )
-		self.ByteScroled.Layout()
-		self.gridBotones.Fit( self.ByteScroled )
-		bSizer32.Add( self.ByteScroled, 1, wx.EXPAND |wx.ALL, 5 )
+		self.ByteScrolled.SetSizer( self.gridBotones )
+		self.ByteScrolled.Layout()
+		self.gridBotones.Fit( self.ByteScrolled )
+		bSizer32.Add( self.ByteScrolled, 1, wx.EXPAND |wx.ALL, 5 )
 		
 		bSizer34 = wx.BoxSizer( wx.HORIZONTAL )
 		
@@ -254,6 +256,7 @@ class frmEditByte ( wx.Frame ):
 		self.Centre( wx.BOTH )
 		
 		# Connect Events
+		self.Bind( wx.EVT_CLOSE, self.OnClose )
 		self.frmEditByte_btn_Actualizar.Bind( wx.EVT_BUTTON, self.OnEditByte )
 		self.frmEditByte_btn_Deshacer.Bind( wx.EVT_BUTTON, self.OnUndoByte )
 	
@@ -262,10 +265,84 @@ class frmEditByte ( wx.Frame ):
 	
 	
 	# Virtual event handlers, overide them in your derived class
+	def OnClose( self, event ):
+		event.Skip()
+	
 	def OnEditByte( self, event ):
 		event.Skip()
 	
 	def OnUndoByte( self, event ):
+		event.Skip()
+	
+
+###########################################################################
+## Class frmSMS
+###########################################################################
+
+class frmSMS ( wx.Frame ):
+	
+	def __init__( self, parent ):
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Edición de SMS", pos = wx.DefaultPosition, size = wx.Size( 525,410 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		
+		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
+		
+		bSizer33 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.SmsScrolled = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
+		self.SmsScrolled.SetScrollRate( 5, 5 )
+		self.GridSms = wx.FlexGridSizer( 0, 3, 0, 0 )
+		self.GridSms.AddGrowableCol( 1 )
+		self.GridSms.SetFlexibleDirection( wx.BOTH )
+		self.GridSms.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+		
+		self.GridSms.SetMinSize( wx.Size( -1,50 ) ) 
+		
+		self.SmsScrolled.SetSizer( self.GridSms )
+		self.SmsScrolled.Layout()
+		self.GridSms.Fit( self.SmsScrolled )
+		bSizer33.Add( self.SmsScrolled, 1, wx.EXPAND |wx.ALL, 5 )
+		
+		bSizer35 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.m_button29 = wx.Button( self, wx.ID_ANY, u"&Guardar Cambios", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer35.Add( self.m_button29, 1, wx.ALIGN_CENTER_VERTICAL|wx.EXPAND|wx.ALL, 5 )
+		
+		self.m_button30 = wx.Button( self, wx.ID_ANY, u"&Deshacer Cambios", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer35.Add( self.m_button30, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
+		
+		self.m_button34 = wx.Button( self, wx.ID_ANY, u"&Cargar desde Archivo", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer35.Add( self.m_button34, 1, wx.ALL, 5 )
+		
+		
+		bSizer33.Add( bSizer35, 0, wx.EXPAND, 5 )
+		
+		
+		self.SetSizer( bSizer33 )
+		self.Layout()
+		
+		self.Centre( wx.BOTH )
+		
+		# Connect Events
+		self.Bind( wx.EVT_CLOSE, self.OnClose )
+		self.m_button29.Bind( wx.EVT_BUTTON, self.OnGuardarSMS )
+		self.m_button30.Bind( wx.EVT_BUTTON, self.OnUndo )
+		self.m_button34.Bind( wx.EVT_BUTTON, self.OnCargarSms )
+	
+	def __del__( self ):
+		pass
+	
+	
+	# Virtual event handlers, overide them in your derived class
+	def OnClose( self, event ):
+		event.Skip()
+	
+	def OnGuardarSMS( self, event ):
+		event.Skip()
+	
+	def OnUndo( self, event ):
+		event.Skip()
+	
+	def OnCargarSms( self, event ):
 		event.Skip()
 	
 
