@@ -224,17 +224,17 @@ class frmEditByte ( wx.Frame ):
 		
 		bSizer32 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.m_scrolledWindow3 = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
-		self.m_scrolledWindow3.SetScrollRate( 5, 5 )
+		self.ByteScroled = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
+		self.ByteScroled.SetScrollRate( 5, 5 )
 		self.gridBotones = wx.FlexGridSizer( 0, 2, 0, 0 )
 		self.gridBotones.SetFlexibleDirection( wx.BOTH )
 		self.gridBotones.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
 		
-		self.m_scrolledWindow3.SetSizer( self.gridBotones )
-		self.m_scrolledWindow3.Layout()
-		self.gridBotones.Fit( self.m_scrolledWindow3 )
-		bSizer32.Add( self.m_scrolledWindow3, 1, wx.EXPAND |wx.ALL, 5 )
+		self.ByteScroled.SetSizer( self.gridBotones )
+		self.ByteScroled.Layout()
+		self.gridBotones.Fit( self.ByteScroled )
+		bSizer32.Add( self.ByteScroled, 1, wx.EXPAND |wx.ALL, 5 )
 		
 		bSizer34 = wx.BoxSizer( wx.HORIZONTAL )
 		
