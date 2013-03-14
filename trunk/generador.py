@@ -379,11 +379,13 @@ class MiFrame(gui.frmPpal):
             binario = GenerarBin(self.aplicaciones)
             #Agregar Sms al binario:
             # 0xAA, HEADER_SMS, SIZE, NºSMS, SMS
+            #Solo Agrega SMS que no estén vacíos
             for i in range(Cantidad_SMS):
-                binario +=  str(chr(0xAA)) + str(chr(Header_SMS))
-                nextstring = ""
-                nextstring += unicode(chr(i)) + miSMS[i]
-                binario += chr(len(nextstring)) + nextstring
+                if miSMS[i] != "":
+                    binario +=  str(chr(0xAA)) + str(chr(Header_SMS))
+                    nextstring = ""
+                    nextstring += str(chr(i)) + str(miSMS[i].encode('latin1','ignore'))
+                    binario += chr(len(nextstring)) + nextstring                
             archivobinario.write(binario)
             archivobinario.flush()
             archivobinario.close()
@@ -1950,7 +1952,7 @@ class mifrmSMS ( gui.frmSMS ):
         global miSMS
         for i,[txtctrl,btn] in enumerate(self.ListaSMS):
             if txtctrl.IsModified():
-                self.miSMS[i] = txtctrl.GetValue()
+                self.miSMS[i] = unicode(txtctrl.GetValue())
         miSMS = self.miSMS[:]
         global Modificado
         Modificado = True

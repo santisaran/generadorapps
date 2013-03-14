@@ -21,68 +21,67 @@
 #  MA 02110-1301, USA.
 #  
 #  
-Encabezado = u"""/* Archivo Generado con generarheader.py,\nNo modificar este\
- archivo*/\n\n"""
+
 
 tupleBits = (
-	("BitContacto",		u"Estado de la entrada contacto 	p2.13"),
-	("BitBtnPanic",		u"Estado de la entrada Pánico	 	p2.10"),
-	("Bitpulsdesact",	u"Estado de la entrada pulsdesact	p0.17"),
-	("BitPuerta",		u"Estado de la entrada Puerta		p1.10"),
-	("BitPorton",		u"Estado de la entrada Porton		p2.11"),
-	("BitTrailer",		u"Estado de la entrada Trailer		p2.12"),
-	("BitSetCorteC",	u"									p1.16"),
-	("BitSetCorteNA",	u"	 								p0.25"),
-	("BitAux1in",		u"									p0.01"),
-	("BitAux2in",		u"										 "),	
-	("BitSetCorte",		u"Indica si se debe activar el rele de corte"),
-	("BitAux1out",		u""),
-	("BitAux2out",		u""),
-	("Bitan0Zonas",		u"""True => usar zonas, False => devolver valor AD
+	("Contacto",	u"Estado de la entrada contacto", 	u"p2.13"),
+	("BtnPanic",	u"Estado de la entrada Pánico", 	u"p2.10"),
+	("pulsdesact",	u"Estado de la entrada pulsdesact", u"p0.17"),
+	("Puerta",		u"Estado de la entrada Puerta", 	u"p1.10"),
+	("Porton",		u"Estado de la entrada Porton", 	u"p2.11"),
+	("Trailer",		u"Estado de la entrada Trailer", 	u"p2.12"),
+	("SetCorteC",	u"", 								u"p1.16"),
+	("SetCorteNA",	u"", 								u"p0.25"),
+	("Aux1in",		u"", 								u"p0.01"),
+	("Aux2in",		u"", 								u""),	
+	("SetCorte",	u"Indica si se debe activar el rele de corte", u""),
+	("Aux1out",		u"",u""),
+	("Aux2out",		u"",u""),
+	("an0Zonas",		u"""True => usar zonas, False => devolver valor AD
 \t\t\t\tb1|b0 |zona
 \t\t\t\tLas zonas son 	0 | 0 |a
 \t\t\t\t0 | 1 |b
 \t\t\t\t1 | 0 |c
-\t\t\t\t1 | 1 |d"""),
-	("Bitan0Zb0",		u"indicador zona Bit bajo"),
-	("Bitan0Zb1",		u"indicador zona Bit alto"),
-	("Bitan0ZVal",		u"True => dato de zona válido"),
-	("Bitan0",			u"""False, no hay datos correctos
+\t\t\t\t1 | 1 |d""",u""),
+	("an0Zb0",		u"indicador zona Bit bajo", u""),
+	("an0Zb1",		u"indicador zona Bit alto", u""),
+	("an0ZVal",		u"True => dato de zona válido", u""),
+	("an0",			u"""False, no hay datos correctos
 \t\t\tTrue, valor válido con antirrebote. (el antirrebote se define con:
 \t\t\tFrecan0, frecuencia de muestreo en ms de entrada analógica.
 \t\t\tCNTan0, Contador cuantos an0 dentro del rango.
-\t\t\tCfgCNTan0, Cantidad de muestras para validar valor An0. """),
-	("Bitan0val", 		u"True => dato válido en el vector MemoriaUsuario_Bytes[an0VALOR]"),
-	("Bitan1val", 		u"True => dato válido en el vector MemoriaUsuario_Bytes[an1VALOR]"),
-	("Bitan2val", 		u"True => dato válido en el vector MemoriaUsuario_Bytes[an2VALOR]"),
-	("Bitan3val", 		u"True => dato válido en el vector MemoriaUsuario_Bytes[an3VALOR]"),
-	("Bitan4val", 		u"True => dato válido en el vector MemoriaUsuario_Bytes[an4VALOR]"),
-	("Bitan5val", 		u"True => dato válido en el vector MemoriaUsuario_Bytes[an5VALOR]"),
-	("BitLeerAn0",		u"True => petición de lectura AD0."),
-	("BitLeerAn1",		u"True => petición de lectura AD1."),
-	("BitLeerAn2",		u"True => petición de lectura AD2."),
-	("BitLeerAn3",		u"True => petición de lectura AD3."),
-	("BitLeerAn4",		u"True => petición de lectura AD4."),
-	("BitLeerAn5",		u"True => petición de lectura AD5."),
-	("BitLeerXYZ",		u"	"),
-	("BitLed",			u"Led prendido u apagado."),
-	("BitDestellar",	u" "),
-	("BitCLed",			u""),
-	("BitAux1CfgInOut", u"Aux1 1=salida, 0=entrada"),
-	("BitAux2CfgInOut", u"Aux2 1=salida, 0=entrada"),
-	("BitErrorLed",		u"Falla salida de led."),
-	("BitErrorCorte",	u" "),
-	("BitErrorAux1",	u" "),
-	("BitErrorAux2",	u" "),
-	("Accel_Flag_DR",	u"Flag indicador de dato nuevo de aceleracion disponible."),
-	("Accel_Flag_Choque",u"Flag de accidente. Para mas informacion, ver Registro STAT"),
-	("BitPulsos",	 	u" "),
-	("BitBuzz",	 		u""),
-	("BitAntenaGPSCorto",		u""),
-	("BitAntenaGPSPresente", 	u""),
-	("BitAntenaGSMCorto",		u""),
-	("BitAntenaGSMPresente", 	u""),
-	("Bitfinal",u"Bit final para calcular dinamicamente tamaño"),
+\t\t\tCfgCNTan0, Cantidad de muestras para validar valor An0. """, u""),
+	("an0val", 		u"True => dato válido en el vector MemoriaUsuario_Bytes[an0VALOR]", u""),
+	("an1val", 		u"True => dato válido en el vector MemoriaUsuario_Bytes[an1VALOR]", u""),
+	("an2val", 		u"True => dato válido en el vector MemoriaUsuario_Bytes[an2VALOR]", u""),
+	("an3val", 		u"True => dato válido en el vector MemoriaUsuario_Bytes[an3VALOR]", u""),
+	("an4val", 		u"True => dato válido en el vector MemoriaUsuario_Bytes[an4VALOR]", u""),
+	("an5val", 		u"True => dato válido en el vector MemoriaUsuario_Bytes[an5VALOR]", u""),
+	("LeerAn0",		u"True => petición de lectura AD0.", u""),
+	("LeerAn1",		u"True => petición de lectura AD1.", u""),
+	("LeerAn2",		u"True => petición de lectura AD2.", u""),
+	("LeerAn3",		u"True => petición de lectura AD3.", u""),
+	("LeerAn4",		u"True => petición de lectura AD4.", u""),
+	("LeerAn5",		u"True => petición de lectura AD5.", u""),
+	("LeerXYZ",		u"", u""),
+	("Led",			u"Led prendido u apagado", u""),
+	("Destellar",	u"", u""),
+	("CLed",		u"", u""),
+	("Aux1CfgInOut", u"Aux1 1=salida, 0=entrada", u""),
+	("Aux2CfgInOut", u"Aux2 1=salida, 0=entrada", u""),
+	("ErrorLed",	u"Falla salida de led", u""),
+	("ErrorCorte",	u"", u""),
+	("ErrorAux1",	u"", u""),
+	("ErrorAux2",	u"", u""),
+	("Accel_Flag_DR",	u"Flag indicador de dato nuevo de aceleracion disponible", u""),
+	("Accel_Flag_Choque",u"Flag de accidente. Para mas informacion, ver Registro STAT", u""),
+	("Pulsos",	 			u"", u""),
+	("Buzz",	 			u"", u""),
+	("AntenaGPSCorto",		u"", u""),
+	("AntenaGPSPresente", 	u"", u""),
+	("AntenaGSMCorto",		u"", u""),
+	("AntenaGSMPresente", 	u"", u""),
+	("final",u"Bit final para calcular dinamicamente tamaño", u""),
 )
 
 tupleBytes = (
@@ -163,10 +162,10 @@ tupleBytes = (
 	("Dutyenc",			u"")
 )
 defineCantidades = (
-	("Cantidad_Apps",		20,""),
-	("Cantidad_Estados",	10,""),
-	("Cantidad_Bloques",	5,""),
-	("Cantidad_de_Bytes", 256,""),
+	("Cantidad_Apps",		20	,""),
+	("Cantidad_Estados",	10	,""),
+	("Cantidad_Bloques",	5	,""),
+	("Cantidad_de_Bytes", 	256	,""),
 	("Cantidad_de_Bits", 	64/8,"64 bits, en grupos de bytes"),
 )
 
@@ -195,16 +194,16 @@ tupleBloques = (
 
 descripCondiciones = u"""Defines Tipos de Condiciones"""
 defineCondiciones = (
-("Condicion_Mayor",		0),
-("Condicion_Menor",		1),
-("Condicion_Igual",		2),
-("Condicion_Bit_True",	3),
-("Condicion_Bit_False",	4),
-("Condicion_NULL",		5),
-("BLOQUE(Bloque)",  	"((uint32_t)Bloque<<8*3)"),
-("PARAM1(param)",		"((uint32_t)param<<8*0)"),
-("PARAM2(param)",		"((uint32_t)param<<8*1)"),
-("PARAM3(param)",		"((uint32_t)param<<8*2)")
+	("Condicion_Mayor",		0),
+	("Condicion_Menor",		1),
+	("Condicion_Igual",		2),
+	("Condicion_Bit_True",	3),
+	("Condicion_Bit_False",	4),
+	("Condicion_NULL",		5),
+	("BLOQUE(Bloque)",  	"((uint32_t)Bloque<<8*3)"),
+	("PARAM1(param)",		"((uint32_t)param<<8*0)"),
+	("PARAM2(param)",		"((uint32_t)param<<8*1)"),
+	("PARAM3(param)",		"((uint32_t)param<<8*2)")
 )
 
 enumEstados = (
@@ -221,19 +220,21 @@ enumEstados = (
 )
 
 
-
-
-def main():
+def GenerarH():
+	
+	import os
+	import sys
 	
 	NombreBits = {}
 	# {"NOMBRE":[VALOR,COMENTARIO], }
  
-	archivoh = u"" + Encabezado
+	archivoh = u"" + u"""/* Archivo Generado con %s ,\n\tNo modificar este\
+archivo*/\n\n"""%os.path.basename(sys.argv[0])
 
 	archivoh += u"enum NombreBits\n{\n"
 	for num,BIT in enumerate(tupleBits):
 		NombreBits[BIT[0]] = (num,BIT[1])
-		archivoh += u"\t" + BIT[0] +u" = " + str(num) + u", /*" + BIT[1] + u"*/\n"
+		archivoh += u"\tBit" + BIT[0] +u" = " + str(num) + u", /*" + BIT[1]+ "\t" + BIT[2] + u"*/\n"
 
 
 	NombreBytes = {}
@@ -263,12 +264,12 @@ def main():
 	for item in enumEstados:
 		archivoh +=item[0] + ",\n"
 	archivoh += "};\n"
-	
-	parsear = open("/home/saran/Documentos/trabajo/crear.h",'w')
+	parsear = open("C:\\Users\\santiago\\Documents\\Proyectos\\ATOP\\Soft\\Cyloc_evo\\sample\\Comps\\ATOPLib\\API\\inc\\CylocPyDefines.h",'w')
 	parsear.write(archivoh.encode('utf-8'))
 	parsear.close()
 	return 0
 
 if __name__ == '__main__':
-	main()
+
+	GenerarH()
 

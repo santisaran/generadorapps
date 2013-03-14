@@ -156,7 +156,7 @@ class frmPpal ( wx.Frame ):
 class frmEditBit ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Editar variables  Bits", pos = wx.DefaultPosition, size = wx.Size( 441,392 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Editar Variables  Bits", pos = wx.DefaultPosition, size = wx.Size( 441,392 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -219,7 +219,7 @@ class frmEditBit ( wx.Frame ):
 class frmEditByte ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 522,397 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Editar Variables Bytes", pos = wx.DefaultPosition, size = wx.Size( 522,397 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -295,7 +295,6 @@ class frmSMS ( wx.Frame ):
 		self.GridSms.SetFlexibleDirection( wx.BOTH )
 		self.GridSms.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
-		self.GridSms.SetMinSize( wx.Size( -1,50 ) ) 
 		
 		self.SmsScrolled.SetSizer( self.GridSms )
 		self.SmsScrolled.Layout()
