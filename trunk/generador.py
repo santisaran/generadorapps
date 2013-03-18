@@ -1387,11 +1387,14 @@ class mipanelCondicion ( gui.panelCondicion ):
 ########################################################################
 
 class  mifrmEntrada (gui.frmEntrada):
+
     """Diálogo para configurar entradas"""
+
     def __init__( self, parent , item):
         gui.frmEntrada.__init__ ( self, parent )
         self.padre = parent
         self.item = item
+        self.entrada = self.item.GetText()
         self.Title = self.Title + self.item.GetText()
         global miValoresEntradas
         self.muestras = miValoresEntradas[self.item.GetText()][0]
@@ -1408,6 +1411,12 @@ class  mifrmEntrada (gui.frmEntrada):
         miValoresEntradas[self.item.GetText()][1] = self.tiempo
         global Modificado
         Modificado = True
+        
+        for i,(a,b,c) in enumerate(DefinicionesBytes):
+            if a == "Frec"+self.entrada:
+                print i
+       
+        
 
     def OnCerrar( self, event ):
         global miValoresEntradas
@@ -1954,6 +1963,8 @@ class mifrmSMS ( gui.frmSMS ):
             if txtctrl.IsModified():
                 self.miSMS[i] = unicode(txtctrl.GetValue())
         miSMS = self.miSMS[:]
+        for [txtctrl,btn] in self.ListaSMS:
+            txtctrl.SetModified(False)
         global Modificado
         Modificado = True
         
