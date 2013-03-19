@@ -42,6 +42,9 @@ class frmPpal ( wx.Frame ):
 		self.m_file_gen = wx.MenuItem( self.m_archivo, wx.ID_ANY, u"Generar archivo Cyloc", wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_archivo.AppendItem( self.m_file_gen )
 		
+		self.m_menuItem11 = wx.MenuItem( self.m_archivo, wx.ID_ANY, u"Importar desde Binario", wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_archivo.AppendItem( self.m_menuItem11 )
+		
 		self.m_archivo.AppendSeparator()
 		
 		self.OnClose = wx.MenuItem( self.m_archivo, wx.ID_ANY, u"Salir"+ u"\t" + u"Ctrl+Q", wx.EmptyString, wx.ITEM_NORMAL )
@@ -102,6 +105,7 @@ class frmPpal ( wx.Frame ):
 		self.Bind( wx.EVT_MENU, self.OnGuardarPrograma, id = self.m_file_guardarPrograma.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnGuardarComo, id = self.m_file_guardarComo.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnGenerar, id = self.m_file_gen.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnImportarDesdeBin, id = self.m_menuItem11.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnCerrar, id = self.OnClose.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnEditarBytes, id = self.m_variables_Byte.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnEditarBit, id = self.m_variables_bit.GetId() )
@@ -130,6 +134,9 @@ class frmPpal ( wx.Frame ):
 		event.Skip()
 	
 	def OnGenerar( self, event ):
+		event.Skip()
+	
+	def OnImportarDesdeBin( self, event ):
 		event.Skip()
 	
 	
