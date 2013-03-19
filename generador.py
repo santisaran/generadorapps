@@ -495,6 +495,15 @@ class MiFrame(gui.frmPpal):
         miBytes = Bytes[:]
         global miSMS
         miSMS = SMS[:]
+        
+    	
+    def OnImportarDesdeBin( self, event ):
+        import bin2gen
+        NuevoPrograma = bin2gen.CargarBinario()
+        NuevoPrograma.CargarArchivo()
+        for i in NuevoPrograma.aplicaciones:
+            
+        
 
 
 
