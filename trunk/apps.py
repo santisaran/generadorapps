@@ -353,7 +353,7 @@ def GenerarBin(programa):
             
             binario += str(chr(0xAA)) + str(chr(Header_Bloques))
             nextstring = ""
-            for j,bloque in enumerate(estado.Bloques):               
+            for j,bloque in enumerate(estado.Bloques):
                 BloqueAbs = app.AppNum*Cantidad_Estados*Cantidad_Bloques+i*Cantidad_Bloques+j
                 nextstring += chr(BloqueAbs & 0x0FF) + chr((BloqueAbs>>8) & 0x0FF)
                 nextstring += chr(bloque&0x0FF)+chr(bloque>>8&0x0FF)+\
