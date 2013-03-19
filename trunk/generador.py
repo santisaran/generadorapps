@@ -299,18 +299,19 @@ class MiFrame(gui.frmPpal):
             self.CrearNuevoPrograma()
 
     def OnAbrirPrograma(self, event):
+        """Abre un programa .cyl y lo carga en el espacio de trabajo actual"""
         
         global DIRACTUAL
         global NombreArchivo
         self.OnNuevoPrograma(event)
 
         if self.cancel:
-
             pass
 
         dlg = wx.FileDialog(
             self, message="Abrir archivo ...", defaultDir=DIRACTUAL,
-            defaultFile="", wildcard=wildcard, style=wx.OPEN)
+            defaultFile="", wildcard=wildcard, style=wx.OPEN
+            )
 
         dlg.SetFilterIndex(2)
 
@@ -377,6 +378,19 @@ class MiFrame(gui.frmPpal):
 
             archivobinario = open(path,'wb')
             binario = GenerarBin(self.aplicaciones)
+            
+            for i in range(Cantidad_Bytes_Usuario):
+                if miBytes[i][2] != "-1":
+                    #Si el valor del byte se deja en -1, no se modifica
+                    binario = binario + str(chr(0xAA)) + str(chr(Header_BYTE)) + \
+                        str(chr(2)) + str(chr(i)) + str(chr(int(miBytes[i][2])))
+                
+            for i in range(Cantidad_Bits_Usuario):
+                if miBits[i][2] != "-1":
+                    #Si el valor del bit se deja en -1, no se modifica
+                    binario = binario + str(chr(0xAA)) + str(chr(Header_BIT)) + \
+                        str(chr(2)) + str(chr(i)) + str(chr(int(miBits[i][2])))
+            
             #Agregar Sms al binario:
             # 0xAA, HEADER_SMS, SIZE, NºSMS, SMS
             #Solo Agrega SMS que no estén vacíos
@@ -386,6 +400,8 @@ class MiFrame(gui.frmPpal):
                     nextstring = ""
                     nextstring += str(chr(i)) + str(miSMS[i].encode('latin1','ignore'))
                     binario += chr(len(nextstring)) + nextstring                
+            
+            
             archivobinario.write(binario)
             archivobinario.flush()
             archivobinario.close()
@@ -1463,39 +1479,57 @@ class miDlgGenError (gui.DlgGenError):
 ########################################################################
 
 class mifrmEditBit ( gui.frmEditBit ):
-    """Frame para editar los nombres de los bits"""
-    
+    """Frame para editar los nombres de los bits"""    
     
     def __init__( self, parent, item):
+        
         gui.frmEditBit.__init__ ( self, parent)
         self.item = item
         global miBits
+        self.modificado = False
         self.miBits = miBits[:]
         self.BitsTextCtrl = [] #lista con los wx.TextCtrl de edición de nombre de bit.
+        self.BitsValues = [] #lista con los wx.SpinCtrl
         for i,valorBit in enumerate(self.miBits):
 
-            texto  = wx.StaticText( self.BitScrolled, wx.ID_ANY, u"Bit Nº: %d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+            texto  = wx.StaticText( self.BitScrolled, wx.ID_ANY, \
+                u"Bit Nº: %d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
             texto.Wrap( -1 )
             self.gridBotones.Add( texto, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
             # En Windows no se puede hacer wx.TextCtrl readonly luego\
             # de creado, por lo que debe hacerce cuando se crea:
-            if isinstance(valorBit,tuple):
+
+            if valorBit[3] == 0:
                 textCtrl = wx.TextCtrl( self.BitScrolled, wx.ID_ANY,\
-                    wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,  wx.TE_READONLY )    
+                    wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,\
+                        wx.TE_READONLY )
+                spinValue =  wx.SpinCtrl( self.BitScrolled, wx.ID_ANY, \
+                    wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,\
+                    wx.SP_ARROW_KEYS, -1, 1,  int(self.miBits[i][2]) )
+                    
             else:
                 textCtrl = wx.TextCtrl( self.BitScrolled, wx.ID_ANY, \
-                    wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )    
-            self.gridBotones.Add( textCtrl, 0, wx.ALL|wx.EXPAND, 5 ) 
+                    wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+                spinValue =  wx.SpinCtrl( self.BitScrolled, wx.ID_ANY, \
+                    wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, \
+                    wx.SP_ARROW_KEYS, -1, 1, int(self.miBits[i][2]))
+                
+            self.gridBotones.Add( textCtrl, 0, wx.ALL|wx.EXPAND, 5 )
+            self.gridBotones.Add( spinValue, 0, wx.ALL, 5 )
             textCtrl.SetValue(valorBit[0])
             textCtrl.Bind( wx.EVT_RIGHT_DOWN, self.OnBtnDerecho )
-            #staticline1 = wx.StaticLine( self.BitScrolled, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.LI_HORIZONTAL )
-            #self.gridBotones.Add( staticline1, 1, wx.ALL|wx.EXPAND, 5 )            
-            self.BitsTextCtrl.append(textCtrl)
+            spinValue.Bind( wx.EVT_SPINCTRL, self.OnSpinCtrl )
+            self.BitsTextCtrl.append( textCtrl )
+            self.BitsValues.append( spinValue ) 
 
         self.BitScrolled.SetSizer( self.gridBotones )
         self.BitScrolled.Layout()
         self.BitScrolled.SetAutoLayout(True)
         self.gridBotones.Fit( self.BitScrolled )
+        
+    def OnSpinCtrl ( self , event ):
+        self.modificado = True
+        event.Skip()        
     
     def OnBtnDerecho ( self , event ):
         txtctrl = event.GetEventObject()
@@ -1511,12 +1545,19 @@ class mifrmEditBit ( gui.frmEditBit ):
 
     def OnEditBit( self, event ):
         """guarda los cambios realizados"""
+        self.GuardarDatos()
+            
+
+    def GuardarDatos (self ):
+        """guarda los cambios realizados"""
         global miBits
         for i,txtctrl in enumerate(self.BitsTextCtrl):
             if txtctrl.IsModified():
                 self.miBits[i][0] = txtctrl.GetValue()
-                
+                txtctrl.SetModified(False)
+            self.miBits[i][2] = str(self.BitsValues[i].GetValue())
         miBits = self.miBits[:]
+        self.modificado = False
         global Modificado
         Modificado = True
 
@@ -1528,7 +1569,20 @@ class mifrmEditBit ( gui.frmEditBit ):
             txtctrl.SetValue(self.miBits[i][0])
 
 
-    def OnClose(    self, event ):
+    def OnClose( self, event ):
+        if self.modificado == False:
+            for i in range(Cantidad_Bits_Usuario):
+                if self.BitsTextCtrl[i].IsModified():
+                    self.modificado = True
+                    break
+        if self.modificado:
+            dlg = wx.MessageDialog(self, u"Guardar cambios?",\
+            caption=u"Cerrar Edición Bits",
+            style=wx.YES | wx.NO,
+            pos=wx.DefaultPosition)
+            val = dlg.ShowModal()
+            if val == wx.ID_YES:
+                self.GuardarDatos()
         self.item.Enable(True)
         event.Skip()
 
@@ -1561,12 +1615,16 @@ class infoPopup(wx.PopupTransientWindow):
 
 class mifrmEditByte ( gui.frmEditByte ):
     """Frame para editar los nombres de los bytes"""
+    
     def __init__( self, parent, item ):
+        
         gui.frmEditByte.__init__ ( self, parent)
         self.item = item
         global miBytes
         self.miBytes = miBytes[:]
         self.BytesTextCtrl = [] #lista con los wx.TextCtrl de edición de nombre de byte
+        self.BytesValues = []
+        self.modificado = False
         for i,valorByte in enumerate(self.miBytes):
 
             texto  = wx.StaticText( self.ByteScrolled, wx.ID_ANY, u"Bit Nº: %d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -1574,22 +1632,42 @@ class mifrmEditByte ( gui.frmEditByte ):
             self.gridBotones.Add( texto, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
             # En Windows no se puede hacer wx.TextCtrl readonly luego\
             # de creado, por lo que debe hacerce cuando se crea:
-            if isinstance(valorByte,tuple):
+            
+            if valorByte[3] == 0:
+                
                 textCtrl = wx.TextCtrl( self.ByteScrolled, wx.ID_ANY,\
-                    wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,  wx.TE_READONLY )    
+                    wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,  wx.TE_READONLY )
+                textValue =  wx.SpinCtrl( self.ByteScrolled, wx.ID_ANY,\
+                    wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,\
+                    wx.SP_ARROW_KEYS, -1, 255, int(self.miBytes[i][2]))
+                                        
             else:
+                
                 textCtrl = wx.TextCtrl( self.ByteScrolled, wx.ID_ANY, \
-                    wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )    
-            self.gridBotones.Add( textCtrl, 0, wx.ALL|wx.EXPAND, 5 ) 
+                    wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+                textValue =  wx.SpinCtrl( self.ByteScrolled, wx.ID_ANY,\
+                    wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,\
+                    wx.SP_ARROW_KEYS, -1, 255, int(self.miBytes[i][2]))
+                
+            self.gridBotones.Add( textCtrl, 0, wx.ALL|wx.EXPAND, 5 )
+            self.gridBotones.Add( textValue, 0, wx.ALL, 5 )
             textCtrl.SetValue(valorByte[0])
-            textCtrl.Bind( wx.EVT_RIGHT_DOWN, self.OnBtnDerecho )           
+            
+            textValue.Bind( wx.EVT_SPINCTRL, self.OnSpinCtrl )
+            textCtrl.Bind( wx.EVT_RIGHT_DOWN, self.OnBtnDerecho )
+            
             self.BytesTextCtrl.append(textCtrl)
-
+            self.BytesValues.append(textValue)
+            
         self.ByteScrolled.SetSizer( self.gridBotones )
         self.ByteScrolled.Layout()
         self.ByteScrolled.SetAutoLayout(True)
         self.gridBotones.Fit( self.ByteScrolled )
         
+        
+    def OnSpinCtrl ( self , event ):
+        self.modificado = True
+        event.Skip()
         
     def OnBtnDerecho ( self , event ):
         txtctrl = event.GetEventObject()
@@ -1610,13 +1688,21 @@ class mifrmEditByte ( gui.frmEditByte ):
         self.miBytes[self.BytesSpinCtrl.GetValue()] = self.BytesTxtCtrl.GetValue()
 
     def OnEditByte( self, event ):
+        self.GuardarDatos()
+        
+    def GuardarDatos (self ):
+        """guarda los cambios realizados"""
         global miBytes
         for i,txtctrl in enumerate(self.BytesTextCtrl):
             if txtctrl.IsModified():
                 self.miBytes[i][0] = txtctrl.GetValue()
+                txtctrl.SetModified(False)
+            self.miBytes[i][2] = str(self.BytesValues[i].GetValue())
         miBytes = self.miBytes[:]
         global Modificado
-        Modificado = True
+        Modificado = True  #Avisar modificación al programa global.
+        self.modificado = False  #guardadas modificaciones en Bytes.
+        
 
     def OnUndoByte( self, event ):
         global miBytes
@@ -1625,12 +1711,12 @@ class mifrmEditByte ( gui.frmEditByte ):
             txtctrl.SetValue(self.miBytes[i][0])
 
     def OnClose( self, event ):
-        cambios = False
-        for i,txtctrl in enumerate(self.BytesTextCtrl):
-            if txtctrl.IsModified():
-                cambios = True
-                break
-        if cambios:
+        if self.modificado == False:
+            for i in range(Cantidad_Bytes_Usuario):
+                if self.BytesTextCtrl[i].IsModified():
+                    self.modificado = True
+                    break
+        if self.modificado:
             dlg = wx.MessageDialog(self, u"Guardar cambios?",\
             caption=u"Cerrar Edición Bytes",
             style=wx.YES | wx.NO,
@@ -1642,7 +1728,7 @@ class mifrmEditByte ( gui.frmEditByte ):
                     if txtctrl.IsModified():
                         self.miBytes[i][0] = txtctrl.GetValue()
                         miBytes = self.miBytes[:]
-                    
+        self.modificado = False            
                 
         self.item.Enable(True)
         event.Skip()
@@ -1779,8 +1865,8 @@ class mifrmAnalog ( gui.frmAnalog ):
         for zona in self.zonas.keys():
             self.zonas[zona][0].SetValue(\
                 self.zonas[zona][1])
-        self.txtctrlMuestras.SetValue(str(self.tempAnalogica["muestras"]))
-        self.txtctrlTiempo.SetValue(str(self.tempAnalogica["tiempo"]))
+        self.txtctrlMuestras.SetValue(self.tempAnalogica["muestras"])
+        self.txtctrlTiempo.SetValue(self.tempAnalogica["tiempo"])
         self.txtctrlComentarios.SetValue(self.tempAnalogica["comentarios"])
         self.cambios = False
 

@@ -3,152 +3,6 @@
 
 from struct import pack,unpack
 
- #bits definidos en el archivo CylocDefines.h
-DefinicionesBits = (
-    ("Contacto", u"Estado de la entrada contacto", "p2.13"),
-    ("BtnPanic", u"Estado de la entrada Pánico", "p2.10"),
-    ("pulsdesact", u"Estado de la entrada pulsdesact", "p0.17"),
-    ("Puerta", u"Estado de la entrada Puerta", "p1.10"),
-    ("Porton",u"Estado de la entrada Porton", "p2.11"),
-    ("Trailer",u"Estado de la entrada Trailer", "p2.12"),
-    ("SetCorteC",u"","p1.16"),
-    ("SetCorteNA",u"","p0.25"),
-    ("Aux1in",u"","p0.01"),
-    ("Aux2in","",""),
-    ("SetCorte",u"Indica si se debe activar el rele de corte.",""),
-    ("Aux1out","",""),
-    ("Aux2out","",""),
-    ("an0Zonas",u"""True => usar zonas, False => devolver valor AD
-\t\t              \tb1|b0 |zona
-\t\tLas zonas son \t 0 | 0 | a
-\t\t              \t 0 | 1 | b
-\t\t              \t 1 | 0 | c
-\t\t              \t 1 | 1 | d""",""),
-
-    ("an0Zb0",u"indicador zona bit bajo",""),
-    ("an0Zb1",u"indicador zona bit alto",""),
-    
-    ("an0ZVal",u"True => dato de zona válido",""),
-    ("an0",u"""False, no hay datos correctos
-True, valor válido con antirrebote. (el antirrebote se define con:
-Frecan0, frecuencia de muestreo en ms de entrada analógica.
-CNTan0, Contador cuantos an0 dentro del rango.
-CfgCNTan0, Cantidad de muestras para validar valor An0. """,""),
-    
-    ("an1val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an1VALOR]",""),
-    ("an2val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an2VALOR]",""),
-    ("an3val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an3VALOR]",""),
-    ("an4val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an4VALOR]",""),
-    ("an5val", u"""True => dato válido en el vector MemoriaUsuario_Bytes[an5VALOR]""",""),
-    
-    ("LeerAn0",u"True => petición de lectura AD0.",""),
-    ("LeerAn1",u"True => petición de lectura AD1.",""),
-    ("LeerAn2",u"True => petición de lectura AD2.",""),
-    ("LeerAn3",u"True => petición de lectura AD3.",""),
-    ("LeerAn4",u"True => petición de lectura AD4.",""),
-    ("LeerAn5",u"True => petición de lectura AD5.",""),
-    
-    ("LeerXYZ","",""),
-    
-    ("Led",u"Led prendido u apagado.",""),
-    ("Destellar","",""),
-    ("CLed","",""),
-    
-    ("Aux1CfgInOut",u"Aux1 1=salida, 0=entrada",""),
-    ("Aux2CfgInOut",u"Aux2 1=salida, 0=entrada",""),
-
-    ("ErrorLed",u"Falla salida de led.",""),
-    ("ErrorCorte","",""),
-    ("ErrorAux1","","" ),
-    ("ErrorAux2","","" ),
-    
-    ("Accel_Flag_DR",u"Flag indicador de dato nuevo de aceleracion disponible",""),
-    ("Accel_Flag_Choque", u"Flag de accidente. Para mas informacion, ver Registro STAT",""),
-    
-    ("Pulsos","",""),
-    ("Buzz","",""),
-    ("AntenaGPSCorto","",""),
-    ("AntenaGPSPresente","",""),
-    ("AntenaGSMCorto","",""),
-    ("AntenaGSMPresente","","")
-)
-
-DefinicionesBytes = (\
-    ("FrecContacto",    u"Frecuencia de muestreo contacto",""),
-    ("CNTContacto",     u"Contador cuantos Contacto iguales",""),
-    ("CfgCNTContacto",  u"Cantidad de muestras para validar Contacto",""),
-    ("FrecAux1in",      u"Frecuencia de muestreo en ms de Aux1in",""),
-    ("CfgCNTAux1in",    u"Cantidad de muestras para validar Aux1in",""),
-    ("CNTAux1in",       u"Contador de Aux1in iguales",""), 
-    ("FrecAux2in",      u"Frecuencia de muestreo en ms de Aux2in",""),
-    ("CfgCNTAux2in",    u"Cantidad de muestras para validar Aux2in",""),
-    ("CNTAux2in",       u"Contador de Aux2in iguales",""),
-    ("FrecBtnPanic",    u"Frecuencia de muestreo en ms de btn pánico",""), 
-    ("CNTBtnPanic",     u"Contador cuantos btn pánico iguales",""),
-    ("CfgCNTBtnPanic",  u"Cantidad de muestras para validar btn pánico",""),
-    ("Frecpulsdesact",  u"Frecuencia de muestreo en ms del puls desactivacion",""),    
-    ("CNTpulsdesact",   u"Contador cuantos puls desact iguales",""),   
-    ("CfgCNTpulsdesact",u"Cantidad de muestras para validar puls desactivacion",""),
-    ("Frecpuerta",      u"Frecuencia de muestreo en ms de puerta",""), 
-    ("CNTpuerta",       u"Contador cuantos puerta iguales",""),    
-    ("CfgCNTpuerta",    u"Cantidad de muestras para validar puerta",""),   
-    ("Frecporton",      u"Frecuencia de muestreo en ms de portón",""), 
-    ("CNTporton",       u"Contador cuantos portón iguales",""),    
-    ("CfgCNTporton",    u"Cantidad de muestras para validar portón",""),
-    ("Frectrailer",     u"Frecuencia de muestreo en ms de trailer",""),    
-    ("CNTtrailer",      u"Contador cuantos trailer iguales",""),   
-    ("CfgCNTtrailer",   u"Cantidad de muestras para validar trailer",""),  
-    ("FrecCorteNA",     u"Frecuencia de muestreo en ms de CorteNA",""),    
-    ("CNTCorteNA",      u"Contador cuantos CorteNA iguales",""),
-    ("CfgCNTCorteNA",   u"Cantidad de muestras para validar CorteNA",""),  
-    ("FrecCorteC",      u"Frecuencia de muestreo en ms de CorteC",""), 
-    ("CNTCorteC",       u"Contador cuantos CorteC iguales",""),    
-    ("CfgCNTCorteC",    u"Cantidad de muestras para validar CorteC",""),   
-    ("TiempoCorte",     u"Tiempo entre activacion y lectura de la realimentacion",""), 
-    ("TiempoAux1",      u"",""),
-    ("TiempoAux2",      u"",""),
-    ("CorteReintentos", u"",""),   
-    ("Aux1Reintentos",  u"",""),   
-    ("Aux2Reintentos",  u"",""),   
-    ("Frecan0",         u"Frecuencia de muestreo en ms de entrada analógica",""),  
-    ("FrecVccTest",     u"Frecuencia de muestreo en ms de entrada Vcc",""),    
-    ("CNTan0",          u"Contador cuantos an0 dentro del rango",""),  
-    ("CfgCNTan0",       u"Cantidad de muestras para validar AD0",""),  
-    ("an0VALOR",        u"Valor de la conversión para AD0",""),    
-    ("an0Zai",          u"Límite inferior zona A",""),
-    ("an0Zas",          u"Límite superior zona A",""), 
-    ("an0Zbi",          u"Límite inferior zona B",""), 
-    ("an0Zbs",          u"Límite superior zona B",""), 
-    ("an0Zci",          u"Límite inferior zona C",""), 
-    ("an0Zcs",          u"Límite superior zona C",""), 
-    ("an0Zdi",          u"Límite inferior zona D",""), 
-    ("an0Zds",          u"Límite superior zona D",""), 
-    ("an1VALOR",        u"Valor de la conversión para AD1",""),    
-    ("an2VALOR",        u"Valor de la conversión para AD2",""),    
-    ("an3VALOR",        u"Valor de la conversión para AD3",""),    
-    ("an4VALOR",        u"Valor de la conversión para AD4",""),    
-    ("an5VALOR",        u"Valor de la conversión para AD5",""),    
-    ("an0ZONA",         u"",""),   
-    ("VccVALOR",        u"",""),   
-    ("FrecLed",         u"Frecuencia de encendido ms de LED",""),  
-    ("CfgCNTLed",       u"Configuración cantidad de destellos led cada vez que es disparado",""),  
-    ("CNTLed",          u"",""),   
-    ("DutyLed",         u"porcentaje apagado encendido 50ms de paso",""),  
-    ("CfgCNTCLed","",""),  
-    ("TMRLed",          u"Timer incrementado cada 1ms",""),
-    ("Accel_X_MSB",     u"MSB de la aceleracion Actual eje X",""), 
-    ("Accel_X_LSB",     u"LSB de la aceleracion Actual eje X",""), 
-    ("Accel_Y_MSB",     u"MSB de la aceleracion Actual eje Y",""),
-    ("Accel_Y_LSB",     u"LSB de la aceleracion Actual eje Y",""), 
-    ("Accel_Z_MSB",     u"MSB de la aceleracion Actual eje Z",""),
-    ("Accel_Z_LSB",     u"LSB de la aceleracion Actual eje Z",""), 
-    ("Accel_StChoque",  u"Copia del registro STATE del detector de transitorios del acelerometro\nActualizado solo cuando hay un choque",""),  
-    ("Frecbuzz",        u"",""),
-    ("CfgCNTbuzz",      u"",""),   
-    ("CNTbuzz",         u"",""),   
-    ("Frecoscbuzz",     u"",""),
-    ("Dutyenc",         u"","")
-)
 
 #Defines compartidos con C si se hace modificación, hace la misma modificación en el codigo c
 Estados = ( "ESTADO0","ESTADO1","ESTADO2","ESTADO3","ESTADO4","ESTADO5","ESTADO6",\
@@ -172,7 +26,159 @@ Cantidad_Bits_Usuario = 256
 Cantidad_Bytes_Usuario = 256
 Cantidad_SMS    = 20
 
-DefinicionesBits = DefinicionesBits + tuple([("sendSMS%d"%i,u"Envía Mensaje de Texto Nº %d"%i) for i in range(Cantidad_SMS)])
+
+ #bits definidos en el archivo CylocDefines.h
+DefinicionesBits = (
+#NombredelBit, descripción, valor inicial, editable, descripción avanzada (para c)
+    ("Contacto", u"Estado de la entrada contacto","-1",0, "p2.13"),
+    ("BtnPanic", u"Estado de la entrada Pánico","-1",0, "p2.10"),
+    ("pulsdesact", u"Estado de la entrada pulsdesact","-1",0, "p0.17"),
+    ("Puerta", u"Estado de la entrada Puerta","-1",0, "p1.10"),
+    ("Porton",u"Estado de la entrada Porton", "-1",0,"p2.11"),
+    ("Trailer",u"Estado de la entrada Trailer", "-1",0,"p2.12"),
+    ("SetCorteC",u"","-1",0,"p1.16"),
+    ("SetCorteNA",u"","-1",0,"p0.25"),
+    ("Aux1in",u"","-1",0,"p0.01"),
+    ("Aux2in","","-1",0,""),
+    ("SetCorte",u"Indica si se debe activar el rele de corte.","-1",0,""),
+    ("Aux1out","","-1",0,""),
+    ("Aux2out","","-1",0,""),
+    ("an0Zonas",u"""True => usar zonas, False => devolver valor AD
+\t\t              \tb1|b0 |zona
+\t\tLas zonas son \t 0 | 0 | a
+\t\t              \t 0 | 1 | b
+\t\t              \t 1 | 0 | c
+\t\t              \t 1 | 1 | d""","-1",0,""),
+
+    ("an0Zb0",u"indicador zona bit bajo","-1",0,""),
+    ("an0Zb1",u"indicador zona bit alto","-1",0,""),
+    
+    ("an0ZVal",u"True => dato de zona válido","-1",0,""),
+    ("an0",u"""False, no hay datos correctos
+True, valor válido con antirrebote. (el antirrebote se define con:
+Frecan0, frecuencia de muestreo en ms de entrada analógica.
+CNTan0, Contador cuantos an0 dentro del rango.
+CfgCNTan0, Cantidad de muestras para validar valor An0. ""","-1",0,""),
+    
+    ("an1val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an1VALOR]","-1",0,""),
+    ("an2val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an2VALOR]","-1",0,""),
+    ("an3val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an3VALOR]","-1",0,""),
+    ("an4val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an4VALOR]","-1",0,""),
+    ("an5val", u"""True => dato válido en el vector MemoriaUsuario_Bytes[an5VALOR]""","-1",0,""),
+    
+    ("LeerAn0",u"True => petición de lectura AD0.","-1",0,""),
+    ("LeerAn1",u"True => petición de lectura AD1.","-1",0,""),
+    ("LeerAn2",u"True => petición de lectura AD2.","-1",0,""),
+    ("LeerAn3",u"True => petición de lectura AD3.","-1",0,""),
+    ("LeerAn4",u"True => petición de lectura AD4.","-1",0,""),
+    ("LeerAn5",u"True => petición de lectura AD5.","-1",0,""),
+    
+    ("LeerXYZ","","-1",0,""),
+    
+    ("Led",u"Led prendido u apagado.","-1",0,""),
+    ("Destellar","","-1",0,""),
+    ("CLed","","-1",0,""),
+    
+    ("Aux1CfgInOut",u"Aux1 1=salida, 0=entrada","-1",0,""),
+    ("Aux2CfgInOut",u"Aux2 1=salida, 0=entrada","-1",0,""),
+
+    ("ErrorLed",u"Falla salida de led.","-1",0,""),
+    ("ErrorCorte","","-1",0,""),
+    ("ErrorAux1","","-1",0,"" ),
+    ("ErrorAux2","","-1",0,"" ),
+    
+    ("Accel_Flag_DR",u"Flag indicador de dato nuevo de aceleracion disponible","-1",0,""),
+    ("Accel_Flag_Choque", u"Flag de accidente. Para mas informacion, ver Registro STAT","-1",0,""),
+    
+    ("Pulsos","","-1",0,""),
+    ("Buzz","","-1",0,""),
+    ("AntenaGPSCorto","","-1",0,""),
+    ("AntenaGPSPresente","","-1",0,""),
+    ("AntenaGSMCorto","","-1",0,""),
+    ("AntenaGSMPresente","","-1",0,"")
+)
+DefinicionesBits = DefinicionesBits + tuple([["sendSMS%d"%i,u"Envía Mensaje de Texto Nº %d"%i,"-1",0,""] for i in range(Cantidad_SMS)])
+
+
+DefinicionesBytes = (\
+    ("FrecContacto",    u"Frecuencia de muestreo contacto","-1",0),
+    ("CNTContacto",     u"Contador cuantos Contacto iguales","-1",0),
+    ("CfgCNTContacto",  u"Cantidad de muestras para validar Contacto","-1",0),
+    ("FrecAux1in",      u"Frecuencia de muestreo en ms de Aux1in","-1",0),
+    ("CfgCNTAux1in",    u"Cantidad de muestras para validar Aux1in","-1",0),
+    ("CNTAux1in",       u"Contador de Aux1in iguales","-1",0), 
+    ("FrecAux2in",      u"Frecuencia de muestreo en ms de Aux2in","-1",0),
+    ("CfgCNTAux2in",    u"Cantidad de muestras para validar Aux2in","-1",0),
+    ("CNTAux2in",       u"Contador de Aux2in iguales","-1",0),
+    ("FrecBtnPanic",    u"Frecuencia de muestreo en ms de btn pánico","-1",0), 
+    ("CNTBtnPanic",     u"Contador cuantos btn pánico iguales","-1",0),
+    ("CfgCNTBtnPanic",  u"Cantidad de muestras para validar btn pánico","-1",0),
+    ("Frecpulsdesact",  u"Frecuencia de muestreo en ms del puls desactivacion","-1",0),    
+    ("CNTpulsdesact",   u"Contador cuantos puls desact iguales","-1",0),   
+    ("CfgCNTpulsdesact",u"Cantidad de muestras para validar puls desactivacion","-1",0),
+    ("Frecpuerta",      u"Frecuencia de muestreo en ms de puerta","-1",0), 
+    ("CNTpuerta",       u"Contador cuantos puerta iguales","-1",0),    
+    ("CfgCNTpuerta",    u"Cantidad de muestras para validar puerta","-1",0),   
+    ("Frecporton",      u"Frecuencia de muestreo en ms de portón","-1",0), 
+    ("CNTporton",       u"Contador cuantos portón iguales","-1",0),    
+    ("CfgCNTporton",    u"Cantidad de muestras para validar portón","-1",0),
+    ("Frectrailer",     u"Frecuencia de muestreo en ms de trailer","-1",0),    
+    ("CNTtrailer",      u"Contador cuantos trailer iguales","-1",0),   
+    ("CfgCNTtrailer",   u"Cantidad de muestras para validar trailer","-1",0),  
+    ("FrecCorteNA",     u"Frecuencia de muestreo en ms de CorteNA","-1",0),    
+    ("CNTCorteNA",      u"Contador cuantos CorteNA iguales","-1",0),
+    ("CfgCNTCorteNA",   u"Cantidad de muestras para validar CorteNA","-1",0),  
+    ("FrecCorteC",      u"Frecuencia de muestreo en ms de CorteC","-1",0), 
+    ("CNTCorteC",       u"Contador cuantos CorteC iguales","-1",0),    
+    ("CfgCNTCorteC",    u"Cantidad de muestras para validar CorteC","-1",0),   
+    ("TiempoCorte",     u"Tiempo entre activacion y lectura de la realimentacion","-1",0), 
+    ("TiempoAux1",      u"","-1",0),
+    ("TiempoAux2",      u"","-1",0),
+    ("CorteReintentos", u"","-1",0),   
+    ("Aux1Reintentos",  u"","-1",0),   
+    ("Aux2Reintentos",  u"","-1",0),   
+    ("Frecan0",         u"Frecuencia de muestreo en ms de entrada analógica","-1",0),  
+    ("FrecVccTest",     u"Frecuencia de muestreo en ms de entrada Vcc","-1",0),    
+    ("CNTan0",          u"Contador cuantos an0 dentro del rango","-1",0),  
+    ("CfgCNTan0",       u"Cantidad de muestras para validar AD0","-1",0),  
+    ("an0VALOR",        u"Valor de la conversión para AD0","-1",0),    
+    ("an0Zai",          u"Límite inferior zona A","-1",0),
+    ("an0Zas",          u"Límite superior zona A","-1",0), 
+    ("an0Zbi",          u"Límite inferior zona B","-1",0), 
+    ("an0Zbs",          u"Límite superior zona B","-1",0), 
+    ("an0Zci",          u"Límite inferior zona C","-1",0), 
+    ("an0Zcs",          u"Límite superior zona C","-1",0), 
+    ("an0Zdi",          u"Límite inferior zona D","-1",0), 
+    ("an0Zds",          u"Límite superior zona D","-1",0), 
+    ("an1VALOR",        u"Valor de la conversión para AD1","-1",0),    
+    ("an2VALOR",        u"Valor de la conversión para AD2","-1",0),    
+    ("an3VALOR",        u"Valor de la conversión para AD3","-1",0),    
+    ("an4VALOR",        u"Valor de la conversión para AD4","-1",0),    
+    ("an5VALOR",        u"Valor de la conversión para AD5","-1",0),    
+    ("an0ZONA",         u"","-1",0),   
+    ("VccVALOR",        u"","-1",0),   
+    ("FrecLed",         u"Frecuencia de encendido ms de LED","-1",0),  
+    ("CfgCNTLed",       u"Configuración cantidad de destellos led cada vez que es disparado","-1",0),  
+    ("CNTLed",          u"","-1",0),   
+    ("DutyLed",         u"porcentaje apagado encendido 50ms de paso","-1",0),  
+    ("CfgCNTCLed",		u"","-1",0),  
+    ("TMRLed",          u"Timer incrementado cada 1ms","-1",0),
+    ("Accel_X_MSB",     u"MSB de la aceleracion Actual eje X","-1",0), 
+    ("Accel_X_LSB",     u"LSB de la aceleracion Actual eje X","-1",0), 
+    ("Accel_Y_MSB",     u"MSB de la aceleracion Actual eje Y","-1",0),
+    ("Accel_Y_LSB",     u"LSB de la aceleracion Actual eje Y","-1",0), 
+    ("Accel_Z_MSB",     u"MSB de la aceleracion Actual eje Z","-1",0),
+    ("Accel_Z_LSB",     u"LSB de la aceleracion Actual eje Z","-1",0), 
+    ("Accel_StChoque",  u"Copia del registro STATE del detector de transitorios del acelerometro\nActualizado solo cuando hay un choque","-1",0),  
+    ("Frecbuzz",        u"","-1",0),
+    ("CfgCNTbuzz",      u"","-1",0),   
+    ("CNTbuzz",         u"","-1",0),   
+    ("Frecoscbuzz",     u"","-1",0),
+    ("Dutyenc",         u"","-1",0)
+)
+
+
+
 
 SMS = []
 for i in range(Cantidad_SMS):
@@ -249,16 +255,17 @@ tipoAppCompleta     = 0x44
 Bits = []
 for i in range(Cantidad_Bits_Usuario):
     if len(DefinicionesBits)>i:
-        Bits.append(DefinicionesBits[i][0:2])
+        Bits.append(list(DefinicionesBits[i][0:4]))
     else:
-        Bits.append(["Bit %0.3d"%i,u"Sin Descripción"])
+        Bits.append(["Bit %0.3d"%i,u"Sin Descripción","-1",1])
         
 Bytes = []
 for i in range(Cantidad_Bytes_Usuario):
     if len(DefinicionesBytes)>i:
-        Bytes.append(DefinicionesBytes[i])
+        Bytes.append(list(DefinicionesBytes[i]))
+        #copia los valores de Definiciones bytes en una lista de listas.
     else:
-        Bytes.append(["Byte %0.3d"%i,"",""])
+        Bytes.append(["Byte %0.3d"%i,"","-1",1])
 
 
 #Aplicacion = {"AppNum":0,"Nombre":"","EstadoActual":True,"Estados":[]}
@@ -367,8 +374,7 @@ def GenerarBin(programa):
             
     return binario
 
-def main():
-    DefinicionesBytes    
+def main():   
     print u"Este módulo forma parte de generador.py"
 
 if __name__ == '__main__':

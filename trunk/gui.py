@@ -164,7 +164,7 @@ class frmEditBit ( wx.Frame ):
 		
 		self.BitScrolled = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
 		self.BitScrolled.SetScrollRate( 5, 5 )
-		self.gridBotones = wx.FlexGridSizer( 0, 2, 0, 1 )
+		self.gridBotones = wx.FlexGridSizer( 0, 3, 0, 1 )
 		self.gridBotones.AddGrowableCol( 1 )
 		self.gridBotones.SetFlexibleDirection( wx.BOTH )
 		self.gridBotones.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
@@ -227,7 +227,7 @@ class frmEditByte ( wx.Frame ):
 		
 		self.ByteScrolled = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
 		self.ByteScrolled.SetScrollRate( 5, 5 )
-		self.gridBotones = wx.FlexGridSizer( 0, 2, 0, 0 )
+		self.gridBotones = wx.FlexGridSizer( 0, 3, 0, 0 )
 		self.gridBotones.AddGrowableCol( 1 )
 		self.gridBotones.SetFlexibleDirection( wx.BOTH )
 		self.gridBotones.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
@@ -236,7 +236,7 @@ class frmEditByte ( wx.Frame ):
 		self.ByteScrolled.SetSizer( self.gridBotones )
 		self.ByteScrolled.Layout()
 		self.gridBotones.Fit( self.ByteScrolled )
-		bSizer32.Add( self.ByteScrolled, 1, wx.EXPAND |wx.ALL, 5 )
+		bSizer32.Add( self.ByteScrolled, 1, wx.EXPAND |wx.ALL, 0 )
 		
 		bSizer34 = wx.BoxSizer( wx.HORIZONTAL )
 		
@@ -1188,15 +1188,15 @@ class frmAnalog ( wx.Frame ):
 		self.m_staticText17.Wrap( -1 )
 		gSizer5.Add( self.m_staticText17, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
 		
-		self.txtctrlTiempo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer5.Add( self.txtctrlTiempo, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+		self.txtctrlTiempo = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 255, 10 )
+		gSizer5.Add( self.txtctrlTiempo, 0, wx.ALL, 5 )
 		
 		self.m_staticText18 = wx.StaticText( self, wx.ID_ANY, u"Cantidad de muestras\npara validar zona", wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText18.Wrap( -1 )
 		gSizer5.Add( self.m_staticText18, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
 		
-		self.txtctrlMuestras = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		gSizer5.Add( self.txtctrlMuestras, 0, wx.ALIGN_CENTER_VERTICAL|wx.RIGHT, 5 )
+		self.txtctrlMuestras = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 255, 5 )
+		gSizer5.Add( self.txtctrlMuestras, 0, wx.ALL, 5 )
 		
 		
 		bSizer7.Add( gSizer5, 0, wx.EXPAND, 5 )
@@ -1249,6 +1249,7 @@ class frmAnalog ( wx.Frame ):
 		self.spinDinf.Bind( wx.EVT_SPINCTRL, self.OnSpin )
 		self.btnInformacion.Bind( wx.EVT_BUTTON, self.OnInfo )
 		self.txtctrlTiempo.Bind( wx.EVT_CHAR, self.OnChar )
+		self.txtctrlTiempo.Bind( wx.EVT_SPINCTRL, self.OnSpinCtrl )
 		self.txtctrlMuestras.Bind( wx.EVT_CHAR, self.OnChar )
 		self.txtctrlComentarios.Bind( wx.EVT_CHAR, self.OnCambios )
 		self.frm_analog_btnGuardar.Bind( wx.EVT_BUTTON, self.OnGuardar )
@@ -1293,6 +1294,9 @@ class frmAnalog ( wx.Frame ):
 		event.Skip()
 	
 	def OnChar( self, event ):
+		event.Skip()
+	
+	def OnSpinCtrl( self, event ):
 		event.Skip()
 	
 	
