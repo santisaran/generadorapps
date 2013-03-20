@@ -97,40 +97,67 @@ CfgCNTan0, Cantidad de muestras para validar valor An0. ""","-1",0,""),
     ("AntenaGSMCorto","","-1",0,""),
     ("AntenaGSMPresente","","-1",0,"")
 )
+
 DefinicionesBits = DefinicionesBits + tuple([["sendSMS%d"%i,u"Envía Mensaje de Texto Nº %d"%i,"-1",0,""] for i in range(Cantidad_SMS)])
+
+MuestrasDefault = 5
+TiempoDefault = 20
+
+#Entradas disponibles en el localizador:
+
+_contacto = u"Contacto"
+_aux1 = u"Aux1"
+_aux2 = u"Aux2"
+_panico = u"Pánico"
+_pulsador = u"Pulsador"
+_porton = u"Portón"
+_corteNA = u"CorteNA"
+_corteC = u"CorteC"
+_puerta = u"Puerta"
+_trailer = u"Trailer"
+
+
+Entradas = (_contacto, _aux1 , _aux2, _panico, _pulsador, _puerta,  _porton ,\
+            _trailer, _corteNA, _corteC)
+
+EntradasBytes = { _contacto: ["FrecContacto","CfgCNTContacto"], _aux1:["FrecAux1in","CfgCNTAux1in"],\
+                 _aux2:["FrecAux2in","CfgCNTAux2in"], _panico:["FrecBtnPanic","CfgCNTBtnPanic"],\
+                 _pulsador:["Frecpulsdesact","CfgCNTpulsdesact"], _porton:["Frecporton","CfgCNTporton"],\
+                 _corteNA:["FrecCorteNA","CfgCNTCorteNA"],_corteC:["FrecCorteC","CfgCNTCorteC"],\
+                 _puerta: ["Frecpuerta","CfgCNTpuerta"], _trailer:["Frectrailer","CfgCNTTrailer"]}
 
 
 DefinicionesBytes = (\
-    ("FrecContacto",    u"Frecuencia de muestreo contacto","-1",0),
-    ("CNTContacto",     u"Contador cuantos Contacto iguales","-1",0),
-    ("CfgCNTContacto",  u"Cantidad de muestras para validar Contacto","-1",0),
-    ("FrecAux1in",      u"Frecuencia de muestreo en ms de Aux1in","-1",0),
-    ("CfgCNTAux1in",    u"Cantidad de muestras para validar Aux1in","-1",0),
-    ("CNTAux1in",       u"Contador de Aux1in iguales","-1",0), 
-    ("FrecAux2in",      u"Frecuencia de muestreo en ms de Aux2in","-1",0),
-    ("CfgCNTAux2in",    u"Cantidad de muestras para validar Aux2in","-1",0),
-    ("CNTAux2in",       u"Contador de Aux2in iguales","-1",0),
-    ("FrecBtnPanic",    u"Frecuencia de muestreo en ms de btn pánico","-1",0), 
-    ("CNTBtnPanic",     u"Contador cuantos btn pánico iguales","-1",0),
-    ("CfgCNTBtnPanic",  u"Cantidad de muestras para validar btn pánico","-1",0),
-    ("Frecpulsdesact",  u"Frecuencia de muestreo en ms del puls desactivacion","-1",0),    
-    ("CNTpulsdesact",   u"Contador cuantos puls desact iguales","-1",0),   
-    ("CfgCNTpulsdesact",u"Cantidad de muestras para validar puls desactivacion","-1",0),
-    ("Frecpuerta",      u"Frecuencia de muestreo en ms de puerta","-1",0), 
-    ("CNTpuerta",       u"Contador cuantos puerta iguales","-1",0),    
-    ("CfgCNTpuerta",    u"Cantidad de muestras para validar puerta","-1",0),   
-    ("Frecporton",      u"Frecuencia de muestreo en ms de portón","-1",0), 
-    ("CNTporton",       u"Contador cuantos portón iguales","-1",0),    
-    ("CfgCNTporton",    u"Cantidad de muestras para validar portón","-1",0),
-    ("Frectrailer",     u"Frecuencia de muestreo en ms de trailer","-1",0),    
-    ("CNTtrailer",      u"Contador cuantos trailer iguales","-1",0),   
-    ("CfgCNTtrailer",   u"Cantidad de muestras para validar trailer","-1",0),  
-    ("FrecCorteNA",     u"Frecuencia de muestreo en ms de CorteNA","-1",0),    
-    ("CNTCorteNA",      u"Contador cuantos CorteNA iguales","-1",0),
-    ("CfgCNTCorteNA",   u"Cantidad de muestras para validar CorteNA","-1",0),  
-    ("FrecCorteC",      u"Frecuencia de muestreo en ms de CorteC","-1",0), 
-    ("CNTCorteC",       u"Contador cuantos CorteC iguales","-1",0),    
-    ("CfgCNTCorteC",    u"Cantidad de muestras para validar CorteC","-1",0),   
+    (EntradasBytes[_contacto][0],   u"Frecuencia de muestreo contacto","-1",0),
+    ("CNTContacto",                 u"Contador cuantos Contacto iguales","-1",0),
+    (EntradasBytes[_contacto][1],   u"Cantidad de muestras para validar Contacto","-1",0),
+    (EntradasBytes[_aux1][0],       u"Frecuencia de muestreo en ms de Aux1in","-1",0),
+    ("CNTAux1in",                   u"Contador de Aux1in iguales","-1",0),
+    (EntradasBytes[_aux1][1],       u"Cantidad de muestras para validar Aux1in","-1",0), 
+    (EntradasBytes[_aux2][0],       u"Frecuencia de muestreo en ms de Aux2in","-1",0),
+    ("CNTAux2in",                   u"Contador de Aux2in iguales","-1",0),
+    (EntradasBytes[_aux2][1],       u"Cantidad de muestras para validar Aux2in","-1",0),    
+    (EntradasBytes[_panico][0],     u"Frecuencia de muestreo en ms de btn pánico","-1",0), 
+    ("CNTBtnPanic",                 u"Contador cuantos btn pánico iguales","-1",0),
+    (EntradasBytes[_panico][1],     u"Cantidad de muestras para validar btn pánico","-1",0),
+    (EntradasBytes[_pulsador][0],   u"Frecuencia de muestreo en ms del puls desactivacion","-1",0),    
+    ("CNTpulsdesact",               u"Contador cuantos puls desact iguales","-1",0),   
+    (EntradasBytes[_pulsador][1],   u"Cantidad de muestras para validar puls desactivacion","-1",0),
+    (EntradasBytes[_puerta][0],     u"Frecuencia de muestreo en ms de puerta","-1",0), 
+    ("CNTpuerta",                   u"Contador cuantos puerta iguales","-1",0),    
+    (EntradasBytes[_puerta][1],     u"Cantidad de muestras para validar puerta","-1",0),   
+    (EntradasBytes[_porton][0],     u"Frecuencia de muestreo en ms de portón","-1",0), 
+    ("CNTporton",                   u"Contador cuantos portón iguales","-1",0),    
+    (EntradasBytes[_porton][1],     u"Cantidad de muestras para validar portón","-1",0),
+    (EntradasBytes[_trailer][0],    u"Frecuencia de muestreo en ms de trailer","-1",0),    
+    ("CNTtrailer",                  u"Contador cuantos trailer iguales","-1",0),   
+    (EntradasBytes[_trailer][1],    u"Cantidad de muestras para validar trailer","-1",0),  
+    (EntradasBytes[_corteNA][0],    u"Frecuencia de muestreo en ms de CorteNA","-1",0),    
+    ("CNTCorteNA",                  u"Contador cuantos CorteNA iguales","-1",0),
+    (EntradasBytes[_corteNA][1],    u"Cantidad de muestras para validar CorteNA","-1",0),  
+    (EntradasBytes[_corteC][0],     u"Frecuencia de muestreo en ms de CorteC","-1",0), 
+    ("CNTCorteC",                   u"Contador cuantos CorteC iguales","-1",0),    
+    (EntradasBytes[_corteC][1],     u"Cantidad de muestras para validar CorteC","-1",0),   
     ("TiempoCorte",     u"Tiempo entre activacion y lectura de la realimentacion","-1",0), 
     ("TiempoAux1",      u"","-1",0),
     ("TiempoAux2",      u"","-1",0),
@@ -161,7 +188,7 @@ DefinicionesBytes = (\
     ("CfgCNTLed",       u"Configuración cantidad de destellos led cada vez que es disparado","-1",0),  
     ("CNTLed",          u"","-1",0),   
     ("DutyLed",         u"porcentaje apagado encendido 50ms de paso","-1",0),  
-    ("CfgCNTCLed",		u"","-1",0),  
+    ("CfgCNTCLed",        u"","-1",0),  
     ("TMRLed",          u"Timer incrementado cada 1ms","-1",0),
     ("Accel_X_MSB",     u"MSB de la aceleracion Actual eje X","-1",0), 
     ("Accel_X_LSB",     u"LSB de la aceleracion Actual eje X","-1",0), 
@@ -178,11 +205,10 @@ DefinicionesBytes = (\
 )
 
 
-
-
 SMS = []
 for i in range(Cantidad_SMS):
     SMS.append("")
+
 
 #/*
 #* BLOQUES:
@@ -192,6 +218,7 @@ for i in range(Cantidad_SMS):
 #// Defines Tipos de Bloques (Ojo si se cambia algo cambiar también el archivo CylocDefines.h)
 
 #// Almacenado en los bits [29:24] de la informacion de los bloques (uint32_t)
+
 
 BloquesPosibles = (u"Null",u"Incrementar",u"Decrementar",u"AND_2_BIT",\
     u"OR_2_BIT",u"NOT_BIT",u"Sumar_2_Reg",u"Restar_2_Reg",u"Invertir_Reg",\
@@ -252,6 +279,7 @@ tipoBloque          = 0x02
 tipoCondiciones     = 0x22
 tipoResultados      = 0x33
 tipoAppCompleta     = 0x44
+
 Bits = []
 for i in range(Cantidad_Bits_Usuario):
     if len(DefinicionesBits)>i:
@@ -274,6 +302,7 @@ for i in range(Cantidad_Bytes_Usuario):
 
 
 class Aplicacion():
+    """Clase que contiene todos los datos de una aplicacion"""
     def __init__(self,numero, nombre):
         self.AppNum = numero
         self.Nombre = nombre
@@ -292,34 +321,66 @@ class Aplicacion():
 
 
 class Estado():
-            def __init__(self):
-                self.Bloques     = [Bloque_Null,Bloque_Null,Bloque_Null,Bloque_Null,Bloque_Null]
-                self.Condiciones = [Condicion_NULL,PARAMETRO1,PARAMETRO2]
-                self.Resultados  = [ESTADO0,ESTADO0]
-                self.Nombre = ""
-                self.Comentario = ""
-            def copy(self):
-                EST = Estado()
-                EST.Bloques = self.Bloques[:]
-                EST.Condiciones = self.Condiciones[:]
-                EST.Resultados = self.Resultados[:]
-                EST.Nombre = "%s"%self.Nombre
-                EST.Comentario = "%s"%self.Comentario
-                return EST
-muestras = 5
-tiempo = 20
-Entradas = (u"Contacto", u"Aux1", u"Pánico", u"Pulsador", u"Portón",\
-    u"CorteNA", u"CorteC")
-    
-ValoresEntradas = {}
-for i in Entradas:
-    ValoresEntradas[i] = [muestras, tiempo]
+    """variables de la clase estado"""
+    def __init__(self):
+        self.Bloques     = [Bloque_Null,Bloque_Null,Bloque_Null,Bloque_Null,Bloque_Null]
+        self.Condiciones = [Condicion_NULL,PARAMETRO1,PARAMETRO2]
+        self.Resultados  = [ESTADO0,ESTADO0]
+        self.Nombre = ""
+        self.Comentario = ""
+    def copy(self):
+        EST = Estado()
+        EST.Bloques = self.Bloques[:]
+        EST.Condiciones = self.Condiciones[:]
+        EST.Resultados = self.Resultados[:]
+        EST.Nombre = "%s"%self.Nombre
+        EST.Comentario = "%s"%self.Comentario
+        return EST
+                
+class Programa():
+    """Clase que contiene un programa completo, con N aplicaciones, valores
+    bits, valores bytes, nombres de bytes y bits y SMSs.
+    recibe como parámetros una lista de aplicaciones, una lista de listas con
+    la configuracion de bits, una lista de listas con la configuracion de los 
+    bytes, y una lista con los mensajes de texto"""
+    def __init__(self, aplicaciones = False , cfgBits = False ,\
+            cfgBytes = False , cfgSMS = False):
+        
+        self.aplicaciones = []
+        if (aplicaciones != False) and (len(aplicaciones)==Cantidad_Apps):
+            """solo cargar si es una lista completa de aplicaciones"""
+            for app in aplicaciones:
+                self.aplicaciones.append(app.copy())
+        else:
+            """cargar aplicaciones vacías"""
+            for i in range(Cantidad_Apps):
+                self.aplicaciones.append(Aplicacion(i,""))
+        
+        self.Bits = []
+        if cfgBits != False:
+            self.Bits = cfgBits[:]
+        else:
+            self.Bits = Bits[:]
+        
+        self.Bytes = []
+        if cfgBytes != False:
+            self.Bytes = cfgBytes[:]
+        else:
+            self.Bytes = Bytes[:]
+        
+        self.SMS = []
+        if cfgSMS != False:
+            self.SMS = cfgSMS[:]
+        else:
+            self.SMS = SMS[:]
+        print "Programa creado"        
 
 PorZonas = 0
 ValorADC = 1
 nZonas = ("Asup","Ainf","Bsup","Binf","Csup","Cinf","Dsup","Dinf")
 Analogica = {"Asup":100,"Ainf":90,"Bsup":80,"Binf":70,"Csup":60,"Cinf":50,\
-    "Dsup":40,"Dinf":30,"tiempo":5, "muestras":5, "modo":PorZonas,"comentarios":""}
+        "Dsup":40,"Dinf":30,"tiempo":5, "muestras":5, "modo":PorZonas,\
+        "comentarios":""}
 
 #Acerca del modo : 0 modo 4 zonas, 1 modo valor ADC.
 

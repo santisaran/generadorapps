@@ -10,6 +10,9 @@
 import wx
 import wx.xrc
 
+import gettext
+_ = gettext.gettext
+
 ###########################################################################
 ## Class frmPpal
 ###########################################################################
@@ -17,7 +20,7 @@ import wx.xrc
 class frmPpal ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Generador de Programas: ", pos = wx.DefaultPosition, size = wx.Size( 597,496 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Generador de Programas: "), pos = wx.DefaultPosition, size = wx.Size( 597,496 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -25,59 +28,59 @@ class frmPpal ( wx.Frame ):
 		self.m_menubar1.SetExtraStyle( wx.WS_EX_BLOCK_EVENTS )
 		
 		self.m_archivo = wx.Menu()
-		self.m_file_nuevoPrograma = wx.MenuItem( self.m_archivo, wx.ID_ANY, u"Nuevo Programa"+ u"\t" + u"Ctrl+N", wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_file_nuevoPrograma = wx.MenuItem( self.m_archivo, wx.ID_ANY, _(u"Nuevo Programa")+ u"\t" + u"Ctrl+N", wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_archivo.AppendItem( self.m_file_nuevoPrograma )
 		
-		self.m_file_abrirPrograma = wx.MenuItem( self.m_archivo, wx.ID_ANY, u"Abrir Programa"+ u"\t" + u"Ctrl+O", wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_file_abrirPrograma = wx.MenuItem( self.m_archivo, wx.ID_ANY, _(u"Abrir Programa")+ u"\t" + u"Ctrl+O", wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_archivo.AppendItem( self.m_file_abrirPrograma )
 		
-		self.m_file_guardarPrograma = wx.MenuItem( self.m_archivo, wx.ID_ANY, u"Guardar Programa"+ u"\t" + u"Ctrl+S", wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_file_guardarPrograma = wx.MenuItem( self.m_archivo, wx.ID_ANY, _(u"Guardar Programa")+ u"\t" + u"Ctrl+S", wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_archivo.AppendItem( self.m_file_guardarPrograma )
 		
-		self.m_file_guardarComo = wx.MenuItem( self.m_archivo, wx.ID_ANY, u"Guardar Programa Como", wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_file_guardarComo = wx.MenuItem( self.m_archivo, wx.ID_ANY, _(u"Guardar Programa Como"), wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_archivo.AppendItem( self.m_file_guardarComo )
 		
 		self.m_archivo.AppendSeparator()
 		
-		self.m_file_gen = wx.MenuItem( self.m_archivo, wx.ID_ANY, u"Generar archivo Cyloc", wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_file_gen = wx.MenuItem( self.m_archivo, wx.ID_ANY, _(u"Generar archivo Cyloc"), wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_archivo.AppendItem( self.m_file_gen )
 		
-		self.m_menuItem11 = wx.MenuItem( self.m_archivo, wx.ID_ANY, u"Importar desde Binario", wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_menuItem11 = wx.MenuItem( self.m_archivo, wx.ID_ANY, _(u"Importar desde Binario"), wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_archivo.AppendItem( self.m_menuItem11 )
 		
 		self.m_archivo.AppendSeparator()
 		
-		self.OnClose = wx.MenuItem( self.m_archivo, wx.ID_ANY, u"Salir"+ u"\t" + u"Ctrl+Q", wx.EmptyString, wx.ITEM_NORMAL )
+		self.OnClose = wx.MenuItem( self.m_archivo, wx.ID_ANY, _(u"Salir")+ u"\t" + u"Ctrl+Q", wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_archivo.AppendItem( self.OnClose )
 		
-		self.m_menubar1.Append( self.m_archivo, u"&Archivo" ) 
+		self.m_menubar1.Append( self.m_archivo, _(u"&Archivo") ) 
 		
 		self.m_variables = wx.Menu()
-		self.m_variables_Byte = wx.MenuItem( self.m_variables, wx.ID_ANY, u"Editar Variables Byte", wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_variables_Byte = wx.MenuItem( self.m_variables, wx.ID_ANY, _(u"Editar Variables Byte"), wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_variables.AppendItem( self.m_variables_Byte )
 		
-		self.m_variables_bit = wx.MenuItem( self.m_variables, wx.ID_ANY, u"Editar variables Bit", wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_variables_bit = wx.MenuItem( self.m_variables, wx.ID_ANY, _(u"Editar variables Bit"), wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_variables.AppendItem( self.m_variables_bit )
 		
-		self.mVariablesSMS = wx.MenuItem( self.m_variables, wx.ID_ANY, u"Editar Mensajes de Texto", wx.EmptyString, wx.ITEM_NORMAL )
+		self.mVariablesSMS = wx.MenuItem( self.m_variables, wx.ID_ANY, _(u"Editar Mensajes de Texto"), wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_variables.AppendItem( self.mVariablesSMS )
 		
-		self.m_menubar1.Append( self.m_variables, u"Va&riables" ) 
+		self.m_menubar1.Append( self.m_variables, _(u"Va&riables") ) 
 		
 		self.m_aplicaciones = wx.Menu()
-		self.m_menubar1.Append( self.m_aplicaciones, u"A&plicaciones" ) 
+		self.m_menubar1.Append( self.m_aplicaciones, _(u"A&plicaciones") ) 
 		
 		self.m_drivers = wx.Menu()
-		self.m_drivers_analog = wx.MenuItem( self.m_drivers, wx.ID_ANY, u"Entrada Analógica", wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_drivers_analog = wx.MenuItem( self.m_drivers, wx.ID_ANY, _(u"Entrada Analógica"), wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_drivers.AppendItem( self.m_drivers_analog )
 		
-		self.m_menubar1.Append( self.m_drivers, u"&Drivers" ) 
+		self.m_menubar1.Append( self.m_drivers, _(u"&Drivers") ) 
 		
 		self.SetMenuBar( self.m_menubar1 )
 		
 		bSizer32 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.m_button22 = wx.Button( self, wx.ID_ANY, u"MyButton", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button22 = wx.Button( self, wx.ID_ANY, _(u"MyButton"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_button22.Hide()
 		
 		bSizer32.Add( self.m_button22, 0, wx.ALL, 5 )
@@ -114,7 +117,20 @@ class frmPpal ( wx.Frame ):
 		self.m_button22.Bind( wx.EVT_BUTTON, self.OnTest )
 	
 	def __del__( self ):
-		pass
+		# Disconnect Events
+		self.Unbind( wx.EVT_CLOSE )
+		self.Unbind( wx.EVT_MENU, id = self.m_file_nuevoPrograma.GetId() )
+		self.Unbind( wx.EVT_MENU, id = self.m_file_abrirPrograma.GetId() )
+		self.Unbind( wx.EVT_MENU, id = self.m_file_guardarPrograma.GetId() )
+		self.Unbind( wx.EVT_MENU, id = self.m_file_guardarComo.GetId() )
+		self.Unbind( wx.EVT_MENU, id = self.m_file_gen.GetId() )
+		self.Unbind( wx.EVT_MENU, id = self.m_menuItem11.GetId() )
+		self.Unbind( wx.EVT_MENU, id = self.OnClose.GetId() )
+		self.Unbind( wx.EVT_MENU, id = self.m_variables_Byte.GetId() )
+		self.Unbind( wx.EVT_MENU, id = self.m_variables_bit.GetId() )
+		self.Unbind( wx.EVT_MENU, id = self.mVariablesSMS.GetId() )
+		self.Unbind( wx.EVT_MENU, id = self.m_drivers_analog.GetId() )
+		self.m_button22.Unbind( wx.EVT_BUTTON, None )
 	
 	
 	# Virtual event handlers, overide them in your derived class
@@ -163,7 +179,7 @@ class frmPpal ( wx.Frame ):
 class frmEditBit ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Editar Variables  Bits", pos = wx.DefaultPosition, size = wx.Size( 441,392 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Editar Variables  Bits"), pos = wx.DefaultPosition, size = wx.Size( 441,392 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -184,10 +200,10 @@ class frmEditBit ( wx.Frame ):
 		
 		bSizer31 = wx.BoxSizer( wx.HORIZONTAL )
 		
-		self.m_button15 = wx.Button( self, wx.ID_ANY, u"Actualizar cambios", wx.Point( 0,1 ), wx.DefaultSize, 0 )
+		self.m_button15 = wx.Button( self, wx.ID_ANY, _(u"Actualizar cambios"), wx.Point( 0,1 ), wx.DefaultSize, 0 )
 		bSizer31.Add( self.m_button15, 1, wx.ALL, 5 )
 		
-		self.m_button16 = wx.Button( self, wx.ID_ANY, u"Deshacer cambios", wx.Point( 1,1 ), wx.DefaultSize, 0 )
+		self.m_button16 = wx.Button( self, wx.ID_ANY, _(u"Deshacer cambios"), wx.Point( 1,1 ), wx.DefaultSize, 0 )
 		bSizer31.Add( self.m_button16, 1, wx.ALL, 5 )
 		
 		
@@ -205,7 +221,10 @@ class frmEditBit ( wx.Frame ):
 		self.m_button16.Bind( wx.EVT_BUTTON, self.OnUndoBit )
 	
 	def __del__( self ):
-		pass
+		# Disconnect Events
+		self.Unbind( wx.EVT_CLOSE )
+		self.m_button15.Unbind( wx.EVT_BUTTON, None )
+		self.m_button16.Unbind( wx.EVT_BUTTON, None )
 	
 	
 	# Virtual event handlers, overide them in your derived class
@@ -226,7 +245,7 @@ class frmEditBit ( wx.Frame ):
 class frmEditByte ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Editar Variables Bytes", pos = wx.DefaultPosition, size = wx.Size( 522,397 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Editar Variables Bytes"), pos = wx.DefaultPosition, size = wx.Size( 522,397 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -247,10 +266,10 @@ class frmEditByte ( wx.Frame ):
 		
 		bSizer34 = wx.BoxSizer( wx.HORIZONTAL )
 		
-		self.frmEditByte_btn_Actualizar = wx.Button( self, wx.ID_ANY, u"Actualizar cambios", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.frmEditByte_btn_Actualizar = wx.Button( self, wx.ID_ANY, _(u"Actualizar cambios"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer34.Add( self.frmEditByte_btn_Actualizar, 1, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.frmEditByte_btn_Deshacer = wx.Button( self, wx.ID_ANY, u"Deshacer cambios", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.frmEditByte_btn_Deshacer = wx.Button( self, wx.ID_ANY, _(u"Deshacer cambios"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer34.Add( self.frmEditByte_btn_Deshacer, 1, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		
@@ -268,7 +287,10 @@ class frmEditByte ( wx.Frame ):
 		self.frmEditByte_btn_Deshacer.Bind( wx.EVT_BUTTON, self.OnUndoByte )
 	
 	def __del__( self ):
-		pass
+		# Disconnect Events
+		self.Unbind( wx.EVT_CLOSE )
+		self.frmEditByte_btn_Actualizar.Unbind( wx.EVT_BUTTON, None )
+		self.frmEditByte_btn_Deshacer.Unbind( wx.EVT_BUTTON, None )
 	
 	
 	# Virtual event handlers, overide them in your derived class
@@ -289,7 +311,7 @@ class frmEditByte ( wx.Frame ):
 class frmSMS ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Edición de SMS", pos = wx.DefaultPosition, size = wx.Size( 525,410 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Edición de SMS"), pos = wx.DefaultPosition, size = wx.Size( 525,410 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -310,13 +332,13 @@ class frmSMS ( wx.Frame ):
 		
 		bSizer35 = wx.BoxSizer( wx.HORIZONTAL )
 		
-		self.m_button29 = wx.Button( self, wx.ID_ANY, u"&Guardar Cambios", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button29 = wx.Button( self, wx.ID_ANY, _(u"&Guardar Cambios"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer35.Add( self.m_button29, 1, wx.ALIGN_CENTER_VERTICAL|wx.EXPAND|wx.ALL, 5 )
 		
-		self.m_button30 = wx.Button( self, wx.ID_ANY, u"&Deshacer Cambios", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button30 = wx.Button( self, wx.ID_ANY, _(u"&Deshacer Cambios"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer35.Add( self.m_button30, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 		
-		self.m_button34 = wx.Button( self, wx.ID_ANY, u"&Cargar desde Archivo", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button34 = wx.Button( self, wx.ID_ANY, _(u"&Cargar desde Archivo"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer35.Add( self.m_button34, 1, wx.ALL, 5 )
 		
 		
@@ -335,7 +357,11 @@ class frmSMS ( wx.Frame ):
 		self.m_button34.Bind( wx.EVT_BUTTON, self.OnCargarSms )
 	
 	def __del__( self ):
-		pass
+		# Disconnect Events
+		self.Unbind( wx.EVT_CLOSE )
+		self.m_button29.Unbind( wx.EVT_BUTTON, None )
+		self.m_button30.Unbind( wx.EVT_BUTTON, None )
+		self.m_button34.Unbind( wx.EVT_BUTTON, None )
 	
 	
 	# Virtual event handlers, overide them in your derived class
@@ -359,24 +385,24 @@ class frmSMS ( wx.Frame ):
 class frmEditApp  ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Editar Aplicación", pos = wx.DefaultPosition, size = wx.Size( 553,418 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Editar Aplicación"), pos = wx.DefaultPosition, size = wx.Size( 553,418 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
 		bSizer4 = wx.BoxSizer( wx.VERTICAL )
 		
-		sbSizer16 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Datos de la aplicación" ), wx.VERTICAL )
+		sbSizer16 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Datos de la aplicación") ), wx.VERTICAL )
 		
 		gSizer5 = wx.GridSizer( 0, 2, 0, 0 )
 		
-		self.textoPrograma = wx.StaticText( self, wx.ID_ANY, u"Aplicación: ", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_LEFT )
+		self.textoPrograma = wx.StaticText( self, wx.ID_ANY, _(u"Aplicación: "), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_LEFT )
 		self.textoPrograma.Wrap( -1 )
 		gSizer5.Add( self.textoPrograma, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.frm_edit_btn_Nombre = wx.Button( self, wx.ID_ANY, u"Cambiar Nombre", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.frm_edit_btn_Nombre = wx.Button( self, wx.ID_ANY, _(u"Cambiar Nombre"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		gSizer5.Add( self.frm_edit_btn_Nombre, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.m_staticText27 = wx.StaticText( self, wx.ID_ANY, u"Estado Inicial", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText27 = wx.StaticText( self, wx.ID_ANY, _(u"Estado Inicial"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText27.Wrap( -1 )
 		gSizer5.Add( self.m_staticText27, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
@@ -388,7 +414,7 @@ class frmEditApp  ( wx.Frame ):
 		
 		sbSizer16.Add( gSizer5, 0, wx.EXPAND, 5 )
 		
-		sbSizer15 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Lista de Estados" ), wx.VERTICAL )
+		sbSizer15 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Lista de Estados") ), wx.VERTICAL )
 		
 		listEstadosChoices = []
 		self.listEstados = wx.ListBox( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, listEstadosChoices, wx.LB_NEEDED_SB|wx.LB_SINGLE )
@@ -396,13 +422,13 @@ class frmEditApp  ( wx.Frame ):
 		
 		bSizer30 = wx.BoxSizer( wx.HORIZONTAL )
 		
-		self.frm_edit_btn_editarestado = wx.Button( self, wx.ID_ANY, u"&Editar Estado", wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
+		self.frm_edit_btn_editarestado = wx.Button( self, wx.ID_ANY, _(u"&Editar Estado"), wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
 		bSizer30.Add( self.frm_edit_btn_editarestado, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 		
-		self.frm_edit_btn_copiarestado = wx.Button( self, wx.ID_ANY, u"C&opiar Estado", wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
+		self.frm_edit_btn_copiarestado = wx.Button( self, wx.ID_ANY, _(u"C&opiar Estado"), wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
 		bSizer30.Add( self.frm_edit_btn_copiarestado, 1, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 		
-		self.frm_edit_btn_delestado = wx.Button( self, wx.ID_ANY, u"Eliminar Estado", wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
+		self.frm_edit_btn_delestado = wx.Button( self, wx.ID_ANY, _(u"Eliminar Estado"), wx.DefaultPosition, wx.DefaultSize, wx.BU_EXACTFIT )
 		bSizer30.Add( self.frm_edit_btn_delestado, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND|wx.ALL, 5 )
 		
 		
@@ -413,16 +439,16 @@ class frmEditApp  ( wx.Frame ):
 		
 		bSizer26 = wx.BoxSizer( wx.HORIZONTAL )
 		
-		self.frm_edit_btn_delapp = wx.Button( self, wx.ID_ANY, u"Eliminar Aplicación", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.frm_edit_btn_delapp = wx.Button( self, wx.ID_ANY, _(u"Eliminar Aplicación"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer26.Add( self.frm_edit_btn_delapp, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		
 		bSizer26.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
-		self.frm_edit_btn_guardarapp = wx.Button( self, wx.ID_ANY, u"&Guardar aplicación", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.frm_edit_btn_guardarapp = wx.Button( self, wx.ID_ANY, _(u"&Guardar aplicación"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer26.Add( self.frm_edit_btn_guardarapp, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.frm_edit_btn_cerrar = wx.Button( self, wx.ID_ANY, u"&Cerrar", wx.Point( -1,-1 ), wx.DefaultSize, 0 )
+		self.frm_edit_btn_cerrar = wx.Button( self, wx.ID_ANY, _(u"&Cerrar"), wx.Point( -1,-1 ), wx.DefaultSize, 0 )
 		bSizer26.Add( self.frm_edit_btn_cerrar, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 		
 		
@@ -450,7 +476,17 @@ class frmEditApp  ( wx.Frame ):
 		self.frm_edit_btn_cerrar.Bind( wx.EVT_BUTTON, self.OnClose )
 	
 	def __del__( self ):
-		pass
+		# Disconnect Events
+		self.Unbind( wx.EVT_CLOSE )
+		self.frm_edit_btn_Nombre.Unbind( wx.EVT_BUTTON, None )
+		self.choiceEstadoInicial.Unbind( wx.EVT_CHOICE, None )
+		self.listEstados.Unbind( wx.EVT_LISTBOX_DCLICK, None )
+		self.frm_edit_btn_editarestado.Unbind( wx.EVT_BUTTON, None )
+		self.frm_edit_btn_copiarestado.Unbind( wx.EVT_BUTTON, None )
+		self.frm_edit_btn_delestado.Unbind( wx.EVT_BUTTON, None )
+		self.frm_edit_btn_delapp.Unbind( wx.EVT_BUTTON, None )
+		self.frm_edit_btn_guardarapp.Unbind( wx.EVT_BUTTON, None )
+		self.frm_edit_btn_cerrar.Unbind( wx.EVT_BUTTON, None )
 	
 	
 	# Virtual event handlers, overide them in your derived class
@@ -488,13 +524,13 @@ class frmEditApp  ( wx.Frame ):
 class DialogoCopiarApp ( wx.Dialog ):
 	
 	def __init__( self, parent ):
-		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Copiar Programas", pos = wx.DefaultPosition, size = wx.Size( 340,170 ), style = wx.DEFAULT_DIALOG_STYLE )
+		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Copiar Programas"), pos = wx.DefaultPosition, size = wx.Size( 340,170 ), style = wx.DEFAULT_DIALOG_STYLE )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
 		bSizer27 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.m_staticText25 = wx.StaticText( self, wx.ID_ANY, u"Copia:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText25 = wx.StaticText( self, wx.ID_ANY, _(u"Copia:"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText25.Wrap( -1 )
 		bSizer27.Add( self.m_staticText25, 0, wx.ALL, 5 )
 		
@@ -505,7 +541,7 @@ class DialogoCopiarApp ( wx.Dialog ):
 		self.choiceAppA.SetSelection( 0 )
 		bSizer28.Add( self.choiceAppA, 1, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.m_staticText26 = wx.StaticText( self, wx.ID_ANY, u"=", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText26 = wx.StaticText( self, wx.ID_ANY, _(u"="), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText26.Wrap( -1 )
 		bSizer28.Add( self.m_staticText26, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
@@ -522,13 +558,13 @@ class DialogoCopiarApp ( wx.Dialog ):
 		
 		bSizer29 = wx.BoxSizer( wx.HORIZONTAL )
 		
-		self.m_button24 = wx.Button( self, wx.ID_ANY, u"Copiar", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button24 = wx.Button( self, wx.ID_ANY, _(u"Copiar"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer29.Add( self.m_button24, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 		
 		
 		bSizer29.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
-		self.btnCerrar = wx.Button( self, wx.ID_ANY, u"Cerrar", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.btnCerrar = wx.Button( self, wx.ID_ANY, _(u"Cerrar"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer29.Add( self.btnCerrar, 0, wx.ALL, 5 )
 		
 		
@@ -548,7 +584,12 @@ class DialogoCopiarApp ( wx.Dialog ):
 		self.btnCerrar.Bind( wx.EVT_BUTTON, self.OnCerrar )
 	
 	def __del__( self ):
-		pass
+		# Disconnect Events
+		self.Unbind( wx.EVT_CLOSE )
+		self.choiceAppA.Unbind( wx.EVT_CHOICE, None )
+		self.choiceAppB.Unbind( wx.EVT_CHOICE, None )
+		self.m_button24.Unbind( wx.EVT_BUTTON, None )
+		self.btnCerrar.Unbind( wx.EVT_BUTTON, None )
 	
 	
 	# Virtual event handlers, overide them in your derived class
@@ -573,13 +614,13 @@ class DialogoCopiarApp ( wx.Dialog ):
 class DlgCopiarEstado ( wx.Dialog ):
 	
 	def __init__( self, parent ):
-		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Copiar Estado", pos = wx.DefaultPosition, size = wx.Size( 340,170 ), style = wx.DEFAULT_DIALOG_STYLE )
+		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Copiar Estado"), pos = wx.DefaultPosition, size = wx.Size( 340,170 ), style = wx.DEFAULT_DIALOG_STYLE )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
 		bSizer27 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.m_staticText25 = wx.StaticText( self, wx.ID_ANY, u"Copia:", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText25 = wx.StaticText( self, wx.ID_ANY, _(u"Copia:"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText25.Wrap( -1 )
 		bSizer27.Add( self.m_staticText25, 0, wx.ALL, 5 )
 		
@@ -590,7 +631,7 @@ class DlgCopiarEstado ( wx.Dialog ):
 		self.choiceEstA.SetSelection( 0 )
 		bSizer28.Add( self.choiceEstA, 1, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.m_staticText26 = wx.StaticText( self, wx.ID_ANY, u"=", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText26 = wx.StaticText( self, wx.ID_ANY, _(u"="), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText26.Wrap( -1 )
 		bSizer28.Add( self.m_staticText26, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
@@ -607,13 +648,13 @@ class DlgCopiarEstado ( wx.Dialog ):
 		
 		bSizer29 = wx.BoxSizer( wx.HORIZONTAL )
 		
-		self.btnCopiar = wx.Button( self, wx.ID_ANY, u"Copiar", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.btnCopiar = wx.Button( self, wx.ID_ANY, _(u"Copiar"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer29.Add( self.btnCopiar, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 		
 		
 		bSizer29.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
-		self.btnCerrar = wx.Button( self, wx.ID_ANY, u"Cerrar", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.btnCerrar = wx.Button( self, wx.ID_ANY, _(u"Cerrar"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer29.Add( self.btnCerrar, 0, wx.ALL, 5 )
 		
 		
@@ -633,7 +674,12 @@ class DlgCopiarEstado ( wx.Dialog ):
 		self.btnCerrar.Bind( wx.EVT_BUTTON, self.OnCerrar )
 	
 	def __del__( self ):
-		pass
+		# Disconnect Events
+		self.Unbind( wx.EVT_CLOSE )
+		self.choiceEstA.Unbind( wx.EVT_CHOICE, None )
+		self.choiceEstB.Unbind( wx.EVT_CHOICE, None )
+		self.btnCopiar.Unbind( wx.EVT_BUTTON, None )
+		self.btnCerrar.Unbind( wx.EVT_BUTTON, None )
 	
 	
 	# Virtual event handlers, overide them in your derived class
@@ -658,7 +704,7 @@ class DlgCopiarEstado ( wx.Dialog ):
 class frmBloques ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Edición de Bloques de un estado", pos = wx.DefaultPosition, size = wx.Size( 725,320 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Edición de Bloques de un estado"), pos = wx.DefaultPosition, size = wx.Size( 725,320 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -670,24 +716,24 @@ class frmBloques ( wx.Frame ):
 		
 		bSizer29 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.m_staticText36 = wx.StaticText( self, wx.ID_ANY, u"Estado", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText36 = wx.StaticText( self, wx.ID_ANY, _(u"Estado"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText36.Wrap( -1 )
 		bSizer29.Add( self.m_staticText36, 0, wx.ALL, 5 )
 		
-		self.m_button27 = wx.Button( self, wx.ID_ANY, u"Guardar Estado", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button27 = wx.Button( self, wx.ID_ANY, _(u"Guardar Estado"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer29.Add( self.m_button27, 0, wx.ALL, 5 )
 		
-		self.m_button28 = wx.Button( self, wx.ID_ANY, u"Descartar Cambios", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button28 = wx.Button( self, wx.ID_ANY, _(u"Descartar Cambios"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer29.Add( self.m_button28, 0, wx.ALL, 5 )
 		
-		self.m_staticText39 = wx.StaticText( self, wx.ID_ANY, u"Título", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText39 = wx.StaticText( self, wx.ID_ANY, _(u"Título"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText39.Wrap( -1 )
 		bSizer29.Add( self.m_staticText39, 0, wx.ALL, 5 )
 		
 		self.txtctrlTitulo = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_PROCESS_ENTER )
 		bSizer29.Add( self.txtctrlTitulo, 0, wx.ALL|wx.EXPAND, 5 )
 		
-		self.m_staticText40 = wx.StaticText( self, wx.ID_ANY, u"Comentario", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText40 = wx.StaticText( self, wx.ID_ANY, _(u"Comentario"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText40.Wrap( -1 )
 		bSizer29.Add( self.m_staticText40, 0, wx.ALL, 5 )
 		
@@ -711,7 +757,12 @@ class frmBloques ( wx.Frame ):
 		self.txtctrlTitulo.Bind( wx.EVT_TEXT_ENTER, self.OnTitulo )
 	
 	def __del__( self ):
-		pass
+		# Disconnect Events
+		self.Unbind( wx.EVT_CLOSE )
+		self.m_button27.Unbind( wx.EVT_BUTTON, None )
+		self.m_button28.Unbind( wx.EVT_BUTTON, None )
+		self.txtctrlTitulo.Unbind( wx.EVT_TEXT, None )
+		self.txtctrlTitulo.Unbind( wx.EVT_TEXT_ENTER, None )
 	
 	
 	# Virtual event handlers, overide them in your derived class
@@ -740,7 +791,7 @@ class panelBloque ( wx.Panel ):
 		
 		bSizer21 = wx.BoxSizer( wx.VERTICAL )
 		
-		sbSizer2 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Acción" ), wx.VERTICAL )
+		sbSizer2 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Acción") ), wx.VERTICAL )
 		
 		choiceAccionChoices = []
 		self.choiceAccion = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceAccionChoices, 0 )
@@ -750,7 +801,7 @@ class panelBloque ( wx.Panel ):
 		
 		bSizer21.Add( sbSizer2, 1, wx.EXPAND, 5 )
 		
-		sbSizer6 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Parámetro 1" ), wx.VERTICAL )
+		sbSizer6 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Parámetro 1") ), wx.VERTICAL )
 		
 		choiceParametro1Choices = []
 		self.choiceParametro1 = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceParametro1Choices, 0 )
@@ -762,7 +813,7 @@ class panelBloque ( wx.Panel ):
 		
 		bSizer21.Add( sbSizer6, 1, wx.EXPAND, 5 )
 		
-		sbSizer8 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Parámetro 2" ), wx.VERTICAL )
+		sbSizer8 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Parámetro 2") ), wx.VERTICAL )
 		
 		choiceParametro2Choices = []
 		self.choiceParametro2 = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceParametro2Choices, 0 )
@@ -774,7 +825,7 @@ class panelBloque ( wx.Panel ):
 		
 		bSizer21.Add( sbSizer8, 1, wx.EXPAND, 5 )
 		
-		sbSizer9 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Guardar en:" ), wx.VERTICAL )
+		sbSizer9 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Guardar en:") ), wx.VERTICAL )
 		
 		choiceGuardarChoices = []
 		self.choiceGuardar = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceGuardarChoices, 0 )
@@ -791,7 +842,7 @@ class panelBloque ( wx.Panel ):
 		
 		bSizer22 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.m_staticText35 = wx.StaticText( self, wx.ID_ANY, u"Seudocódigo", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText35 = wx.StaticText( self, wx.ID_ANY, _(u"Seudocódigo"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText35.Wrap( -1 )
 		bSizer22.Add( self.m_staticText35, 0, wx.ALL, 5 )
 		
@@ -812,7 +863,11 @@ class panelBloque ( wx.Panel ):
 		self.choiceGuardar.Bind( wx.EVT_CHOICE, self.OnChoice )
 	
 	def __del__( self ):
-		pass
+		# Disconnect Events
+		self.choiceAccion.Unbind( wx.EVT_CHOICE, None )
+		self.choiceParametro1.Unbind( wx.EVT_CHOICE, None )
+		self.choiceParametro2.Unbind( wx.EVT_CHOICE, None )
+		self.choiceGuardar.Unbind( wx.EVT_CHOICE, None )
 	
 	
 	# Virtual event handlers, overide them in your derived class
@@ -838,9 +893,9 @@ class panelCondicion ( wx.Panel ):
 		
 		bSizer24 = wx.BoxSizer( wx.VERTICAL )
 		
-		sbSizer10 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Comparación" ), wx.VERTICAL )
+		sbSizer10 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Comparación") ), wx.VERTICAL )
 		
-		choiceAccionChoices = [ u"Null", u"Mayor", u"Menor", u"==", u"Bit 1", u"Bit 0?", u"Bit 1?" ]
+		choiceAccionChoices = [ _(u"Null"), _(u"Mayor"), _(u"Menor"), _(u"=="), _(u"Bit 1"), _(u"Bit 0?"), _(u"Bit 1?") ]
 		self.choiceAccion = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceAccionChoices, 0 )
 		self.choiceAccion.SetSelection( 1 )
 		sbSizer10.Add( self.choiceAccion, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
@@ -848,7 +903,7 @@ class panelCondicion ( wx.Panel ):
 		
 		bSizer24.Add( sbSizer10, 1, wx.EXPAND, 5 )
 		
-		sbSizer11 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Parámetro 1" ), wx.VERTICAL )
+		sbSizer11 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Parámetro 1") ), wx.VERTICAL )
 		
 		choiceParametro1Choices = []
 		self.choiceParametro1 = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceParametro1Choices, 0 )
@@ -860,7 +915,7 @@ class panelCondicion ( wx.Panel ):
 		
 		bSizer24.Add( sbSizer11, 1, wx.EXPAND, 5 )
 		
-		sbSizer12 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Parámetro 2" ), wx.VERTICAL )
+		sbSizer12 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Parámetro 2") ), wx.VERTICAL )
 		
 		choiceParametro2Choices = []
 		self.choiceParametro2 = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceParametro2Choices, 0 )
@@ -872,9 +927,9 @@ class panelCondicion ( wx.Panel ):
 		
 		bSizer24.Add( sbSizer12, 1, wx.EXPAND, 5 )
 		
-		sbSizer13 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Estado Siguiente Si Verdadero" ), wx.VERTICAL )
+		sbSizer13 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Estado Siguiente Si Verdadero") ), wx.VERTICAL )
 		
-		choiceEstadoTrueChoices = [ u"Estado0", u"Estado1", u"Estado2", u"Estado3", u"Estado4", u"Estado5", u"Estado6", u"Estado7", u"Estado8", u"Estado9" ]
+		choiceEstadoTrueChoices = [ _(u"Estado0"), _(u"Estado1"), _(u"Estado2"), _(u"Estado3"), _(u"Estado4"), _(u"Estado5"), _(u"Estado6"), _(u"Estado7"), _(u"Estado8"), _(u"Estado9") ]
 		self.choiceEstadoTrue = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceEstadoTrueChoices, 0 )
 		self.choiceEstadoTrue.SetSelection( 0 )
 		self.choiceEstadoTrue.Enable( False )
@@ -884,9 +939,9 @@ class panelCondicion ( wx.Panel ):
 		
 		bSizer24.Add( sbSizer13, 1, wx.EXPAND, 5 )
 		
-		sbSizer14 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Estado Siguiente si Falso" ), wx.VERTICAL )
+		sbSizer14 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Estado Siguiente si Falso") ), wx.VERTICAL )
 		
-		choiceEstadoFalseChoices = [ u"Estado0", u"Estado1", u"Estado2", u"Estado3", u"Estado4", u"Estado5", u"Estado6", u"Estado7", u"Estado8", u"Estado9" ]
+		choiceEstadoFalseChoices = [ _(u"Estado0"), _(u"Estado1"), _(u"Estado2"), _(u"Estado3"), _(u"Estado4"), _(u"Estado5"), _(u"Estado6"), _(u"Estado7"), _(u"Estado8"), _(u"Estado9") ]
 		self.choiceEstadoFalse = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceEstadoFalseChoices, 0 )
 		self.choiceEstadoFalse.SetSelection( 0 )
 		self.choiceEstadoFalse.Enable( False )
@@ -901,7 +956,7 @@ class panelCondicion ( wx.Panel ):
 		
 		bSizer25 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.txtctrlSeudo = wx.StaticText( self, wx.ID_ANY, u"Seudocódigo Total", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.txtctrlSeudo = wx.StaticText( self, wx.ID_ANY, _(u"Seudocódigo Total"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.txtctrlSeudo.Wrap( -1 )
 		bSizer25.Add( self.txtctrlSeudo, 0, wx.ALL, 5 )
 		
@@ -924,7 +979,13 @@ class panelCondicion ( wx.Panel ):
 		self.choiceEstadoFalse.Bind( wx.EVT_CHOICE, self.OnChoice )
 	
 	def __del__( self ):
-		pass
+		# Disconnect Events
+		self.Unbind( wx.EVT_ENTER_WINDOW )
+		self.choiceAccion.Unbind( wx.EVT_CHOICE, None )
+		self.choiceParametro1.Unbind( wx.EVT_CHOICE, None )
+		self.choiceParametro2.Unbind( wx.EVT_CHOICE, None )
+		self.choiceEstadoTrue.Unbind( wx.EVT_CHOICE, None )
+		self.choiceEstadoFalse.Unbind( wx.EVT_CHOICE, None )
 	
 	
 	# Virtual event handlers, overide them in your derived class
@@ -959,7 +1020,7 @@ class frmEntrada ( wx.Frame ):
 		
 		bSizer26.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
-		self.m_staticText48 = wx.StaticText( self, wx.ID_ANY, u"Cantidad de muestras para validar cambio", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText48 = wx.StaticText( self, wx.ID_ANY, _(u"Cantidad de muestras para validar cambio"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText48.Wrap( -1 )
 		bSizer26.Add( self.m_staticText48, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
@@ -974,7 +1035,7 @@ class frmEntrada ( wx.Frame ):
 		
 		bSizer28.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
-		self.m_staticText49 = wx.StaticText( self, wx.ID_ANY, u"Tiempo de muestreo [ms]", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText49 = wx.StaticText( self, wx.ID_ANY, _(u"Tiempo de muestreo [ms]"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText49.Wrap( -1 )
 		bSizer28.Add( self.m_staticText49, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
@@ -988,13 +1049,13 @@ class frmEntrada ( wx.Frame ):
 		
 		bSizer30 = wx.BoxSizer( wx.HORIZONTAL )
 		
-		self.btn_guardar = wx.Button( self, wx.ID_ANY, u"Guardar", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.btn_guardar = wx.Button( self, wx.ID_ANY, _(u"Guardar"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer30.Add( self.btn_guardar, 1, wx.ALL, 5 )
 		
-		self.btn_cerrar = wx.Button( self, wx.ID_ANY, u"Cerrar", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.btn_cerrar = wx.Button( self, wx.ID_ANY, _(u"Cerrar"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer30.Add( self.btn_cerrar, 1, wx.ALL, 5 )
 		
-		self.btn_cargar = wx.Button( self, wx.ID_ANY, u"Cargar Defaults", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.btn_cargar = wx.Button( self, wx.ID_ANY, _(u"Cargar Defaults"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer30.Add( self.btn_cargar, 1, wx.ALL, 5 )
 		
 		
@@ -1018,7 +1079,13 @@ class frmEntrada ( wx.Frame ):
 		self.btn_cargar.Bind( wx.EVT_BUTTON, self.OnCargarDefaults )
 	
 	def __del__( self ):
-		pass
+		# Disconnect Events
+		self.Unbind( wx.EVT_CLOSE )
+		self.txtctrlMuestras.Unbind( wx.EVT_CHAR, None )
+		self.txtctrlTiempo.Unbind( wx.EVT_CHAR, None )
+		self.btn_guardar.Unbind( wx.EVT_BUTTON, None )
+		self.btn_cerrar.Unbind( wx.EVT_BUTTON, None )
+		self.btn_cargar.Unbind( wx.EVT_BUTTON, None )
 	
 	
 	# Virtual event handlers, overide them in your derived class
@@ -1044,17 +1111,17 @@ class frmEntrada ( wx.Frame ):
 class DlgGenError ( wx.Dialog ):
 	
 	def __init__( self, parent ):
-		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = u"Generador", pos = wx.DefaultPosition, size = wx.Size( 202,122 ), style = wx.DEFAULT_DIALOG_STYLE )
+		wx.Dialog.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Generador"), pos = wx.DefaultPosition, size = wx.Size( 202,122 ), style = wx.DEFAULT_DIALOG_STYLE )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
 		bSizer61 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.m_staticText63 = wx.StaticText( self, wx.ID_ANY, u"Nombre no Válido", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
+		self.m_staticText63 = wx.StaticText( self, wx.ID_ANY, _(u"Nombre no Válido"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
 		self.m_staticText63.Wrap( -1 )
 		bSizer61.Add( self.m_staticText63, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.EXPAND|wx.ALL, 5 )
 		
-		self.m_button48 = wx.Button( self, wx.ID_ANY, u"Aceptar", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_button48 = wx.Button( self, wx.ID_ANY, _(u"Aceptar"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer61.Add( self.m_button48, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
@@ -1067,7 +1134,8 @@ class DlgGenError ( wx.Dialog ):
 		self.m_button48.Bind( wx.EVT_BUTTON, self.OnAceptar )
 	
 	def __del__( self ):
-		pass
+		# Disconnect Events
+		self.m_button48.Unbind( wx.EVT_BUTTON, None )
 	
 	
 	# Virtual event handlers, overide them in your derived class
@@ -1082,7 +1150,7 @@ class DlgGenError ( wx.Dialog ):
 class frmAnalog ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Configuración entrada analógica", pos = wx.DefaultPosition, size = wx.Size( 550,408 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Configuración entrada analógica"), pos = wx.DefaultPosition, size = wx.Size( 550,408 ), style = wx.DEFAULT_FRAME_STYLE|wx.FRAME_FLOAT_ON_PARENT|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		self.SetBackgroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_ACTIVEBORDER ) )
@@ -1091,22 +1159,22 @@ class frmAnalog ( wx.Frame ):
 		
 		bSizer5 = wx.BoxSizer( wx.VERTICAL )
 		
-		sbSizer12 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Modo de funcionamiento" ), wx.VERTICAL )
+		sbSizer12 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Modo de funcionamiento") ), wx.VERTICAL )
 		
-		self.radbtn4zonas = wx.RadioButton( self, wx.ID_ANY, u"Utilizar 4 zonas", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.radbtn4zonas = wx.RadioButton( self, wx.ID_ANY, _(u"Utilizar 4 zonas"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		sbSizer12.Add( self.radbtn4zonas, 0, wx.ALL, 5 )
 		
-		self.radbtnValorADC = wx.RadioButton( self, wx.ID_ANY, u"Obtener valor ADC", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.radbtnValorADC = wx.RadioButton( self, wx.ID_ANY, _(u"Obtener valor ADC"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		sbSizer12.Add( self.radbtnValorADC, 0, wx.ALL, 5 )
 		
 		
 		bSizer5.Add( sbSizer12, 0, wx.EXPAND|wx.ALL, 5 )
 		
-		sbSizer13 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Configuración Zonas" ), wx.VERTICAL )
+		sbSizer13 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Configuración Zonas") ), wx.VERTICAL )
 		
 		gSizer3 = wx.GridSizer( 0, 2, 0, 0 )
 		
-		self.m_staticText6 = wx.StaticText( self, wx.ID_ANY, u"Límite superior zona A", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText6 = wx.StaticText( self, wx.ID_ANY, _(u"Límite superior zona A"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText6.Wrap( -1 )
 		gSizer3.Add( self.m_staticText6, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
@@ -1115,7 +1183,7 @@ class frmAnalog ( wx.Frame ):
 		
 		gSizer3.Add( self.spinAsup, 0, wx.ALL, 5 )
 		
-		self.m_staticText7 = wx.StaticText( self, wx.ID_ANY, u"Límite inferior zona A", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText7 = wx.StaticText( self, wx.ID_ANY, _(u"Límite inferior zona A"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText7.Wrap( -1 )
 		gSizer3.Add( self.m_staticText7, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
@@ -1126,42 +1194,42 @@ class frmAnalog ( wx.Frame ):
 		
 		gSizer3.Add( self.spinAinf, 0, wx.ALL, 5 )
 		
-		self.m_staticText8 = wx.StaticText( self, wx.ID_ANY, u"Límite superior zona B", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText8 = wx.StaticText( self, wx.ID_ANY, _(u"Límite superior zona B"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText8.Wrap( -1 )
 		gSizer3.Add( self.m_staticText8, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		self.spinBsup = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 0 )
 		gSizer3.Add( self.spinBsup, 0, wx.ALL, 5 )
 		
-		self.m_staticText9 = wx.StaticText( self, wx.ID_ANY, u"Límite inferior zona B", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText9 = wx.StaticText( self, wx.ID_ANY, _(u"Límite inferior zona B"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText9.Wrap( -1 )
 		gSizer3.Add( self.m_staticText9, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		self.spinBinf = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 0 )
 		gSizer3.Add( self.spinBinf, 0, wx.ALL, 5 )
 		
-		self.m_staticText10 = wx.StaticText( self, wx.ID_ANY, u"Límite superior zona C", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText10 = wx.StaticText( self, wx.ID_ANY, _(u"Límite superior zona C"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText10.Wrap( -1 )
 		gSizer3.Add( self.m_staticText10, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		self.spinCsup = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 0 )
 		gSizer3.Add( self.spinCsup, 0, wx.ALL, 5 )
 		
-		self.m_staticText11 = wx.StaticText( self, wx.ID_ANY, u"Límite inferior zona C", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText11 = wx.StaticText( self, wx.ID_ANY, _(u"Límite inferior zona C"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText11.Wrap( -1 )
 		gSizer3.Add( self.m_staticText11, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		self.spinCinf = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 0 )
 		gSizer3.Add( self.spinCinf, 0, wx.ALL, 5 )
 		
-		self.m_staticText12 = wx.StaticText( self, wx.ID_ANY, u"Límite superior zona D", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText12 = wx.StaticText( self, wx.ID_ANY, _(u"Límite superior zona D"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText12.Wrap( -1 )
 		gSizer3.Add( self.m_staticText12, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		self.spinDsup = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 100, 0 )
 		gSizer3.Add( self.spinDsup, 0, wx.ALL, 5 )
 		
-		self.m_staticText13 = wx.StaticText( self, wx.ID_ANY, u"Límite inferior zona D", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText13 = wx.StaticText( self, wx.ID_ANY, _(u"Límite inferior zona D"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText13.Wrap( -1 )
 		gSizer3.Add( self.m_staticText13, 0, wx.ALL|wx.ALIGN_RIGHT|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
@@ -1171,7 +1239,7 @@ class frmAnalog ( wx.Frame ):
 		
 		sbSizer13.Add( gSizer3, 1, wx.EXPAND, 5 )
 		
-		self.btnInformacion = wx.Button( self, wx.ID_ANY, u"Información", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.btnInformacion = wx.Button( self, wx.ID_ANY, _(u"Información"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		sbSizer13.Add( self.btnInformacion, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 		
 		
@@ -1182,7 +1250,7 @@ class frmAnalog ( wx.Frame ):
 		
 		bSizer7 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.m_staticText16 = wx.StaticText( self, wx.ID_ANY, u"Configuración General", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText16 = wx.StaticText( self, wx.ID_ANY, _(u"Configuración General"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText16.Wrap( -1 )
 		self.m_staticText16.SetFont( wx.Font( 12, 70, 90, 90, False, wx.EmptyString ) )
 		self.m_staticText16.SetForegroundColour( wx.SystemSettings.GetColour( wx.SYS_COLOUR_BACKGROUND ) )
@@ -1191,14 +1259,14 @@ class frmAnalog ( wx.Frame ):
 		
 		gSizer5 = wx.GridSizer( 0, 2, 0, 0 )
 		
-		self.m_staticText17 = wx.StaticText( self, wx.ID_ANY, u"Tiempo de muestreo[ms]", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText17 = wx.StaticText( self, wx.ID_ANY, _(u"Tiempo de muestreo[ms]"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText17.Wrap( -1 )
 		gSizer5.Add( self.m_staticText17, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
 		
 		self.txtctrlTiempo = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 255, 10 )
 		gSizer5.Add( self.txtctrlTiempo, 0, wx.ALL, 5 )
 		
-		self.m_staticText18 = wx.StaticText( self, wx.ID_ANY, u"Cantidad de muestras\npara validar zona", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText18 = wx.StaticText( self, wx.ID_ANY, _(u"Cantidad de muestras\npara validar zona"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText18.Wrap( -1 )
 		gSizer5.Add( self.m_staticText18, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
 		
@@ -1208,7 +1276,7 @@ class frmAnalog ( wx.Frame ):
 		
 		bSizer7.Add( gSizer5, 0, wx.EXPAND, 5 )
 		
-		sbSizer14 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, u"Comentario" ), wx.VERTICAL )
+		sbSizer14 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Comentario") ), wx.VERTICAL )
 		
 		self.txtctrlComentarios = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
 		sbSizer14.Add( self.txtctrlComentarios, 1, wx.ALL|wx.EXPAND, 5 )
@@ -1216,13 +1284,13 @@ class frmAnalog ( wx.Frame ):
 		
 		bSizer7.Add( sbSizer14, 1, wx.EXPAND, 5 )
 		
-		self.frm_analog_btnGuardar = wx.Button( self, wx.ID_ANY, u"Guardar", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.frm_analog_btnGuardar = wx.Button( self, wx.ID_ANY, _(u"Guardar"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer7.Add( self.frm_analog_btnGuardar, 0, wx.ALL|wx.EXPAND, 5 )
 		
-		self.frm_analog_btnCargarDefault = wx.Button( self, wx.ID_ANY, u"Cargar Default", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.frm_analog_btnCargarDefault = wx.Button( self, wx.ID_ANY, _(u"Cargar Default"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer7.Add( self.frm_analog_btnCargarDefault, 0, wx.ALL|wx.EXPAND, 5 )
 		
-		self.frm_analog_btnCerrar = wx.Button( self, wx.ID_ANY, u"Cerrar", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.frm_analog_btnCerrar = wx.Button( self, wx.ID_ANY, _(u"Cerrar"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer7.Add( self.frm_analog_btnCerrar, 0, wx.ALL|wx.EXPAND, 5 )
 		
 		
@@ -1264,7 +1332,34 @@ class frmAnalog ( wx.Frame ):
 		self.frm_analog_btnCerrar.Bind( wx.EVT_BUTTON, self.OnClose )
 	
 	def __del__( self ):
-		pass
+		# Disconnect Events
+		self.Unbind( wx.EVT_CLOSE )
+		self.radbtn4zonas.Unbind( wx.EVT_RADIOBUTTON, None )
+		self.radbtnValorADC.Unbind( wx.EVT_RADIOBUTTON, None )
+		self.spinAsup.Unbind( wx.EVT_KILL_FOCUS, None )
+		self.spinAsup.Unbind( wx.EVT_SPINCTRL, None )
+		self.spinAinf.Unbind( wx.EVT_KILL_FOCUS, None )
+		self.spinAinf.Unbind( wx.EVT_SPINCTRL, None )
+		self.spinBsup.Unbind( wx.EVT_KILL_FOCUS, None )
+		self.spinBsup.Unbind( wx.EVT_SPINCTRL, None )
+		self.spinBinf.Unbind( wx.EVT_KILL_FOCUS, None )
+		self.spinBinf.Unbind( wx.EVT_SPINCTRL, None )
+		self.spinCsup.Unbind( wx.EVT_KILL_FOCUS, None )
+		self.spinCsup.Unbind( wx.EVT_SPINCTRL, None )
+		self.spinCinf.Unbind( wx.EVT_KILL_FOCUS, None )
+		self.spinCinf.Unbind( wx.EVT_SPINCTRL, None )
+		self.spinDsup.Unbind( wx.EVT_KILL_FOCUS, None )
+		self.spinDsup.Unbind( wx.EVT_SPINCTRL, None )
+		self.spinDinf.Unbind( wx.EVT_KILL_FOCUS, None )
+		self.spinDinf.Unbind( wx.EVT_SPINCTRL, None )
+		self.btnInformacion.Unbind( wx.EVT_BUTTON, None )
+		self.txtctrlTiempo.Unbind( wx.EVT_CHAR, None )
+		self.txtctrlTiempo.Unbind( wx.EVT_SPINCTRL, None )
+		self.txtctrlMuestras.Unbind( wx.EVT_CHAR, None )
+		self.txtctrlComentarios.Unbind( wx.EVT_CHAR, None )
+		self.frm_analog_btnGuardar.Unbind( wx.EVT_BUTTON, None )
+		self.frm_analog_btnCargarDefault.Unbind( wx.EVT_BUTTON, None )
+		self.frm_analog_btnCerrar.Unbind( wx.EVT_BUTTON, None )
 	
 	
 	# Virtual event handlers, overide them in your derived class
@@ -1325,13 +1420,13 @@ class frmAnalog ( wx.Frame ):
 class FrameZonas ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = u"Zonas", pos = wx.DefaultPosition, size = wx.Size( 500,474 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Zonas"), pos = wx.DefaultPosition, size = wx.Size( 500,474 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
 		bSizer35 = wx.BoxSizer( wx.HORIZONTAL )
 		
-		self.m_staticText29 = wx.StaticText( self, wx.ID_ANY, u"El localizador tomará como válidos los valores del conversor analógicos que estén dentro de las zonas indicadas, devolviendo como resultado la zona actual en la que se encuentra el valor de entrada.", wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_LEFT )
+		self.m_staticText29 = wx.StaticText( self, wx.ID_ANY, _(u"El localizador tomará como válidos los valores del conversor analógicos que estén dentro de las zonas indicadas, devolviendo como resultado la zona actual en la que se encuentra el valor de entrada."), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_LEFT )
 		self.m_staticText29.Wrap( -1 )
 		self.m_staticText29.SetFont( wx.Font( wx.NORMAL_FONT.GetPointSize(), 70, 90, 90, False, wx.EmptyString ) )
 		
@@ -1354,7 +1449,12 @@ class FrameZonas ( wx.Frame ):
 		self.bitmap_ADC.Bind( wx.EVT_LEFT_DOWN, self.OnClose )
 	
 	def __del__( self ):
-		pass
+		# Disconnect Events
+		self.Unbind( wx.EVT_CLOSE )
+		self.Unbind( wx.EVT_LEFT_DCLICK )
+		self.Unbind( wx.EVT_LEFT_DOWN )
+		self.m_staticText29.Unbind( wx.EVT_LEFT_DOWN, None )
+		self.bitmap_ADC.Unbind( wx.EVT_LEFT_DOWN, None )
 	
 	
 	# Virtual event handlers, overide them in your derived class
