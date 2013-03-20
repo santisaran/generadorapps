@@ -11,10 +11,12 @@
 #TODO independizar MODIFIDACO para cada ventana
 #TODO guardar SMS en binario
 
-import gui
-import wx
 import os
 import shelve
+
+import wx
+
+import gui
 from apps import *
 from generarheader import tupleBits,tupleBytes
 
@@ -39,13 +41,13 @@ miBytes= Bytes[:]
 global miSMS
 miSMS = SMS[:]
 
-global ValoresEntradas
+#global ValoresEntradas
 #diccionario con los valores de las entradas
-global miValoresEntradas
+#global miValoresEntradas
 #copia del diccionario, con los valores del programa actual
-miValoresEntradas = {}
-for i in ValoresEntradas.keys():
-    miValoresEntradas[i] = ValoresEntradas[i][:]
+#miValoresEntradas = {}
+#for i in ValoresEntradas.keys():
+    #miValoresEntradas[i] = ValoresEntradas[i][:]
 
 global Analogica
 #Diccionario con los valores de cfg de la entra analógica
@@ -65,6 +67,9 @@ NombreArchivo = ""
 #Tipos de archivo que muestran los diálos abrir/guardar
 wildcard = "Archivo Programa Cyloc (*.cyl)|*.cyl|"\
            "Todos los archivos (*.*)|*.*"
+           
+wildcardbin = "Archivo Binario Cyloc (*.cb)|*.cb|"\
+           "Todos los archivos (*.*)|*.*"            
 
 binwildcard = "Archivo binario Cyloc (*.cb)|*.cb|"\
             "Todos los archivos (*.*)|*.*"
@@ -82,7 +87,7 @@ class MiFrame(gui.frmPpal):
         for i in range(Cantidad_Apps):
             self.aplicaciones.append(Aplicacion(i,""))
             # Crea aplicaciones vacías
-            item = wx.MenuItem( self.m_aplicaciones, wx.ID_ANY, \
+            item = wx.MenuItem(self.m_aplicaciones, wx.ID_ANY, \
                 u"Aplicación %0.2d: %s"%(i,self.aplicaciones[i].Nombre) ,\
                 wx.EmptyString, wx.ITEM_NORMAL )
             self.m_aplicaciones.AppendItem(item)
@@ -91,27 +96,33 @@ class MiFrame(gui.frmPpal):
             self.Bind ( wx.EVT_MENU, self.OnAbrirApp, id = item.GetId() )
             item.Enable ( True )
             
-            boton = wx.Button( self.scroolled, wx.ID_ANY,\
+            boton = wx.Button(self.scroolled, wx.ID_ANY,\
                 u"Aplicación: %0.2d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
             self.sizerbotones.Add( boton, 0, wx.ALL, 5 )
             boton.Bind(wx.EVT_BUTTON, self.OnImprimirApp)
-        item = wx.MenuItem( self.m_aplicaciones, wx.ID_ANY, u"Copiar Aplicación",\
+        item = wx.MenuItem(self.m_aplicaciones, wx.ID_ANY, u"Copiar Aplicación",\
             wx.EmptyString, wx.ITEM_NORMAL )
         self.m_aplicaciones.AppendItem(item)
         self.Bind ( wx.EVT_MENU, self.OnCopiarApp, id = item.GetId() )
 
 
-        self.sizerbotones.Fit( self.scroolled )
+        self.sizerbotones.Fit(self.scroolled )
         for i in Entradas:
-            item = wx.MenuItem( self.m_drivers, wx.ID_ANY, i,\
+            item = wx.MenuItem(self.m_drivers, wx.ID_ANY, i,\
                 wx.EmptyString, wx.ITEM_NORMAL )
             self.m_drivers.AppendItem( item )
             self.Bind ( wx.EVT_MENU, self.OnDriver, id = item.GetId() )
-        item = wx.MenuItem ( self.m_drivers , wx.ID_ANY, u"Cargar desde archivo...",\
+        item = wx.MenuItem (self.m_drivers , wx.ID_ANY, u"Cargar desde archivo...",\
             wx.EmptyString, wx.ITEM_NORMAL )
         self.m_drivers.AppendItem ( item )
         self.Bind ( wx.EVT_MENU, self.OnCopiarDesde, id = item.GetId() )
-        self.Entradas = {}
+#        for llave in Entradas:
+#            for i,(a,b,c,d) in enumerate(DefinicionesBytes):
+#                if a == EntradasBytes[llave][0]:
+#                    miValoresEntradas[llave][0] = miBytes[i][2]
+#                if a == EntradasBytes[llave][1]:
+#                    miValoresEntradas[llave][1] = miBytes[i][2]
+        
 
     def AgregarVentana(self):
         pass
@@ -155,22 +166,22 @@ class MiFrame(gui.frmPpal):
         self.Destroy()
         event.Skip()
 
-    def OnEditarBytes( self, event ):
-        id = event.GetId()
-        item = self.GetMenuBar().FindItemById(id)
+    def OnEditarBytes(self, event):
+        id_ = event.GetId()
+        item = self.GetMenuBar().FindItemById(id_)
         item.Enable(False)
         win = mifrmEditByte(self,item)
         win.Show()
 
 
-    def OnEditarBit( self, event ):
+    def OnEditarBit(self, event):
         id = event.GetId()
         item = self.GetMenuBar().FindItemById(id)
         item.Enable(False)
-        win = mifrmEditBit(self,item)
+        win = mifrmEditBit(self, item)
         win.Show()
         
-    def OnEditarSMS( self, event ):
+    def OnEditarSMS(self, event):
         id = event.GetId()
         item = self.GetMenuBar().FindItemById(id)
         item.Enable(False)
@@ -178,17 +189,16 @@ class MiFrame(gui.frmPpal):
         win.Show()
 
 
-    def OnDriverAnalog( self, event ):
+    def OnDriverAnalog(self, event):
         id = event.GetId()
         item = self.GetMenuBar().FindItemById(id)
         item.Enable(False)
         win = mifrmAnalog(self)
         win.Show()
-
         pass
 
 
-    def OnDriver( self, event ):
+    def OnDriver(self, event):
         id = event.GetId()
         item = self.GetMenuBar().FindItemById(id)
         win = mifrmEntrada(self,item)
@@ -196,7 +206,7 @@ class MiFrame(gui.frmPpal):
         win.Show()
 
 
-    def OnAbrirApp(self,event):
+    def OnAbrirApp(self, event):
 
         id = event.GetId()
         item = self.GetMenuBar().FindItemById(id)
@@ -224,7 +234,7 @@ class MiFrame(gui.frmPpal):
         dlg = miDlgCopiarApp(self)
         dlg.ShowModal()
 
-    def OnCopiarDesde( self, event):
+    def OnCopiarDesde(self, event):
         global DIRACTUAL
         dlg = wx.FileDialog(
             self, message="Copiar Desde ...", defaultDir=DIRACTUAL,
@@ -244,9 +254,9 @@ class MiFrame(gui.frmPpal):
                 dlg.ShowModal()
                 dlg.Destroy()
                 return
-            global miValoresEntradas
+            global miBytes
             try:
-                miValoresEntradas = shelf["miValoresEntradas"]
+                miBytes = shelf["bytes"] 
             except:
                 print "El archivo no tiene valores de entradas"
                 pass
@@ -260,7 +270,7 @@ class MiFrame(gui.frmPpal):
         dlg.Destroy()
 
 
-    def OnNuevoPrograma ( self, event):
+    def OnNuevoPrograma (self, event):
 
         global Modificado
         global NombreArchivo
@@ -287,7 +297,7 @@ class MiFrame(gui.frmPpal):
                 self.Guardar()
 
                 if self.Boton == wx.ID_CANCEL:
-                   return
+                    return
                    
                 self.CrearNuevoPrograma()
                 
@@ -326,8 +336,16 @@ class MiFrame(gui.frmPpal):
                 miBits = shelf["bits"]
                 global miBytes
                 miBytes = shelf["bytes"]
-                global miValoresEntradas
+                global miValoresEntradas                
                 miValoresEntradas = shelf["miValoresEntradas"]
+                
+                for llave in Entradas:
+                    for i,(a,b,c,d) in enumerate(DefinicionesBytes):
+                        if a == EntradasBytes[llave][0]:
+                            miValoresEntradas[llave][0] = miBytes[i][2]
+                        if a == EntradasBytes[llave][1]:
+                            miValoresEntradas[llave][1] = miBytes[i][2]
+                    
                 global miAnalogica
                 miAnalogica = shelf["miAnalogica"]
                 global miSMS
@@ -342,12 +360,12 @@ class MiFrame(gui.frmPpal):
 
             dlg.Destroy()
 
-    def OnGuardarPrograma(self,event):
+    def OnGuardarPrograma(self, event):
         global NombreArchivo
         self.Guardar()
         self.Title = "Generador de Programas: " + NombreArchivo.split(os.sep)[-1]
 
-    def OnGuardarComo( self, event ):
+    def OnGuardarComo(self, event):
         global Modificado
         global NombreArchivo
         self.archivoActual = NombreArchivo[:]
@@ -360,7 +378,7 @@ class MiFrame(gui.frmPpal):
         else:
             NombreArchivo = self.archivoActual[:]
 
-    def OnGenerar( self , event):
+    def OnGenerar(self, event):
         """Genera un archivo de configuración binario con todos los datos, 
             debe colocarse en la tarjeta sd"""
         global DIRACTUAL
@@ -445,8 +463,6 @@ class MiFrame(gui.frmPpal):
                     shelf["bits"] = miBits
                     global miBytes
                     shelf["bytes"] = miBytes
-                    global miValoresEntradas
-                    shelf["miValoresEntradas"] = miValoresEntradas
                     global miAnalogica
                     shelf["miAnalogica"] = miAnalogica
                     shelf["version"] = VERSION
@@ -468,46 +484,81 @@ class MiFrame(gui.frmPpal):
                 shelf.close()
 
 
-    def CrearNuevoPrograma(self):
+    def CrearNuevoPrograma(self, aplicaciones = False,\
+                            BitsVal = False, BytesVal = False, SMSVal = False):
         global Modificado
         Modificado = False
         global NombreArchivo
         NombreArchivo = ""
         self.aplicaciones = []
+        if aplicaciones == False:
+            for i in range(Cantidad_Apps):
+                self.aplicaciones.append(Aplicacion(i,""))
+        else:
+            for i in range(Cantidad_Apps):
+                self.aplicaciones.append(aplicaciones[i].copy())
         for i in range(Cantidad_Apps):
-            self.aplicaciones.append(Aplicacion(i,""))
             self.AppMenuItems[i].SetText(\
                 u"Aplicación %0.2d: %s"%(i,self.aplicaciones[i].Nombre))
+        
         self.Title = "Generador de Programas: "
         global ValoresEntradas
         global miValoresEntradas
         miValoresEntradas = {}
-        for i in ValoresEntradas.keys():
+        for i in Entradas:
             miValoresEntradas[i] = ValoresEntradas[i][:]
+        
+        
         global Analogica
         global miAnalogica
         miAnalogica = {}
         for i in Analogica.keys():
             miAnalogica[i] = Analogica[i]
-        global miBits
-        miBits = Bits[:]
-        global miBytes
-        miBytes = Bytes[:]
-        global miSMS
-        miSMS = SMS[:]
         
-    	
-    def OnImportarDesdeBin( self, event ):
-        import bin2gen
-        NuevoPrograma = bin2gen.CargarBinario()
-        NuevoPrograma.CargarArchivo()
-        for i in NuevoPrograma.aplicaciones:
+        if BitsVal == False:            
+            global miBits
+            miBits = Bits[:]
+        else:            
+            miBits = BitsVal[:]
+        
+        if BytesVal == False:            
+            global miBytes
+            miBytes = Bytes[:]
+        else:
+            miBytes = BytesVal[:]
+        
+        if SMSVal == False:
+            global miSMS
+            miSMS = SMS[:]        
+        else:
+            miSMS = SMSVal[:]
             
+    
+    def OnImportarDesdeBin(self, event):
+        """Importar datos desde un archivo binario"""
+        self.OnNuevoPrograma(event)
+        if self.cancel:
+            pass
         
+        dlg = wx.FileDialog(
+            self, message="Abrir archivo ...", defaultDir=DIRACTUAL,
+            defaultFile="", wildcard=wildcardbin, style=wx.OPEN
+            )
+        
+        dlg.SetFilterIndex(2)
 
-
-
-
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            import bin2gen
+            NuevoPrograma = bin2gen.CargarBinario(path)
+            if NuevoPrograma.CargarArchivo():
+                self.CrearNuevoPrograma(NuevoPrograma.aplicaciones,\
+                                        NuevoPrograma.binBIT,\
+                                        NuevoPrograma.binBYTE,\
+                                        NuevoPrograma.SMS)
+        dlg.Destroy()
+        
+        
 ########################################################################
 ########################################################################
 ##############                                   #######################
@@ -521,7 +572,7 @@ class mifrmEditApp(gui.frmEditApp):
 
     """Frame para editar una app, recibe la app a editar"""
 
-    def __init__(self,parent,App):
+    def __init__(self, parent,App):
 
         super(mifrmEditApp,self).__init__(parent)
         self.padre = parent
@@ -540,7 +591,7 @@ class mifrmEditApp(gui.frmEditApp):
 
     #diccionario de lista de estados {0:{"nombre":nombre,"opened":False/True}}
 
-    def OnChoiceEstadoInicial( self, event ):
+    def OnChoiceEstadoInicial(self, event):
         self.tempApp.EstadoActual = self.choiceEstadoInicial.GetSelection()
 
 
@@ -554,7 +605,7 @@ class mifrmEditApp(gui.frmEditApp):
             titulo = "%0.2d"%i + " : " + titulo
             self.listEstados.Append(titulo)
 
-    def OnEditarEstado( self, event ):
+    def OnEditarEstado(self, event):
         self.Cambios = True
         sel = self.listEstados.GetSelection()
         if sel != -1:
@@ -568,12 +619,12 @@ class mifrmEditApp(gui.frmEditApp):
                 #Poner el foco en la ventana de edición
                 self.EstadosDic[int(text[0:2])].ventana.SetFocus()
 
-    def OnDuplicarEstado( self, event ):
+    def OnDuplicarEstado(self, event):
         dlg = miDlgCopiarEstado(self)
         dlg.ShowModal()
 
 
-    def OnEliminarEstado( self, event ):
+    def OnEliminarEstado(self, event):
 
         sel = self.listEstados.GetSelection()
         if sel != -1:
@@ -584,7 +635,7 @@ class mifrmEditApp(gui.frmEditApp):
             self.listEstados.Insert( "%0.2d :"%sel, sel )
 
 
-    def OnEliminarApp( self, event ):
+    def OnEliminarApp(self, event):
 
         dlg = wx.MessageDialog(self, u"Desea borrar la\nAplicación actual?",\
             caption="Borrar Aplicación",\
@@ -603,10 +654,10 @@ class mifrmEditApp(gui.frmEditApp):
             self.Destroy()
 
 
-    def OnGuardarApp( self, event ):
+    def OnGuardarApp(self, event):
         self.Guardar()
 
-    def OnCambiarNombre( self, event ):
+    def OnCambiarNombre(self, event):
         self.Cambios = True
         text = self.tempApp.Nombre
         renamed = wx.GetTextFromUser(u"Renombrar Aplicación", "Renombrar", text)
@@ -646,9 +697,9 @@ class mifrmEditApp(gui.frmEditApp):
 
 class mifrmBloques( gui.frmBloques):
 
-    def __init__( self, parent, numEstado):
+    def __init__(self, parent, numEstado):
 
-        gui.frmBloques.__init__ ( self, parent)
+        gui.frmBloques.__init__ (self, parent)
         self.padre = parent
         self.notBloque.NumEstado = numEstado
         self.notBloque.Estado = self.padre.tempApp.Estados[numEstado].copy()
@@ -657,7 +708,7 @@ class mifrmBloques( gui.frmBloques):
         self.notBloque.Modificado = False
         for i in range(Cantidad_Bloques):
             self.notBloque.SCTotal.append("")
-            win = mipanelBloque( self.notBloque, i , self.padre )
+            win = mipanelBloque(self.notBloque, i , self.padre )
             self.notBloque.AddPage(win,"Bloque: %d"%i)
         self.notBloque.SCTotal.append("")
 
@@ -671,7 +722,7 @@ class mifrmBloques( gui.frmBloques):
             self.notBloque.Estado.Comentario)
 
 
-    def OnGuardar( self, event ):
+    def OnGuardar(self, event):
         self.Guardar()
 
 
@@ -695,7 +746,7 @@ class mifrmBloques( gui.frmBloques):
         self.padre.tempApp.Estados[self.notBloque.NumEstado].Comentario = self.comentario
 
 
-    def OnClose ( self , event ):
+    def OnClose (self, event):
 
         """Quita la ventana actual de la lista de ventanas abiertas"""
 
@@ -712,7 +763,7 @@ class mifrmBloques( gui.frmBloques):
         self.Destroy()
 
 
-    def OnTitulo( self, event ):
+    def OnTitulo(self, event):
         self.notBloque.Modificado = True
         self.Title = self.txtctrlTitulo.GetValue()
         self.notBloque.Estado.Nombre = self.Title
@@ -791,164 +842,164 @@ class mipanelBloque(gui.panelBloque):
         self.padre.Estado.Bloques[self.numero] = self.ValorBloque
 
 
-    def OnChoiceAccion( self, event ):
+    def OnChoiceAccion(self, event):
         self.padre.Modificado = True
         self.txtctrlSeudo.SetValue("")
         self.Acciones.get(event.GetString())()
 
 
-    def OnChoice( self, event ):
+    def OnChoice(self, event):
         self.ActualizarSeudoCodigo()
 
 
-    def BloqueNull( self):
+    def BloqueNull(self):
         self.choiceParametro1.Enable(False)
         self.choiceParametro2.Enable(False)
         self.choiceGuardar.Enable(False)
         self.ActualizarSeudoCodigo()
 
 
-    def BloqueIncrementar( self):
+    def BloqueIncrementar(self):
         self.choiceParametro1.SetItems([i[0] for i in miBytes])
         self.choiceParametro2.SetItems([i[0] for i in miBytes])
         self.choiceGuardar.SetItems([i[0] for i in miBytes])
         self.choiceParametro1.Enable(True)
-        self.choiceParametro1.SetSelection( self.Par1 )
+        self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(False)
         self.choiceGuardar.Enable(True)
-        self.choiceGuardar.SetSelection( self.Guardar )
+        self.choiceGuardar.SetSelection(self.Guardar )
 
 
-    def BloqueDecrementar( self):
+    def BloqueDecrementar(self):
         self.choiceParametro1.SetItems([i[0] for i in miBytes])
         self.choiceParametro2.SetItems([i[0] for i in miBytes])
         self.choiceGuardar.SetItems([i[0] for i in miBytes])
         self.choiceParametro1.Enable(True)
-        self.choiceParametro1.SetSelection( self.Par1 )
+        self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(False)
         self.choiceGuardar.Enable(True)
-        self.choiceGuardar.SetSelection( self.Guardar )
+        self.choiceGuardar.SetSelection(self.Guardar )
 
 
-    def BloqueAND( self):
+    def BloqueAND(self):
         self.choiceParametro1.SetItems([i[0] for i in miBits])
         self.choiceParametro2.SetItems([i[0] for i in miBits])
         self.choiceGuardar.SetItems([i[0] for i in miBits])
         self.choiceParametro1.Enable(True)
-        self.choiceParametro1.SetSelection( self.Par1 )
+        self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(True)
-        self.choiceParametro2.SetSelection( self.Par2 )
+        self.choiceParametro2.SetSelection(self.Par2 )
         self.choiceGuardar.Enable(True)
-        self.choiceGuardar.SetSelection( self.Guardar )
+        self.choiceGuardar.SetSelection(self.Guardar )
 
 
-    def BloqueOR( self):
+    def BloqueOR(self):
         self.choiceParametro1.SetItems([i[0] for i in miBits])
         self.choiceParametro2.SetItems([i[0] for i in miBits])
         self.choiceGuardar.SetItems([i[0] for i in miBits])
         self.choiceParametro1.Enable(True)
-        self.choiceParametro1.SetSelection( self.Par1 )
+        self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(True)
-        self.choiceParametro2.SetSelection( self.Par2 )
+        self.choiceParametro2.SetSelection(self.Par2 )
         self.choiceGuardar.Enable(True)
-        self.choiceGuardar.SetSelection( self.Guardar )
+        self.choiceGuardar.SetSelection(self.Guardar )
 
 
-    def BloqueNOT( self):
+    def BloqueNOT(self):
         self.choiceParametro1.SetItems([i[0] for i in miBits])
         self.choiceGuardar.SetItems([i[0] for i in miBits])
         self.choiceParametro1.Enable(True)
-        self.choiceParametro1.SetSelection( self.Par1 )
+        self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(False)
         self.choiceGuardar.Enable(True)
-        self.choiceGuardar.SetSelection( self.Guardar )
+        self.choiceGuardar.SetSelection(self.Guardar )
 
 
-    def BloqueSumar( self):
+    def BloqueSumar(self):
         self.choiceParametro1.SetItems([i[0] for i in miBytes])
         self.choiceParametro2.SetItems([i[0] for i in miBytes])
         self.choiceGuardar.SetItems([i[0] for i in miBytes])
         self.choiceParametro1.Enable(True)
-        self.choiceParametro1.SetSelection( self.Par1 )
+        self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(True)
-        self.choiceParametro2.SetSelection( self.Par2 )
+        self.choiceParametro2.SetSelection(self.Par2 )
         self.choiceGuardar.Enable(True)
-        self.choiceGuardar.SetSelection( self.Guardar )
+        self.choiceGuardar.SetSelection(self.Guardar )
 
 
-    def BloqueRestar( self):
+    def BloqueRestar(self):
         self.choiceParametro1.SetItems([i[0] for i in miBytes])
         self.choiceParametro2.SetItems([i[0] for i in miBytes])
         self.choiceGuardar.SetItems([i[0] for i in miBytes])
         self.choiceParametro1.Enable(True)
-        self.choiceParametro1.SetSelection( self.Par1 )
+        self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(True)
-        self.choiceParametro2.SetSelection( self.Par2 )
+        self.choiceParametro2.SetSelection(self.Par2 )
         self.choiceGuardar.Enable(True)
-        self.choiceGuardar.SetSelection( self.Guardar )
+        self.choiceGuardar.SetSelection(self.Guardar )
 
 
-    def BloqueInvertir( self):
+    def BloqueInvertir(self):
         self.choiceParametro1.SetItems([i[0] for i in miBytes])
         #self.choiceParametro2.SetItems([i[0] for i in miBytes])
         self.choiceGuardar.SetItems([i[0] for i in miBytes])
         self.choiceParametro1.Enable(True)
-        self.choiceParametro1.SetSelection( self.Par1 )
+        self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(False)
         self.choiceGuardar.Enable(True)
-        self.choiceGuardar.SetSelection( self.Guardar )
+        self.choiceGuardar.SetSelection(self.Guardar )
 
 
-    def BloqueTransmitir( self):
+    def BloqueTransmitir(self):
         self.choiceParametro1.SetItems([i[0] for i in miBytes])
         self.choiceParametro2.SetItems([i[0] for i in miBytes])
         self.choiceGuardar.SetItems([i[0] for i in miBytes])
         self.choiceParametro1.Enable(True)
-        self.choiceParametro1.SetSelection( self.Par1 )
+        self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(True)
-        self.choiceParametro2.SetSelection( self.Par2 )
+        self.choiceParametro2.SetSelection(self.Par2 )
         self.choiceGuardar.Enable(True)
-        self.choiceGuardar.SetSelection( self.Guardar )
+        self.choiceGuardar.SetSelection(self.Guardar )
 
-    def BloqueSetBit( self):
+    def BloqueSetBit(self):
         self.choiceParametro1.SetItems([i[0] for i in miBits])
         #self.choiceParametro2.SetItems([i[0] for i in miBits])
         #self.choiceGuardar.SetItems([i[0] for i in miBits])
         self.choiceParametro1.Enable(True)
-        self.choiceParametro1.SetSelection( self.Par1 )
+        self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(False)
         self.choiceGuardar.Enable(False)
 
 
-    def BloqueClrBit( self):
+    def BloqueClrBit(self):
         self.choiceParametro1.SetItems([i[0] for i in miBits])
         #self.choiceParametro2.SetItems([i[0] for i in miBits])
         #self.choiceGuardar.SetItems([i[0] for i in miBits])
         self.choiceParametro1.Enable(True)
-        self.choiceParametro1.SetSelection( self.Par1 )
+        self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(False)
         self.choiceGuardar.Enable(False)
 
 
-    def BloqueClrReg( self):
+    def BloqueClrReg(self):
         self.choiceParametro1.SetItems([i[0] for i in miBytes])
         #self.choiceParametro2.SetItems([i[0] for i in miBytes])
         #self.choiceGuardar.SetItems([i[0] for i in miBytes])
         self.choiceParametro1.Enable(True)
-        self.choiceParametro1.SetSelection( self.Par1 )
+        self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(False)
         self.choiceGuardar.Enable(False)
 
 
-    def BloqueCopiar( self):
+    def BloqueCopiar(self):
         self.choiceParametro1.SetItems([i[0] for i in miBytes])
         #self.choiceParametro2.SetItems([i[0] for i in miBytes])
         self.choiceGuardar.SetItems([i[0] for i in miBytes])
         self.choiceParametro1.Enable(True)
-        self.choiceParametro1.SetSelection( self.Par1 )
+        self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(False)
         self.choiceGuardar.Enable(True)
-        self.choiceGuardar.SetSelection( self.Guardar )
+        self.choiceGuardar.SetSelection(self.Guardar )
 
 
     def SCNull(self):
@@ -1151,10 +1202,10 @@ class mipanelBloque(gui.panelBloque):
 ########################################################################
 
 class mipanelCondicion ( gui.panelCondicion ):
-    def __init__( self, parent , numero , frmEditApp):
+    def __init__(self, parent , numero , frmEditApp):
         """ parent: frm padre, numero = numero de estado ,
         frmEditApp = frm que posee la app actual"""
-        gui.panelCondicion.__init__ ( self, parent)
+        gui.panelCondicion.__init__ (self, parent)
         self.numero = numero
         self.padre = parent
         self.frmEditApp = frmEditApp
@@ -1307,15 +1358,15 @@ class mipanelCondicion ( gui.panelCondicion ):
                 self.padre.SCTotal[-1])
 
 
-    def OnChoiceComparacion( self, event ):
+    def OnChoiceComparacion(self, event):
         self.Acciones.get(event.GetString())()
         self.ActualizarSeudoCodigo()
 
-    def OnChoice( self, event ):
+    def OnChoice(self, event):
         self.ActualizarSeudoCodigo()
 
 
-    def OnEnterWindow( self, event ):
+    def OnEnterWindow(self, event):
         self.ActualizarSeudoCodigo()
 
 
@@ -1415,50 +1466,52 @@ class  mifrmEntrada (gui.frmEntrada):
 
     """Diálogo para configurar entradas"""
 
-    def __init__( self, parent , item):
-        gui.frmEntrada.__init__ ( self, parent )
+    def __init__(self, parent , item):
+        gui.frmEntrada.__init__ (self, parent )
         self.padre = parent
         self.item = item
         self.entrada = self.item.GetText()
         self.Title = self.Title + self.item.GetText()
-        global miValoresEntradas
-        self.muestras = miValoresEntradas[self.item.GetText()][0]
-        self.tiempo = miValoresEntradas[self.item.GetText()][1]
-        self.txtctrlMuestras.SetValue(str(self.muestras))
-        self.txtctrlTiempo.SetValue(str(self.tiempo))
+        global miBytes
+        #global miValoresEntradas
+        for i,(a,b,c,d) in enumerate(miBytes):
+            if a == EntradasBytes[self.entrada][0]:
+                # self.muestras queda con el valor del numero de byte que 
+                # corresponde a la entrada actual. (contacto, puerta, porton, etc) 
+                self.muestras = i 
+            if a == EntradasBytes[self.entrada][1]:
+                # self.muestras queda con el valor del numero de byte que 
+                # corresponde a la entrada actual. (contacto, puerta, porton, etc) 
+                self.tiempo = i
+        self.txtctrlMuestras.SetValue(str(miBytes[self.muestras][2]))
+        self.txtctrlTiempo.SetValue(str(miBytes[self.tiempo][2]))
 
 
-    def OnGuardar( self, event ):
+    def OnGuardar(self, event):
         global miValoresEntradas
-        self.muestras = self.txtctrlMuestras.GetValue()
-        self.tiempo   = self.txtctrlTiempo.GetValue()
-        miValoresEntradas[self.item.GetText()][0] = self.muestras
-        miValoresEntradas[self.item.GetText()][1] = self.tiempo
+        miBytes[self.muestras][2] = self.txtctrlMuestras.GetValue()
+        miBytes[self.tiempo][2]   = self.txtctrlTiempo.GetValue()
+        #miValoresEntradas[self.item.GetText()][0] = self.muestras
+        #miValoresEntradas[self.item.GetText()][1] = self.tiempo
         global Modificado
         Modificado = True
-        
-        for i,(a,b,c) in enumerate(DefinicionesBytes):
-            if a == "Frec"+self.entrada:
-                print i
        
         
 
-    def OnCerrar( self, event ):
+    def OnCerrar(self, event):
         global miValoresEntradas
         self.item.Enable(True)
         self.Destroy()
 
-    def OnCargarDefaults( self, event ):
-        global miValoresEntradas
-        global ValoresEntradas
-        miValoresEntradas[self.item.GetText()] = ValoresEntradas[self.item.GetText()]
-        self.muestras = miValoresEntradas[self.item.GetText()][0]
-        self.tiempo = miValoresEntradas[self.item.GetText()][1]
-        self.txtctrlMuestras.SetValue(str(self.muestras))
-        self.txtctrlTiempo.SetValue(str(self.tiempo))
+    def OnCargarDefaults(self, event):
+        global miBytes
+        miBytes[self.muestras][2] = MuestrasDefault
+        miBytes[self.tiempo][2] = TiempoDefault
+        self.txtctrlMuestras.SetValue(str(miBytes[self.muestras][2]))
+        self.txtctrlTiempo.SetValue(str(miBytes[self.tiempo][2]))
 
-    def OnChar( self, event ):
-        EsNumero ( event )
+    def OnChar(self, event):
+        EsNumero ( event)
 
 
 
@@ -1472,10 +1525,10 @@ class  mifrmEntrada (gui.frmEntrada):
 
 class miDlgGenError (gui.DlgGenError):
     """Diálogo de error"""
-    def __init__( self, parent ):
-        gui.DlgGenError.__init__ ( self, parent)
+    def __init__(self, parent ):
+        gui.DlgGenError.__init__ (self, parent)
 
-    def OnAceptar( self, event ):
+    def OnAceptar(self, event):
         self.Destroy()
 
 
@@ -1490,9 +1543,9 @@ class miDlgGenError (gui.DlgGenError):
 class mifrmEditBit ( gui.frmEditBit ):
     """Frame para editar los nombres de los bits"""    
     
-    def __init__( self, parent, item):
+    def __init__(self, parent, item):
         
-        gui.frmEditBit.__init__ ( self, parent)
+        gui.frmEditBit.__init__ (self, parent)
         self.item = item
         global miBits
         self.modificado = False
@@ -1501,7 +1554,7 @@ class mifrmEditBit ( gui.frmEditBit ):
         self.BitsValues = [] #lista con los wx.SpinCtrl
         for i,valorBit in enumerate(self.miBits):
 
-            texto  = wx.StaticText( self.BitScrolled, wx.ID_ANY, \
+            texto  = wx.StaticText(self.BitScrolled, wx.ID_ANY, \
                 u"Bit Nº: %d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
             texto.Wrap( -1 )
             self.gridBotones.Add( texto, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
@@ -1509,17 +1562,17 @@ class mifrmEditBit ( gui.frmEditBit ):
             # de creado, por lo que debe hacerce cuando se crea:
 
             if valorBit[3] == 0:
-                textCtrl = wx.TextCtrl( self.BitScrolled, wx.ID_ANY,\
+                textCtrl = wx.TextCtrl(self.BitScrolled, wx.ID_ANY,\
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,\
                         wx.TE_READONLY )
-                spinValue =  wx.SpinCtrl( self.BitScrolled, wx.ID_ANY, \
+                spinValue =  wx.SpinCtrl(self.BitScrolled, wx.ID_ANY, \
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,\
                     wx.SP_ARROW_KEYS, -1, 1,  int(self.miBits[i][2]) )
                     
             else:
-                textCtrl = wx.TextCtrl( self.BitScrolled, wx.ID_ANY, \
+                textCtrl = wx.TextCtrl(self.BitScrolled, wx.ID_ANY, \
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-                spinValue =  wx.SpinCtrl( self.BitScrolled, wx.ID_ANY, \
+                spinValue =  wx.SpinCtrl(self.BitScrolled, wx.ID_ANY, \
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, \
                     wx.SP_ARROW_KEYS, -1, 1, int(self.miBits[i][2]))
                 
@@ -1531,16 +1584,16 @@ class mifrmEditBit ( gui.frmEditBit ):
             self.BitsTextCtrl.append( textCtrl )
             self.BitsValues.append( spinValue ) 
 
-        self.BitScrolled.SetSizer( self.gridBotones )
+        self.BitScrolled.SetSizer(self.gridBotones )
         self.BitScrolled.Layout()
         self.BitScrolled.SetAutoLayout(True)
-        self.gridBotones.Fit( self.BitScrolled )
+        self.gridBotones.Fit(self.BitScrolled )
         
-    def OnSpinCtrl ( self , event ):
+    def OnSpinCtrl (self, event):
         self.modificado = True
         event.Skip()        
     
-    def OnBtnDerecho ( self , event ):
+    def OnBtnDerecho (self, event):
         txtctrl = event.GetEventObject()
         texto = self.miBits[self.BitsTextCtrl.index(txtctrl)][1]
         win = infoPopup(self, wx.SIMPLE_BORDER,texto)
@@ -1549,10 +1602,10 @@ class mifrmEditBit ( gui.frmEditBit ):
         win.Position(pos, (0, sz[1]))
         win.Popup()
     
-    def OnModificarTexto ( self , event ):
+    def OnModificarTexto (self, event):
         event.Skip()
 
-    def OnEditBit( self, event ):
+    def OnEditBit(self, event):
         """guarda los cambios realizados"""
         self.GuardarDatos()
             
@@ -1571,14 +1624,14 @@ class mifrmEditBit ( gui.frmEditBit ):
         Modificado = True
 
 
-    def OnUndoBit( self, event ):
+    def OnUndoBit(self, event):
         global miBits
         self.miBits = miBits[:]
         for i,txtctrl in enumerate(self.BitsTextCtrl):
             txtctrl.SetValue(self.miBits[i][0])
 
 
-    def OnClose( self, event ):
+    def OnClose(self, event):
         if self.modificado == False:
             for i in range(Cantidad_Bits_Usuario):
                 if self.BitsTextCtrl[i].IsModified():
@@ -1625,9 +1678,9 @@ class infoPopup(wx.PopupTransientWindow):
 class mifrmEditByte ( gui.frmEditByte ):
     """Frame para editar los nombres de los bytes"""
     
-    def __init__( self, parent, item ):
+    def __init__(self, parent, item ):
         
-        gui.frmEditByte.__init__ ( self, parent)
+        gui.frmEditByte.__init__ (self, parent)
         self.item = item
         global miBytes
         self.miBytes = miBytes[:]
@@ -1636,7 +1689,7 @@ class mifrmEditByte ( gui.frmEditByte ):
         self.modificado = False
         for i,valorByte in enumerate(self.miBytes):
 
-            texto  = wx.StaticText( self.ByteScrolled, wx.ID_ANY, u"Bit Nº: %d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+            texto  = wx.StaticText(self.ByteScrolled, wx.ID_ANY, u"Bit Nº: %d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
             texto.Wrap( -1 )
             self.gridBotones.Add( texto, 0, wx.ALL|wx.ALIGN_RIGHT, 5 )
             # En Windows no se puede hacer wx.TextCtrl readonly luego\
@@ -1644,17 +1697,17 @@ class mifrmEditByte ( gui.frmEditByte ):
             
             if valorByte[3] == 0:
                 
-                textCtrl = wx.TextCtrl( self.ByteScrolled, wx.ID_ANY,\
+                textCtrl = wx.TextCtrl(self.ByteScrolled, wx.ID_ANY,\
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,  wx.TE_READONLY )
-                textValue =  wx.SpinCtrl( self.ByteScrolled, wx.ID_ANY,\
+                textValue =  wx.SpinCtrl(self.ByteScrolled, wx.ID_ANY,\
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,\
                     wx.SP_ARROW_KEYS, -1, 255, int(self.miBytes[i][2]))
                                         
             else:
                 
-                textCtrl = wx.TextCtrl( self.ByteScrolled, wx.ID_ANY, \
+                textCtrl = wx.TextCtrl(self.ByteScrolled, wx.ID_ANY, \
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-                textValue =  wx.SpinCtrl( self.ByteScrolled, wx.ID_ANY,\
+                textValue =  wx.SpinCtrl(self.ByteScrolled, wx.ID_ANY,\
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,\
                     wx.SP_ARROW_KEYS, -1, 255, int(self.miBytes[i][2]))
                 
@@ -1668,17 +1721,17 @@ class mifrmEditByte ( gui.frmEditByte ):
             self.BytesTextCtrl.append(textCtrl)
             self.BytesValues.append(textValue)
             
-        self.ByteScrolled.SetSizer( self.gridBotones )
+        self.ByteScrolled.SetSizer(self.gridBotones )
         self.ByteScrolled.Layout()
         self.ByteScrolled.SetAutoLayout(True)
-        self.gridBotones.Fit( self.ByteScrolled )
+        self.gridBotones.Fit(self.ByteScrolled )
         
         
-    def OnSpinCtrl ( self , event ):
+    def OnSpinCtrl (self, event):
         self.modificado = True
         event.Skip()
         
-    def OnBtnDerecho ( self , event ):
+    def OnBtnDerecho (self, event):
         txtctrl = event.GetEventObject()
         texto = self.miBytes[self.BytesTextCtrl.index(txtctrl)][1]
         win = infoPopup(self, wx.SIMPLE_BORDER,texto)
@@ -1688,7 +1741,7 @@ class mifrmEditByte ( gui.frmEditByte ):
         win.Position(pos, (0, sz[1]))
         win.Popup()
 
-    def OnByteSpinCtrl( self, event ):
+    def OnByteSpinCtrl(self, event):
         spin = self.BytesSpinCtrl.GetValue()
         self.BytesTxtCtrl.SetValue(self.miBytes[spin])
         pass
@@ -1696,7 +1749,7 @@ class mifrmEditByte ( gui.frmEditByte ):
     def OnText(self,event):
         self.miBytes[self.BytesSpinCtrl.GetValue()] = self.BytesTxtCtrl.GetValue()
 
-    def OnEditByte( self, event ):
+    def OnEditByte(self, event):
         self.GuardarDatos()
         
     def GuardarDatos (self ):
@@ -1713,13 +1766,13 @@ class mifrmEditByte ( gui.frmEditByte ):
         self.modificado = False  #guardadas modificaciones en Bytes.
         
 
-    def OnUndoByte( self, event ):
+    def OnUndoByte(self, event):
         global miBytes
         self.miBytes = miBytes[:]
         for i,txtctrl in enumerate(self.BytesTextCtrl):
             txtctrl.SetValue(self.miBytes[i][0])
 
-    def OnClose( self, event ):
+    def OnClose(self, event):
         if self.modificado == False:
             for i in range(Cantidad_Bytes_Usuario):
                 if self.BytesTextCtrl[i].IsModified():
@@ -1754,12 +1807,12 @@ class mifrmEditByte ( gui.frmEditByte ):
 class miDlgCopiarApp ( gui.DialogoCopiarApp ):
 
 
-    def __init__( self, parent ):
-        gui.DialogoCopiarApp.__init__ ( self, parent)
+    def __init__(self, parent ):
+        gui.DialogoCopiarApp.__init__ (self, parent)
         self.padre = parent
         self.CargarChoices()
 
-    def OnChoiceAppA( self, event ):
+    def OnChoiceAppA(self, event):
         sel = self.choiceAppA.GetSelection()
         if not self.padre.AppMenuItems[sel].IsEnabled():
             self.choiceAppA.SetSelection(-1)
@@ -1769,7 +1822,7 @@ class miDlgCopiarApp ( gui.DialogoCopiarApp ):
             dlg.ShowModal()
 
 
-    def OnChoiceAppB( self, event ):
+    def OnChoiceAppB(self, event):
         sel = self.choiceAppB.GetSelection()
         if not self.padre.AppMenuItems[sel].IsEnabled():
             self.choiceAppB.SetSelection(-1)
@@ -1779,7 +1832,7 @@ class miDlgCopiarApp ( gui.DialogoCopiarApp ):
             dlg.ShowModal()
 
 
-    def OnCopiar( self, event ):
+    def OnCopiar(self, event):
         selA = self.choiceAppA.GetSelection()
         selB = self.choiceAppB.GetSelection()
         if (selA == -1) or (selB == -1):
@@ -1796,7 +1849,7 @@ class miDlgCopiarApp ( gui.DialogoCopiarApp ):
             global Modificado
             Modificado = True
 
-    def OnCerrar( self, event ):
+    def OnCerrar(self, event):
         self.Destroy()
 
     def CargarChoices(self):
@@ -1816,7 +1869,7 @@ class miDlgCopiarEstado ( gui.DlgCopiarEstado ):
         self.NumApp = parent.tempApp.AppNum
         self.CargarChoices()
 
-    def OnCopiar( self, event ):
+    def OnCopiar(self, event):
         selA = self.choiceEstA.GetSelection()
         selB = self.choiceEstB.GetSelection()
         if (selA == -1) or (selB == -1):
@@ -1833,7 +1886,7 @@ class miDlgCopiarEstado ( gui.DlgCopiarEstado ):
             self.CargarChoices()
             self.padre.CargarLista()
 
-    def CargarChoices ( self ):
+    def CargarChoices (self ):
         self.choices = [[],[]]
         for i in range(Cantidad_Estados):
             #Los estados que están siendo editados no son puestos en la
@@ -1848,14 +1901,14 @@ class miDlgCopiarEstado ( gui.DlgCopiarEstado ):
         self.choiceEstA.SetItems(self.choices[0])
         self.choiceEstB.SetItems(self.choices[0])
 
-    def OnCerrar( self , event ):
+    def OnCerrar(self, event):
         self.Destroy()
 
 
 class mifrmAnalog ( gui.frmAnalog ):
 
-    def __init__( self, parent ):
-        gui.frmAnalog.__init__ ( self, parent)
+    def __init__(self, parent ):
+        gui.frmAnalog.__init__ (self, parent)
         self.padre = parent
         global miAnalogica
         self.tempAnalogica = miAnalogica.copy()
@@ -1879,20 +1932,20 @@ class mifrmAnalog ( gui.frmAnalog ):
         self.txtctrlComentarios.SetValue(self.tempAnalogica["comentarios"])
         self.cambios = False
 
-    def On4zonas( self, event ):
+    def On4zonas(self, event):
         for zona in self.zonas.keys():
             self.zonas[zona][0].Enable(True)
         self.cambios = True
         self.radbtnValorADC.SetValue(False)
         #event.Skip()
 
-    def OnValorADC( self, event ):
+    def OnValorADC(self, event):
         for zona in self.zonas.keys():
             self.zonas[zona][0].Enable(False)
         self.cambios = True
         self.radbtn4zonas.SetValue(False)
 
-    def OnGuardar( self, event ):
+    def OnGuardar(self, event):
         self.Guardar()
 
     def Guardar(self):
@@ -1909,7 +1962,7 @@ class mifrmAnalog ( gui.frmAnalog ):
             Modificado = True
 
 
-    def OnCargarDefault( self, event ):
+    def OnCargarDefault(self, event):
         self.cambios = True
         global Analogica
         self.tempAnalogica = Analogica.copy()
@@ -1922,7 +1975,7 @@ class mifrmAnalog ( gui.frmAnalog ):
         self.txtctrlTiempo.SetValue(str(self.tempAnalogica["tiempo"]))
         self.txtctrlComentarios.SetValue("")
 
-    def OnClose( self, event ):
+    def OnClose(self, event):
         if not self.cambios:
             self.padre.m_drivers_analog.Enable(True)
             self.Destroy()
@@ -1937,7 +1990,7 @@ class mifrmAnalog ( gui.frmAnalog ):
             self.Destroy()
             self.padre.m_drivers_analog.Enable(True)
 
-    def OnInfo( self, event ):
+    def OnInfo(self, event):
         win = miFrameZonas(self)
         win.Show()
 
@@ -1945,15 +1998,15 @@ class mifrmAnalog ( gui.frmAnalog ):
         self.cambios = True
         event.Skip()
 
-    def OnChar( self, event ):
+    def OnChar(self, event):
         self.cambios = True
         EsNumero( event)
 
-    def OnSpin ( self, event ):
+    def OnSpin (self, event):
         self.cambios = True
         event.Skip()
 
-    def DatosValidos( self ):
+    def DatosValidos(self ):
 
         self.leerDatos()
         if ((self.zonas["Asup"][1]>self.zonas["Ainf"][1]) and\
@@ -1967,7 +2020,7 @@ class mifrmAnalog ( gui.frmAnalog ):
         else:
             return False
 
-    def leerDatos( self ):
+    def leerDatos(self ):
 
         for zona in self.zonas.keys():
             valor = self.zonas[zona][0].GetValue()
@@ -1985,7 +2038,7 @@ class mifrmAnalog ( gui.frmAnalog ):
 
         self.tempAnalogica["comentarios"] = self.txtctrlComentarios.GetValue()
 
-    def OnEnter( self , event):
+    def OnEnter(self, event):
         pass
 
 
@@ -1994,36 +2047,36 @@ class miFrameZonas(gui.FrameZonas):
     def __init__(self, parent):
         super(miFrameZonas, self).__init__(parent)
 
-    def OnClose( self, event ):
+    def OnClose(self, event):
         self.Destroy()
 
 class mifrmSMS ( gui.frmSMS ):
     """Frame para editar SMS"""
-    def __init__( self, parent , item):
-        gui.frmSMS.__init__ ( self, parent )
+    def __init__(self, parent , item):
+        gui.frmSMS.__init__ (self, parent )
         self.item = item
         self.item.Enable(False)
         global miSMS
         self.miSMS = miSMS[:]
         self.ListaSMS = []
         for i in range(Cantidad_SMS):
-            smsnum = wx.StaticText( self.SmsScrolled, wx.ID_ANY, u"SMS %i"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+            smsnum = wx.StaticText(self.SmsScrolled, wx.ID_ANY, u"SMS %i"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
             smsnum.Wrap( -1 )
             self.GridSms.Add( smsnum, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-            texto = wx.TextCtrl( self.SmsScrolled, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
+            texto = wx.TextCtrl(self.SmsScrolled, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
             texto.SetMaxLength( 160 ) 
             texto.SetValue(self.miSMS[i])
             self.GridSms.Add( texto, 1, wx.ALL|wx.EXPAND, 5 )
-            botonborrar = wx.Button( self.SmsScrolled, wx.ID_ANY, u"Borrar SMS", wx.DefaultPosition, wx.DefaultSize, 0 )
+            botonborrar = wx.Button(self.SmsScrolled, wx.ID_ANY, u"Borrar SMS", wx.DefaultPosition, wx.DefaultSize, 0 )
             self.GridSms.Add( botonborrar, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
             botonborrar.Bind(wx.EVT_BUTTON , self.OnBorrarSMS)
             self.ListaSMS.append([texto,botonborrar]) #Asocio el boton borrar con el texto
-        self.SmsScrolled.SetSizer( self.GridSms )
+        self.SmsScrolled.SetSizer(self.GridSms )
         self.SmsScrolled.Layout()
         self.SmsScrolled.SetAutoLayout(True)
-        self.GridSms.Fit( self.SmsScrolled )
+        self.GridSms.Fit(self.SmsScrolled )
             
-    def OnClose( self , event ):
+    def OnClose(self, event):
         cambios = False
         for i,[txtctrl,boton] in enumerate(self.ListaSMS):
             if txtctrl.IsModified():
@@ -2045,14 +2098,14 @@ class mifrmSMS ( gui.frmSMS ):
         self.item.Enable(True)
         self.Destroy()
         
-    def OnBorrarSMS ( self , event ):
+    def OnBorrarSMS (self, event):
         btn = event.GetEventObject()
         for texto ,boton in self.ListaSMS:
             if btn is boton:
                 texto.SetValue("")
                 texto.SetModified(True)
                 
-    def OnGuardarSMS( self, event ):
+    def OnGuardarSMS(self, event):
         global miSMS
         for i,[txtctrl,btn] in enumerate(self.ListaSMS):
             if txtctrl.IsModified():
@@ -2063,13 +2116,13 @@ class mifrmSMS ( gui.frmSMS ):
         global Modificado
         Modificado = True
         
-    def OnUndo ( self , event ) :
+    def OnUndo (self, event) :
         global miSMS
         self.miSMS= miSMS[:]
         for i,[txtctrl,btn] in enumerate(self.ListaSMS):
             txtctrl.SetValue(self.miSMS[i])
     
-    def OnCargarSms( self, event ):
+    def OnCargarSms(self, event):
         global DIRACTUAL
         dlg = wx.FileDialog(
             self, message="Copiar Desde ...", defaultDir=DIRACTUAL,
@@ -2098,7 +2151,7 @@ class mifrmSMS ( gui.frmSMS ):
             shelf.close()
         dlg.Destroy()
 
-def EsNumero( event):
+def EsNumero(event):
 
     keycode = event.GetKeyCode()
     if keycode < 255:
