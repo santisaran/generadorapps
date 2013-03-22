@@ -1,23 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from struct import pack,unpack
+#from struct import pack,unpack
 
 
 #Defines compartidos con C si se hace modificación, hace la misma modificación en el codigo c
 Estados = ( "ESTADO0","ESTADO1","ESTADO2","ESTADO3","ESTADO4","ESTADO5","ESTADO6",\
     "ESTADO7","ESTADO8","ESTADO9")
 
-ESTADO0=0
-ESTADO1=1
-ESTADO2=2
-ESTADO3=3
-ESTADO4=4
-ESTADO5=5
-ESTADO6=6
-ESTADO7=7
-ESTADO8=8
-ESTADO9=9
+_ESTADO0=0
+_ESTADO1=1
+_ESTADO2=2
+_ESTADO3=3
+_ESTADO4=4
+_ESTADO5=5
+_ESTADO6=6
+_ESTADO7=7
+_ESTADO8=8
+_ESTADO9=9
 
 Cantidad_Apps    = 20
 Cantidad_Estados = 10
@@ -27,7 +27,7 @@ Cantidad_Bytes_Usuario = 256
 Cantidad_SMS    = 20
 
 
- #bits definidos en el archivo CylocDefines.h
+#bits definidos en el archivo CylocDefines.h
 DefinicionesBits = (
 #NombredelBit, descripción, valor inicial, editable, descripción avanzada (para c)
     ("Contacto", u"Estado de la entrada contacto","-1",0, "p2.13"),
@@ -115,16 +115,30 @@ _corteNA = u"CorteNA"
 _corteC = u"CorteC"
 _puerta = u"Puerta"
 _trailer = u"Trailer"
-
+_an0Zai = u"an0Zai"
+_an0Zas = u"an0Zas"
+_an0Zbi = u"an0Zbi" 
+_an0Zbs = u"an0Zbs"      
+_an0Zci = u"an0Zci"      
+_an0Zcs = u"an0Zcs"     
+_an0Zdi = u"an0Zdi"     
+_an0Zds = u"an0Zds"          
+_cntan0 = "CNTan0"  
+_cfgcntan0 = "CfgCNTan0"
+_frecan0 = "Frecan0"
 
 Entradas = (_contacto, _aux1 , _aux2, _panico, _pulsador, _puerta,  _porton ,\
             _trailer, _corteNA, _corteC)
 
-EntradasBytes = { _contacto: ["FrecContacto","CfgCNTContacto"], _aux1:["FrecAux1in","CfgCNTAux1in"],\
+EntradasAn = (_frecan0,_cfgcntan0)
+
+EntradasBytes = {_contacto: ["FrecContacto","CfgCNTContacto"], _aux1:["FrecAux1in","CfgCNTAux1in"],\
                  _aux2:["FrecAux2in","CfgCNTAux2in"], _panico:["FrecBtnPanic","CfgCNTBtnPanic"],\
                  _pulsador:["Frecpulsdesact","CfgCNTpulsdesact"], _porton:["Frecporton","CfgCNTporton"],\
                  _corteNA:["FrecCorteNA","CfgCNTCorteNA"],_corteC:["FrecCorteC","CfgCNTCorteC"],\
-                 _puerta: ["Frecpuerta","CfgCNTpuerta"], _trailer:["Frectrailer","CfgCNTTrailer"]}
+                 _puerta: ["Frecpuerta","CfgCNTpuerta"], _trailer:["Frectrailer","CfgCNTTrailer"],
+                }
+
 
 
 DefinicionesBytes = (\
@@ -164,19 +178,19 @@ DefinicionesBytes = (\
     ("CorteReintentos", u"","-1",0),   
     ("Aux1Reintentos",  u"","-1",0),   
     ("Aux2Reintentos",  u"","-1",0),   
-    ("Frecan0",         u"Frecuencia de muestreo en ms de entrada analógica","-1",0),  
+    (_frecan0,         u"Frecuencia de muestreo en ms de entrada analógica","-1",0),  
     ("FrecVccTest",     u"Frecuencia de muestreo en ms de entrada Vcc","-1",0),    
-    ("CNTan0",          u"Contador cuantos an0 dentro del rango","-1",0),  
-    ("CfgCNTan0",       u"Cantidad de muestras para validar AD0","-1",0),  
+    (_cntan0,           u"Contador cuantos an0 dentro del rango","-1",0),  
+    (_cfgcntan0,        u"Cantidad de muestras para validar AD0","-1",0),  
     ("an0VALOR",        u"Valor de la conversión para AD0","-1",0),    
-    ("an0Zai",          u"Límite inferior zona A","-1",0),
-    ("an0Zas",          u"Límite superior zona A","-1",0), 
-    ("an0Zbi",          u"Límite inferior zona B","-1",0), 
-    ("an0Zbs",          u"Límite superior zona B","-1",0), 
-    ("an0Zci",          u"Límite inferior zona C","-1",0), 
-    ("an0Zcs",          u"Límite superior zona C","-1",0), 
-    ("an0Zdi",          u"Límite inferior zona D","-1",0), 
-    ("an0Zds",          u"Límite superior zona D","-1",0), 
+    (_an0Zai,           u"Límite inferior zona A","-1",0),
+    (_an0Zas,           u"Límite superior zona A","-1",0), 
+    (_an0Zbi,           u"Límite inferior zona B","-1",0), 
+    (_an0Zbs,           u"Límite superior zona B","-1",0), 
+    (_an0Zci,           u"Límite inferior zona C","-1",0), 
+    (_an0Zcs,           u"Límite superior zona C","-1",0), 
+    (_an0Zdi,           u"Límite inferior zona D","-1",0), 
+    (_an0Zds,           u"Límite superior zona D","-1",0), 
     ("an1VALOR",        u"Valor de la conversión para AD1","-1",0),    
     ("an2VALOR",        u"Valor de la conversión para AD2","-1",0),    
     ("an3VALOR",        u"Valor de la conversión para AD3","-1",0),    
@@ -325,7 +339,7 @@ class Estado():
     def __init__(self):
         self.Bloques     = [Bloque_Null,Bloque_Null,Bloque_Null,Bloque_Null,Bloque_Null]
         self.Condiciones = [Condicion_NULL,PARAMETRO1,PARAMETRO2]
-        self.Resultados  = [ESTADO0,ESTADO0]
+        self.Resultados  = [_ESTADO0,_ESTADO0]
         self.Nombre = ""
         self.Comentario = ""
     def copy(self):
@@ -375,11 +389,12 @@ class Programa():
             self.SMS = SMS[:]
         print "Programa creado"        
 
-PorZonas = 0
-ValorADC = 1
-nZonas = ("Asup","Ainf","Bsup","Binf","Csup","Cinf","Dsup","Dinf")
-Analogica = {"Asup":100,"Ainf":90,"Bsup":80,"Binf":70,"Csup":60,"Cinf":50,\
-        "Dsup":40,"Dinf":30,"tiempo":5, "muestras":5, "modo":PorZonas,\
+PorZonas = False
+ValorADC = True
+nZonas = (_an0Zas,_an0Zai,_an0Zbs,_an0Zbi,_an0Zcs,_an0Zci,_an0Zds,_an0Zdi)        
+
+Analogica = { nZonas[0]:100,nZonas[1]:90,nZonas[2]:80,nZonas[3]:70,nZonas[4]:60,nZonas[5]:50,\
+        nZonas[6]:40,nZonas[7]:30,"tiempo":5, "muestras":5, "modo":PorZonas,\
         "comentarios":""}
 
 #Acerca del modo : 0 modo 4 zonas, 1 modo valor ADC.

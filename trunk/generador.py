@@ -115,7 +115,7 @@ class MiFrame(gui.frmPpal):
         item = wx.MenuItem (self.m_drivers , wx.ID_ANY, u"Cargar desde archivo...",\
             wx.EmptyString, wx.ITEM_NORMAL )
         self.m_drivers.AppendItem ( item )
-        self.Bind ( wx.EVT_MENU, self.OnCopiarDesde, id = item.GetId() )
+        self.Bind ( wx.EVT_MENU, self.OnCopiarDesde, id = item.GetId() ) 
 #        for llave in Entradas:
 #            for i,(a,b,c,d) in enumerate(DefinicionesBytes):
 #                if a == EntradasBytes[llave][0]:
@@ -175,23 +175,23 @@ class MiFrame(gui.frmPpal):
 
 
     def OnEditarBit(self, event):
-        id = event.GetId()
-        item = self.GetMenuBar().FindItemById(id)
+        bitid = event.GetId()
+        item = self.GetMenuBar().FindItemById(bitid)
         item.Enable(False)
         win = mifrmEditBit(self, item)
         win.Show()
         
     def OnEditarSMS(self, event):
-        id = event.GetId()
-        item = self.GetMenuBar().FindItemById(id)
+        smsid = event.GetId()
+        item = self.GetMenuBar().FindItemById(smsid)
         item.Enable(False)
         win = mifrmSMS(self, item)
         win.Show()
 
 
     def OnDriverAnalog(self, event):
-        id = event.GetId()
-        item = self.GetMenuBar().FindItemById(id)
+        driverid = event.GetId()
+        item = self.GetMenuBar().FindItemById(driverid)
         item.Enable(False)
         win = mifrmAnalog(self)
         win.Show()
@@ -199,8 +199,8 @@ class MiFrame(gui.frmPpal):
 
 
     def OnDriver(self, event):
-        id = event.GetId()
-        item = self.GetMenuBar().FindItemById(id)
+        driverid = event.GetId()
+        item = self.GetMenuBar().FindItemById(driverid)
         win = mifrmEntrada(self,item)
         item.Enable(False)
         win.Show()
@@ -208,8 +208,8 @@ class MiFrame(gui.frmPpal):
 
     def OnAbrirApp(self, event):
 
-        id = event.GetId()
-        item = self.GetMenuBar().FindItemById(id)
+        appid = event.GetId()
+        item = self.GetMenuBar().FindItemById(appid)
         for i in self.aplicaciones:
             if u"Aplicación %0.2d: %s"%(i.AppNum,i.Nombre) ==item.GetText():
                 win = mifrmEditApp(self,i)
@@ -1912,21 +1912,33 @@ class mifrmAnalog ( gui.frmAnalog ):
         self.padre = parent
         global miAnalogica
         self.tempAnalogica = miAnalogica.copy()
+        for llave in nZonas:
+            # busca dentro de los bytes definidos cual es el que corresponde a cada límite
+            # y carga los datos en el vector de bytes (MemoriaUsuario_Bytes)
+            for i in range(len(DefinicionesBytes)):
+                if miBytes[i][0] == llave:
+                    self.tempAnalogica[llave]  = miBytes[i][2] 
+                    
+        #diccionario con los objetos spin para obtener los datos de los límites
         self.zonas = {\
-            "Asup":[self.spinAsup,0],\
-            "Ainf":[self.spinAinf,0],\
-            "Bsup":[self.spinBsup,0],\
-            "Binf":[self.spinBinf,0],\
-            "Csup":[self.spinCsup,0],\
-            "Cinf":[self.spinCinf,0],\
-            "Dsup":[self.spinDsup,0],\
-            "Dinf":[self.spinDinf,0]\
+            nZonas[0]:[self.spinAsup,0],\
+            nZonas[1]:[self.spinAinf,0],\
+            nZonas[2]:[self.spinBsup,0],\
+            nZonas[3]:[self.spinBinf,0],\
+            nZonas[4]:[self.spinCsup,0],\
+            nZonas[5]:[self.spinCinf,0],\
+            nZonas[6]:[self.spinDsup,0],\
+            nZonas[7]:[self.spinDinf,0]\
             }
+        
         for zona in self.zonas.keys():
+        
             self.zonas[zona][1] = self.tempAnalogica[zona]
+        
         for zona in self.zonas.keys():
-            self.zonas[zona][0].SetValue(\
-                self.zonas[zona][1])
+        
+            self.zonas[zona][0].SetValue(int(self.zonas[zona][1]))
+            
         self.txtctrlMuestras.SetValue(self.tempAnalogica["muestras"])
         self.txtctrlTiempo.SetValue(self.tempAnalogica["tiempo"])
         self.txtctrlComentarios.SetValue(self.tempAnalogica["comentarios"])
@@ -1956,6 +1968,14 @@ class mifrmAnalog ( gui.frmAnalog ):
         else:
             global miAnalogica
             miAnalogica = self.tempAnalogica.copy()
+            
+            for llave in nZonas:
+                # busca dentro de los bytes definidos cual es el que corresponde a cada límite
+                # y carga los datos en el vector de bytes (MemoriaUsuario_Bytes)
+                for i in range(len(DefinicionesBytes)):
+                    if miBytes[i][0] == llave:
+                        miBytes[i][2] = self.tempAnalogica[llave]
+            
             self.cambios = False
             self.leerDatos()
             global Modificado
@@ -2009,18 +2029,18 @@ class mifrmAnalog ( gui.frmAnalog ):
     def DatosValidos(self ):
 
         self.leerDatos()
-        if ((self.zonas["Asup"][1]>self.zonas["Ainf"][1]) and\
-            (self.zonas["Ainf"][1]>self.zonas["Bsup"][1]) and\
-            (self.zonas["Bsup"][1]>self.zonas["Binf"][1]) and\
-            (self.zonas["Binf"][1]>self.zonas["Csup"][1]) and\
-            (self.zonas["Csup"][1]>self.zonas["Cinf"][1]) and\
-            (self.zonas["Cinf"][1]>self.zonas["Dsup"][1]) and\
-            (self.zonas["Dsup"][1]>self.zonas["Dinf"][1])):
+        if ((self.zonas[nZonas[0]][1]>self.zonas[nZonas[1]][1]) and\
+            (self.zonas[nZonas[1]][1]>self.zonas[nZonas[2]][1]) and\
+            (self.zonas[nZonas[2]][1]>self.zonas[nZonas[3]][1]) and\
+            (self.zonas[nZonas[3]][1]>self.zonas[nZonas[4]][1]) and\
+            (self.zonas[nZonas[4]][1]>self.zonas[nZonas[5]][1]) and\
+            (self.zonas[nZonas[5]][1]>self.zonas[nZonas[6]][1]) and\
+            (self.zonas[nZonas[6]][1]>self.zonas[nZonas[7]][1])):
             return True
         else:
             return False
 
-    def leerDatos(self ):
+    def leerDatos(self):
 
         for zona in self.zonas.keys():
             valor = self.zonas[zona][0].GetValue()
@@ -2028,16 +2048,17 @@ class mifrmAnalog ( gui.frmAnalog ):
             self.tempAnalogica[zona]=self.zonas[zona][1]
 
         tiempo = self.txtctrlTiempo.GetValue()
-        self.tempAnalogica["tiempo"] = 0 if tiempo == "" else int(tiempo)
-
+        self.tempAnalogica[EntradasAn(0)] = 0 if tiempo == "" else int(tiempo)
         muestras = self.txtctrlMuestras.GetValue()
-        self.tempAnalogica["muestras"] = 0 if muestras == "" else int(muestras)
-
+        self.tempAnalogica[EntradasAn(1)] = 0 if muestras == "" else int(muestras)
+        
         self.tempAnalogica["modo"] = PorZonas if self.radbtn4zonas.IsEnabled()\
-            else ValorADC
-
+                else ValorADC
+        for i in range(DefinicionesBits):
+            if miBits[i][0] == "an0Zonas":
+                miBits[i][2] == 
         self.tempAnalogica["comentarios"] = self.txtctrlComentarios.GetValue()
-
+        
     def OnEnter(self, event):
         pass
 
@@ -2156,11 +2177,11 @@ def EsNumero(event):
     keycode = event.GetKeyCode()
     if keycode < 255:
     # valid ASCII
-         if chr(keycode).isdigit():
-             # Valid alphanumeric character
-             event.Skip()
-         elif keycode < 31 or keycode == 127 or keycode == '\n':
-             event.Skip()
+        if chr(keycode).isdigit():
+            # Valid alphanumeric character
+            event.Skip()
+        elif keycode < 31 or keycode == 127 or keycode == '\n':
+            event.Skip()
     elif keycode > 255:
         event.Skip()
 
