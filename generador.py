@@ -17,10 +17,21 @@ import shelve
 import wx
 
 import gui
+
+import const
+
 from apps import *
 from generarheader import tupleBits,tupleBytes
 
-VERSION = 0.1
+const.VERSION = 0.1
+
+#Indices de las listas Bytes y Bits
+const.Valor = 2
+const.Nombre = 0
+const.Def = 1
+const.mod = 3
+const.defavan = 4
+
 global DIRACTUAL
 #DIRACTUAL = os.getenv("HOME")
 DIRACTUAL = os.getcwd()
@@ -119,9 +130,9 @@ class MiFrame(gui.frmPpal):
 #        for llave in Entradas:
 #            for i,(a,b,c,d) in enumerate(DefinicionesBytes):
 #                if a == EntradasBytes[llave][0]:
-#                    miValoresEntradas[llave][0] = miBytes[i][2]
+#                    miValoresEntradas[llave][0] = miBytes[i][const.Valor]
 #                if a == EntradasBytes[llave][1]:
-#                    miValoresEntradas[llave][1] = miBytes[i][2]
+#                    miValoresEntradas[llave][1] = miBytes[i][const.Valor]
         
 
     def AgregarVentana(self):
@@ -341,10 +352,10 @@ class MiFrame(gui.frmPpal):
                 
                 for llave in Entradas:
                     for i,(a,b,c,d) in enumerate(DefinicionesBytes):
-                        if a == EntradasBytes[llave][0]:
-                            miValoresEntradas[llave][0] = miBytes[i][2]
+                        if a == EntradasBytes[llave][const.Nombre]:
+                            miValoresEntradas[llave][const.Nombre] = miBytes[i][const.Valor]
                         if a == EntradasBytes[llave][1]:
-                            miValoresEntradas[llave][1] = miBytes[i][2]
+                            miValoresEntradas[llave][1] = miBytes[i][const.Valor]
                     
                 global miAnalogica
                 miAnalogica = shelf["miAnalogica"]
@@ -398,16 +409,16 @@ class MiFrame(gui.frmPpal):
             binario = GenerarBin(self.aplicaciones)
             
             for i in range(Cantidad_Bytes_Usuario):
-                if miBytes[i][2] != "-1":
+                if miBytes[i][const.Valor] != "-1":
                     #Si el valor del byte se deja en -1, no se modifica
                     binario = binario + str(chr(0xAA)) + str(chr(Header_BYTE)) + \
-                        str(chr(2)) + str(chr(i)) + str(chr(int(miBytes[i][2])))
+                        str(chr(2)) + str(chr(i)) + str(chr(int(miBytes[i][const.Valor])))
                 
             for i in range(Cantidad_Bits_Usuario):
-                if miBits[i][2] != "-1":
+                if miBits[i][const.Valor] != "-1":
                     #Si el valor del bit se deja en -1, no se modifica
                     binario = binario + str(chr(0xAA)) + str(chr(Header_BIT)) + \
-                        str(chr(2)) + str(chr(i)) + str(chr(int(miBits[i][2])))
+                        str(chr(2)) + str(chr(i)) + str(chr(int(miBits[i][const.Valor])))
             
             #Agregar Sms al binario:
             # 0xAA, HEADER_SMS, SIZE, NºSMS, SMS
@@ -465,7 +476,7 @@ class MiFrame(gui.frmPpal):
                     shelf["bytes"] = miBytes
                     global miAnalogica
                     shelf["miAnalogica"] = miAnalogica
-                    shelf["version"] = VERSION
+                    shelf["version"] = const.VERSION
                     shelf.close()
                     Modificado = False
                     dlg.Destroy()
@@ -504,9 +515,9 @@ class MiFrame(gui.frmPpal):
         self.Title = "Generador de Programas: "
         global ValoresEntradas
         global miValoresEntradas
-        miValoresEntradas = {}
-        for i in Entradas:
-            miValoresEntradas[i] = ValoresEntradas[i][:]
+        #miValoresEntradas = {}
+        #for i in Entradas:
+        #    miValoresEntradas[i] = ValoresEntradas[i][:]
         
         
         global Analogica
@@ -860,9 +871,9 @@ class mipanelBloque(gui.panelBloque):
 
 
     def BloqueIncrementar(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBytes])
-        self.choiceParametro2.SetItems([i[0] for i in miBytes])
-        self.choiceGuardar.SetItems([i[0] for i in miBytes])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBytes])
+        self.choiceParametro2.SetItems([i[const.Nombre] for i in miBytes])
+        self.choiceGuardar.SetItems([i[const.Nombre] for i in miBytes])
         self.choiceParametro1.Enable(True)
         self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(False)
@@ -871,9 +882,9 @@ class mipanelBloque(gui.panelBloque):
 
 
     def BloqueDecrementar(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBytes])
-        self.choiceParametro2.SetItems([i[0] for i in miBytes])
-        self.choiceGuardar.SetItems([i[0] for i in miBytes])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBytes])
+        self.choiceParametro2.SetItems([i[const.Nombre] for i in miBytes])
+        self.choiceGuardar.SetItems([i[const.Nombre] for i in miBytes])
         self.choiceParametro1.Enable(True)
         self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(False)
@@ -882,9 +893,9 @@ class mipanelBloque(gui.panelBloque):
 
 
     def BloqueAND(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBits])
-        self.choiceParametro2.SetItems([i[0] for i in miBits])
-        self.choiceGuardar.SetItems([i[0] for i in miBits])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBits])
+        self.choiceParametro2.SetItems([i[const.Nombre] for i in miBits])
+        self.choiceGuardar.SetItems([i[const.Nombre] for i in miBits])
         self.choiceParametro1.Enable(True)
         self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(True)
@@ -894,9 +905,9 @@ class mipanelBloque(gui.panelBloque):
 
 
     def BloqueOR(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBits])
-        self.choiceParametro2.SetItems([i[0] for i in miBits])
-        self.choiceGuardar.SetItems([i[0] for i in miBits])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBits])
+        self.choiceParametro2.SetItems([i[const.Nombre] for i in miBits])
+        self.choiceGuardar.SetItems([i[const.Nombre] for i in miBits])
         self.choiceParametro1.Enable(True)
         self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(True)
@@ -906,8 +917,8 @@ class mipanelBloque(gui.panelBloque):
 
 
     def BloqueNOT(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBits])
-        self.choiceGuardar.SetItems([i[0] for i in miBits])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBits])
+        self.choiceGuardar.SetItems([i[const.Nombre] for i in miBits])
         self.choiceParametro1.Enable(True)
         self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(False)
@@ -916,9 +927,9 @@ class mipanelBloque(gui.panelBloque):
 
 
     def BloqueSumar(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBytes])
-        self.choiceParametro2.SetItems([i[0] for i in miBytes])
-        self.choiceGuardar.SetItems([i[0] for i in miBytes])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBytes])
+        self.choiceParametro2.SetItems([i[const.Nombre] for i in miBytes])
+        self.choiceGuardar.SetItems([i[const.Nombre] for i in miBytes])
         self.choiceParametro1.Enable(True)
         self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(True)
@@ -928,9 +939,9 @@ class mipanelBloque(gui.panelBloque):
 
 
     def BloqueRestar(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBytes])
-        self.choiceParametro2.SetItems([i[0] for i in miBytes])
-        self.choiceGuardar.SetItems([i[0] for i in miBytes])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBytes])
+        self.choiceParametro2.SetItems([i[const.Nombre] for i in miBytes])
+        self.choiceGuardar.SetItems([i[const.Nombre] for i in miBytes])
         self.choiceParametro1.Enable(True)
         self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(True)
@@ -940,9 +951,9 @@ class mipanelBloque(gui.panelBloque):
 
 
     def BloqueInvertir(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBytes])
-        #self.choiceParametro2.SetItems([i[0] for i in miBytes])
-        self.choiceGuardar.SetItems([i[0] for i in miBytes])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBytes])
+        #self.choiceParametro2.SetItems([i[const.Nombre] for i in miBytes])
+        self.choiceGuardar.SetItems([i[const.Nombre] for i in miBytes])
         self.choiceParametro1.Enable(True)
         self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(False)
@@ -951,9 +962,9 @@ class mipanelBloque(gui.panelBloque):
 
 
     def BloqueTransmitir(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBytes])
-        self.choiceParametro2.SetItems([i[0] for i in miBytes])
-        self.choiceGuardar.SetItems([i[0] for i in miBytes])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBytes])
+        self.choiceParametro2.SetItems([i[const.Nombre] for i in miBytes])
+        self.choiceGuardar.SetItems([i[const.Nombre] for i in miBytes])
         self.choiceParametro1.Enable(True)
         self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(True)
@@ -962,9 +973,9 @@ class mipanelBloque(gui.panelBloque):
         self.choiceGuardar.SetSelection(self.Guardar )
 
     def BloqueSetBit(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBits])
-        #self.choiceParametro2.SetItems([i[0] for i in miBits])
-        #self.choiceGuardar.SetItems([i[0] for i in miBits])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBits])
+        #self.choiceParametro2.SetItems([i[const.Nombre] for i in miBits])
+        #self.choiceGuardar.SetItems([i[const.Nombre] for i in miBits])
         self.choiceParametro1.Enable(True)
         self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(False)
@@ -972,9 +983,9 @@ class mipanelBloque(gui.panelBloque):
 
 
     def BloqueClrBit(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBits])
-        #self.choiceParametro2.SetItems([i[0] for i in miBits])
-        #self.choiceGuardar.SetItems([i[0] for i in miBits])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBits])
+        #self.choiceParametro2.SetItems([i[const.Nombre] for i in miBits])
+        #self.choiceGuardar.SetItems([i[const.Nombre] for i in miBits])
         self.choiceParametro1.Enable(True)
         self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(False)
@@ -982,9 +993,9 @@ class mipanelBloque(gui.panelBloque):
 
 
     def BloqueClrReg(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBytes])
-        #self.choiceParametro2.SetItems([i[0] for i in miBytes])
-        #self.choiceGuardar.SetItems([i[0] for i in miBytes])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBytes])
+        #self.choiceParametro2.SetItems([i[const.Nombre] for i in miBytes])
+        #self.choiceGuardar.SetItems([i[const.Nombre] for i in miBytes])
         self.choiceParametro1.Enable(True)
         self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(False)
@@ -992,9 +1003,9 @@ class mipanelBloque(gui.panelBloque):
 
 
     def BloqueCopiar(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBytes])
-        #self.choiceParametro2.SetItems([i[0] for i in miBytes])
-        self.choiceGuardar.SetItems([i[0] for i in miBytes])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBytes])
+        #self.choiceParametro2.SetItems([i[const.Nombre] for i in miBytes])
+        self.choiceGuardar.SetItems([i[const.Nombre] for i in miBytes])
         self.choiceParametro1.Enable(True)
         self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(False)
@@ -1379,9 +1390,9 @@ class mipanelCondicion ( gui.panelCondicion ):
 
 
     def Mayor(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBytes])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBytes])
         self.choiceParametro1.SetSelection(0)
-        self.choiceParametro2.SetItems([i[0] for i in miBytes])
+        self.choiceParametro2.SetItems([i[const.Nombre] for i in miBytes])
         self.choiceParametro2.SetSelection(0)
         self.choiceEstadoTrue.SetItems(miEstados)
         self.choiceEstadoTrue.SetSelection(0)
@@ -1395,9 +1406,9 @@ class mipanelCondicion ( gui.panelCondicion ):
 
 
     def Menor(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBytes])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBytes])
         self.choiceParametro1.SetSelection(0)
-        self.choiceParametro2.SetItems([i[0] for i in miBytes])
+        self.choiceParametro2.SetItems([i[const.Nombre] for i in miBytes])
         self.choiceParametro2.SetSelection(0)
         self.choiceEstadoTrue.SetItems(miEstados)
         self.choiceEstadoTrue.SetSelection(0)
@@ -1410,9 +1421,9 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.choiceEstadoFalse.Enable(True)
 
     def Igual(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBytes])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBytes])
         self.choiceParametro1.SetSelection(0)
-        self.choiceParametro2.SetItems([i[0] for i in miBytes])
+        self.choiceParametro2.SetItems([i[const.Nombre] for i in miBytes])
         self.choiceParametro2.SetSelection(0)
         self.choiceEstadoTrue.SetItems(miEstados)
         self.choiceEstadoTrue.SetSelection(0)
@@ -1425,7 +1436,7 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.choiceEstadoFalse.Enable(True)
 
     def BitTrue(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBits])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBits])
         self.choiceParametro1.SetSelection(0)
         self.choiceEstadoTrue.SetItems(miEstados)
         self.choiceEstadoTrue.SetSelection(0)
@@ -1438,7 +1449,7 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.choiceEstadoFalse.Enable(True)
 
     def BitFalse(self):
-        self.choiceParametro1.SetItems([i[0] for i in miBits])
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBits])
         self.choiceParametro1.SetSelection(0)
         self.choiceEstadoTrue.SetItems(miEstados)
         self.choiceEstadoTrue.SetSelection(0)
@@ -1483,8 +1494,8 @@ class  mifrmEntrada (gui.frmEntrada):
                 # self.muestras queda con el valor del numero de byte que 
                 # corresponde a la entrada actual. (contacto, puerta, porton, etc) 
                 self.tiempo = i
-        self.txtctrlMuestras.SetValue(str(miBytes[self.muestras][2]))
-        self.txtctrlTiempo.SetValue(str(miBytes[self.tiempo][2]))
+        self.txtctrlMuestras.SetValue(str(miBytes[self.muestras][const.Nombre]))
+        self.txtctrlTiempo.SetValue(str(miBytes[self.tiempo][const.Nombre]))
 
 
     def OnGuardar(self, event):
@@ -1567,18 +1578,18 @@ class mifrmEditBit ( gui.frmEditBit ):
                         wx.TE_READONLY )
                 spinValue =  wx.SpinCtrl(self.BitScrolled, wx.ID_ANY, \
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,\
-                    wx.SP_ARROW_KEYS, -1, 1,  int(self.miBits[i][2]) )
+                    wx.SP_ARROW_KEYS, -1, 1,  int(self.miBits[i][const.Valor]) )
                     
             else:
                 textCtrl = wx.TextCtrl(self.BitScrolled, wx.ID_ANY, \
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
                 spinValue =  wx.SpinCtrl(self.BitScrolled, wx.ID_ANY, \
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, \
-                    wx.SP_ARROW_KEYS, -1, 1, int(self.miBits[i][2]))
+                    wx.SP_ARROW_KEYS, -1, 1, int(self.miBits[i][const.Valor]))
                 
             self.gridBotones.Add( textCtrl, 0, wx.ALL|wx.EXPAND, 5 )
             self.gridBotones.Add( spinValue, 0, wx.ALL, 5 )
-            textCtrl.SetValue(valorBit[0])
+            textCtrl.SetValue(valorBit[const.Nombre])
             textCtrl.Bind( wx.EVT_RIGHT_DOWN, self.OnBtnDerecho )
             spinValue.Bind( wx.EVT_SPINCTRL, self.OnSpinCtrl )
             self.BitsTextCtrl.append( textCtrl )
@@ -1615,9 +1626,9 @@ class mifrmEditBit ( gui.frmEditBit ):
         global miBits
         for i,txtctrl in enumerate(self.BitsTextCtrl):
             if txtctrl.IsModified():
-                self.miBits[i][0] = txtctrl.GetValue()
+                self.miBits[i][const.Nombre] = txtctrl.GetValue()
                 txtctrl.SetModified(False)
-            self.miBits[i][2] = str(self.BitsValues[i].GetValue())
+            self.miBits[i][const.Valor] = str(self.BitsValues[i].GetValue())
         miBits = self.miBits[:]
         self.modificado = False
         global Modificado
@@ -1628,7 +1639,7 @@ class mifrmEditBit ( gui.frmEditBit ):
         global miBits
         self.miBits = miBits[:]
         for i,txtctrl in enumerate(self.BitsTextCtrl):
-            txtctrl.SetValue(self.miBits[i][0])
+            txtctrl.SetValue(self.miBits[i][const.Nombre])
 
 
     def OnClose(self, event):
@@ -1701,7 +1712,7 @@ class mifrmEditByte ( gui.frmEditByte ):
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,  wx.TE_READONLY )
                 textValue =  wx.SpinCtrl(self.ByteScrolled, wx.ID_ANY,\
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,\
-                    wx.SP_ARROW_KEYS, -1, 255, int(self.miBytes[i][2]))
+                    wx.SP_ARROW_KEYS, -1, 255, int(self.miBytes[i][const.Valor]))
                                         
             else:
                 
@@ -1709,11 +1720,11 @@ class mifrmEditByte ( gui.frmEditByte ):
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
                 textValue =  wx.SpinCtrl(self.ByteScrolled, wx.ID_ANY,\
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,\
-                    wx.SP_ARROW_KEYS, -1, 255, int(self.miBytes[i][2]))
+                    wx.SP_ARROW_KEYS, -1, 255, int(self.miBytes[i][const.Valor]))
                 
             self.gridBotones.Add( textCtrl, 0, wx.ALL|wx.EXPAND, 5 )
             self.gridBotones.Add( textValue, 0, wx.ALL, 5 )
-            textCtrl.SetValue(valorByte[0])
+            textCtrl.SetValue(valorByte[const.Nombre])
             
             textValue.Bind( wx.EVT_SPINCTRL, self.OnSpinCtrl )
             textCtrl.Bind( wx.EVT_RIGHT_DOWN, self.OnBtnDerecho )
@@ -1757,9 +1768,9 @@ class mifrmEditByte ( gui.frmEditByte ):
         global miBytes
         for i,txtctrl in enumerate(self.BytesTextCtrl):
             if txtctrl.IsModified():
-                self.miBytes[i][0] = txtctrl.GetValue()
+                self.miBytes[i][const.Nombre] = txtctrl.GetValue()
                 txtctrl.SetModified(False)
-            self.miBytes[i][2] = str(self.BytesValues[i].GetValue())
+            self.miBytes[i][const.Valor] = str(self.BytesValues[i].GetValue())
         miBytes = self.miBytes[:]
         global Modificado
         Modificado = True  #Avisar modificación al programa global.
@@ -1770,7 +1781,7 @@ class mifrmEditByte ( gui.frmEditByte ):
         global miBytes
         self.miBytes = miBytes[:]
         for i,txtctrl in enumerate(self.BytesTextCtrl):
-            txtctrl.SetValue(self.miBytes[i][0])
+            txtctrl.SetValue(self.miBytes[i][const.Nombre])
 
     def OnClose(self, event):
         if self.modificado == False:
@@ -1788,7 +1799,7 @@ class mifrmEditByte ( gui.frmEditByte ):
                 global miBytes
                 for i,txtctrl in enumerate(self.BytesTextCtrl):
                     if txtctrl.IsModified():
-                        self.miBytes[i][0] = txtctrl.GetValue()
+                        self.miBytes[i][const.Nombre] = txtctrl.GetValue()
                         miBytes = self.miBytes[:]
         self.modificado = False            
                 
@@ -1916,8 +1927,20 @@ class mifrmAnalog ( gui.frmAnalog ):
             # busca dentro de los bytes definidos cual es el que corresponde a cada límite
             # y carga los datos en el vector de bytes (MemoriaUsuario_Bytes)
             for i in range(len(DefinicionesBytes)):
-                if miBytes[i][0] == llave:
-                    self.tempAnalogica[llave]  = miBytes[i][2] 
+                if miBytes[i][const.Nombre] == llave:
+                    self.tempAnalogica[llave]  = miBytes[i][const.Valor]
+                    
+        for i in range(len(DefinicionesBits)):
+            if miBits[i][const.Nombre] == "an0Zonas":
+                self.tempAnalogica["modo"] = miBits[i][const.Valor] 
+                break
+                
+        for i in range(len(DefinicionesBytes)):
+            if miBytes[i][const.Nombre] == EntradasAn[0]:
+                self.tempAnalogica["tiempo"] = miBytes[i][const.Valor]
+            if miBytes[i][const.Nombre] == EntradasAn[1]:
+                self.tempAnalogica["muestras"] = miBytes[i][const.Valor]
+                
                     
         #diccionario con los objetos spin para obtener los datos de los límites
         self.zonas = {\
@@ -1939,23 +1962,41 @@ class mifrmAnalog ( gui.frmAnalog ):
         
             self.zonas[zona][0].SetValue(int(self.zonas[zona][1]))
             
-        self.txtctrlMuestras.SetValue(self.tempAnalogica["muestras"])
-        self.txtctrlTiempo.SetValue(self.tempAnalogica["tiempo"])
+        self.txtctrlMuestras.SetValue(int(self.tempAnalogica["muestras"]))
+        self.txtctrlTiempo.SetValue(int(self.tempAnalogica["tiempo"]))
         self.txtctrlComentarios.SetValue(self.tempAnalogica["comentarios"])
+        
+        for zona in self.zonas.keys():
+            self.zonas[zona][0].Enable(False)
+        self.radbtnValorADC.SetValue(False)
+        self.radbtn4zonas.SetValue(False)
+        
+        if self.tempAnalogica["modo"] != "-1":
+            print "modo distinto a -1"
+            if self.tempAnalogica["modo"] == False:
+                for zona in self.zonas.keys():
+                    self.zonas[zona][0].Enable(True)
+                self.radbtn4zonas.SetValue(True)
+            elif self.tempAnalogica["modo"] == True: 
+                self.radbtnValorADC.SetValue(True)
+                for zona in self.zonas.keys():
+                    self.zonas[zona][0].Enable(False)                
         self.cambios = False
+        
 
     def On4zonas(self, event):
         for zona in self.zonas.keys():
             self.zonas[zona][0].Enable(True)
         self.cambios = True
         self.radbtnValorADC.SetValue(False)
-        #event.Skip()
+        event.Skip()
 
     def OnValorADC(self, event):
         for zona in self.zonas.keys():
             self.zonas[zona][0].Enable(False)
         self.cambios = True
         self.radbtn4zonas.SetValue(False)
+        event.Skip()
 
     def OnGuardar(self, event):
         self.Guardar()
@@ -1973,8 +2014,8 @@ class mifrmAnalog ( gui.frmAnalog ):
                 # busca dentro de los bytes definidos cual es el que corresponde a cada límite
                 # y carga los datos en el vector de bytes (MemoriaUsuario_Bytes)
                 for i in range(len(DefinicionesBytes)):
-                    if miBytes[i][0] == llave:
-                        miBytes[i][2] = self.tempAnalogica[llave]
+                    if miBytes[i][const.Nombre] == llave:
+                        miBytes[i][const.Valor] = self.tempAnalogica[llave]
             
             self.cambios = False
             self.leerDatos()
@@ -2029,6 +2070,14 @@ class mifrmAnalog ( gui.frmAnalog ):
     def DatosValidos(self ):
 
         self.leerDatos()
+        #si todas las zonas son -1 no verifica datos válidos. (no se modificarán los datos
+        # precargados en el programa.
+        if ((self.zonas[nZonas[0]][1] == -1) and (self.zonas[nZonas[0]][1] == -1) and\
+                (self.zonas[nZonas[0]][1] == -1) and (self.zonas[nZonas[0]][1] == -1) and\
+                (self.zonas[nZonas[0]][1] == -1) and (self.zonas[nZonas[0]][1] == -1) and\
+                (self.zonas[nZonas[0]][1] == -1)):
+            return True
+            
         if ((self.zonas[nZonas[0]][1]>self.zonas[nZonas[1]][1]) and\
             (self.zonas[nZonas[1]][1]>self.zonas[nZonas[2]][1]) and\
             (self.zonas[nZonas[2]][1]>self.zonas[nZonas[3]][1]) and\
@@ -2043,20 +2092,21 @@ class mifrmAnalog ( gui.frmAnalog ):
     def leerDatos(self):
 
         for zona in self.zonas.keys():
-            valor = self.zonas[zona][0].GetValue()
-            self.zonas[zona][1] = 0 if (valor == "") else int(valor)
+            resultado = self.zonas[zona][0].GetValue()
+            self.zonas[zona][1] = 0 if (resultado == "") else int(resultado)
             self.tempAnalogica[zona]=self.zonas[zona][1]
 
         tiempo = self.txtctrlTiempo.GetValue()
-        self.tempAnalogica[EntradasAn(0)] = 0 if tiempo == "" else int(tiempo)
+        self.tempAnalogica[EntradasAn[0]] = -1 if tiempo == "" else int(tiempo)
         muestras = self.txtctrlMuestras.GetValue()
-        self.tempAnalogica[EntradasAn(1)] = 0 if muestras == "" else int(muestras)
+        self.tempAnalogica[EntradasAn[1]] = -1 if muestras == "" else int(muestras)
         
-        self.tempAnalogica["modo"] = PorZonas if self.radbtn4zonas.IsEnabled()\
+        self.tempAnalogica["modo"] = PorZonas if self.radbtn4zonas.GetValue()\
                 else ValorADC
-        for i in range(DefinicionesBits):
-            if miBits[i][0] == "an0Zonas":
-                miBits[i][2] == 
+        for i in range(len(DefinicionesBits)):
+            if miBits[i][const.Nombre] == "an0Zonas":
+                miBits[i][const.Valor] = self.tempAnalogica["modo"]
+                break
         self.tempAnalogica["comentarios"] = self.txtctrlComentarios.GetValue()
         
     def OnEnter(self, event):

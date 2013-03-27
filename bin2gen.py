@@ -130,7 +130,7 @@ class CargarBinario():
     
         for i in self.aplicaciones:
             for j in i.Estados:
-                print [hex(valor) for valor in j.Bloques[:]]
+                print [hex(resultado) for resultado in j.Bloques[:]]
         print '\n'
         
         for i,mensaje in enumerate(self.SMS):
@@ -145,7 +145,7 @@ class CargarBinario():
         
         for i in self.programa.aplicaciones:
             for j in i.Estados:
-                print [hex(valor) for valor in j.Bloques[:]]
+                print [hex(resultado) for resultado in j.Bloques[:]]
         print '\n'
     
         for i,mensaje in enumerate(self.programa.SMS):
