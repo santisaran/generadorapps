@@ -2235,8 +2235,6 @@ def EsNumero(event):
     elif keycode > 255:
         event.Skip()
 
-
-
 def GetTexto(elec):
     return elec.GetString(elec.GetSelection())
 
