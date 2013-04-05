@@ -50,6 +50,9 @@ class CylocFrame ( wx.Frame ):
 		self.textCtrlRep = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 1000, 1 )
 		bSizer2.Add( self.textCtrlRep, 0, wx.ALL, 5 )
 		
+		self.btn_EnviarTexto = wx.Button( self, wx.ID_ANY, u"Enviar", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer2.Add( self.btn_EnviarTexto, 0, wx.ALL, 5 )
+		
 		
 		bSizer1.Add( bSizer2, 0, wx.EXPAND, 5 )
 		
@@ -69,13 +72,13 @@ class CylocFrame ( wx.Frame ):
 		self.textCtrlBinRep = wx.SpinCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 1000, 0 )
 		bSizer5.Add( self.textCtrlBinRep, 0, wx.ALL, 5 )
 		
+		self.m_button4 = wx.Button( self, wx.ID_ANY, u"Enviar", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer5.Add( self.m_button4, 0, wx.ALL, 5 )
+		
 		
 		bSizer1.Add( bSizer5, 0, wx.EXPAND, 5 )
 		
 		bSizer3 = wx.BoxSizer( wx.HORIZONTAL )
-		
-		self.btnEnviar = wx.Button( self, wx.ID_ANY, u"Enviar", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer3.Add( self.btnEnviar, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
 		bSizer3.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
@@ -94,8 +97,10 @@ class CylocFrame ( wx.Frame ):
 		
 		# Connect Events
 		self.textCtrlDatos.Bind( wx.EVT_TEXT_ENTER, self.OnEnviar )
+		self.btn_EnviarTexto.Bind( wx.EVT_BUTTON, self.OnEnviarDatos )
+		self.textCtrlBin.Bind( wx.EVT_CHAR, self.OnBinChar )
 		self.textCtrlBin.Bind( wx.EVT_TEXT_ENTER, self.OnEnterBin )
-		self.btnEnviar.Bind( wx.EVT_BUTTON, self.OnEnviar )
+		self.m_button4.Bind( wx.EVT_BUTTON, self.OnEnviarBinario )
 		self.btnSalir.Bind( wx.EVT_BUTTON, self.OnClose )
 	
 	def __del__( self ):
@@ -106,9 +111,17 @@ class CylocFrame ( wx.Frame ):
 	def OnEnviar( self, event ):
 		event.Skip()
 	
+	def OnEnviarDatos( self, event ):
+		event.Skip()
+	
+	def OnBinChar( self, event ):
+		event.Skip()
+	
 	def OnEnterBin( self, event ):
 		event.Skip()
 	
+	def OnEnviarBinario( self, event ):
+		event.Skip()
 	
 	def OnClose( self, event ):
 		event.Skip()
