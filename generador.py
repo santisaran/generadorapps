@@ -1494,8 +1494,8 @@ class  mifrmEntrada (gui.frmEntrada):
                 # self.muestras queda con el valor del numero de byte que 
                 # corresponde a la entrada actual. (contacto, puerta, porton, etc) 
                 self.tiempo = i
-        self.txtctrlMuestras.SetValue(str(miBytes[self.muestras][const.Nombre]))
-        self.txtctrlTiempo.SetValue(str(miBytes[self.tiempo][const.Nombre]))
+        self.txtctrlMuestras.SetValue(str(miBytes[self.muestras][const.Valor]))
+        self.txtctrlTiempo.SetValue(str(miBytes[self.tiempo][const.Valor]))
 
 
     def OnGuardar(self, event):
