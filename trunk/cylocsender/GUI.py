@@ -80,11 +80,17 @@ class CylocFrame ( wx.Frame ):
 		
 		bSizer3 = wx.BoxSizer( wx.HORIZONTAL )
 		
+		self.m_button41 = wx.Button( self, wx.ID_ANY, u"Borrar Pantalla", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer3.Add( self.m_button41, 0, wx.ALL, 5 )
+		
+		self.btnSalir = wx.Button( self, wx.ID_ANY, u"Cerrar", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer3.Add( self.btnSalir, 0, wx.ALL|wx.EXPAND, 5 )
+		
 		
 		bSizer3.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
-		self.btnSalir = wx.Button( self, wx.ID_ANY, u"Cerrar", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer3.Add( self.btnSalir, 1, wx.ALL|wx.EXPAND, 5 )
+		self.m_button5 = wx.Button( self, wx.ID_ANY, u"EnviarInit", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer3.Add( self.m_button5, 0, wx.ALL, 5 )
 		
 		
 		bSizer1.Add( bSizer3, 0, wx.EXPAND, 5 )
@@ -101,7 +107,9 @@ class CylocFrame ( wx.Frame ):
 		self.textCtrlBin.Bind( wx.EVT_CHAR, self.OnBinChar )
 		self.textCtrlBin.Bind( wx.EVT_TEXT_ENTER, self.OnEnterBin )
 		self.m_button4.Bind( wx.EVT_BUTTON, self.OnEnviarBinario )
+		self.m_button41.Bind( wx.EVT_BUTTON, self.OnBorrar )
 		self.btnSalir.Bind( wx.EVT_BUTTON, self.OnClose )
+		self.m_button5.Bind( wx.EVT_BUTTON, self.OnIniciarSerie )
 	
 	def __del__( self ):
 		pass
@@ -123,7 +131,13 @@ class CylocFrame ( wx.Frame ):
 	def OnEnviarBinario( self, event ):
 		event.Skip()
 	
+	def OnBorrar( self, event ):
+		event.Skip()
+	
 	def OnClose( self, event ):
+		event.Skip()
+	
+	def OnIniciarSerie( self, event ):
 		event.Skip()
 	
 
