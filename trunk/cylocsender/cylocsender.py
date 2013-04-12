@@ -43,13 +43,12 @@ class SerialRxEvent(wx.PyCommandEvent):
 class MyCylocFrame (GUI.CylocFrame):
     def __init__(self):
         super(MyCylocFrame,self).__init__(None)
-        
+        self.anterior = False
         self.timer1 = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.OnTimeout, self.timer1)
         self.timer2 = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.OnMantenerCom, self.timer2)
         #EVT_RESULT(self.frame, self.OnAcquireData)
-        
         self.alive = threading.Event()
         try:
             self.serial = serial.Serial(serial.device(PUERTO), BAUDRATE,timeout=TIMEOUT, xonxoff=XONXOFF,writeTimeout=WRITETIMEOUT)
@@ -73,7 +72,7 @@ class MyCylocFrame (GUI.CylocFrame):
             )        
         self.Bind(EVT_SERIALRX, self.OnSerialRead)
         self.EsperaACK = False
-        self.ESTADOSSERIE = {0x55:self.RecvACK,0x01:self.RecvStart,0x02:self.RecvStop,0x03:self.RecvResend}
+        self.ESTADOSSERIE = {0x55:self.RecvACK,0x01:self.RecvStart,0x02:self.RecvStop,0x03:self.RecvResend, 0x04:self.RecvAlive}
         
         
     def StartThread(self):
@@ -117,35 +116,54 @@ class MyCylocFrame (GUI.CylocFrame):
         """Maneja la entrada de puerto serie"""
         text = event.data
         try:
+            #Agregar cadena de texto en el cuadro de izquierda
             self.textCtrlEntrada.AppendText(text.encode('latin1','ignore'))            
         except:
             pass
+        #Agregar lo recibido por el puerto serie en fomato hexadecimal
         self.textCtrlEntradaHex.AppendText(str(map(hex,map(ord,text))))
         
         if self.EsperaACK:
             retorno = map(ord,text)
+            print "recibido: " + str(retorno)
             if (len(retorno) == 2) and (retorno[0] == 0xaa): 
                 if self.ESTADOSSERIE.has_key(retorno[1]):
                     self.ESTADOSSERIE[retorno[1]]()
-
+            elif (len(retorno) == 1):
+                if retorno[0] == 0xaa:
+                    self.anterior = True
+                elif self.anterior:
+                    self.anterior = False
+                    if self.ESTADOSSERIE.has_key(retorno[0]):
+                        print "error salvado"
+                        self.ESTADOSSERIE[retorno[0]]()
+                
+                
     def RecvACK(self):
+        print "recibido ACK"
         self.ACKrecibido = True
-        self.EsperaACK = False
-        #self.textCtrlDatos.Enable(False)
-        #self.textCtrlBin.Enable(False)
         try:
             self.serial.write(COMENZARPROG)
-            self.timer2.Start(500,oneShot=False)
+            self.EsperaACK = True
+            self.timer2.Start(500,oneShot=True)
         except:
             self.StopThread()
                 
     def RecvStart(self):
+        print "Recibido Start"
         pass
     
     def RecvStop(self):
+        print "Recibido Stop"
         pass
     
     def RecvResend(self):
+        print "Recibido Resend"
+        pass
+    
+    def RecvAlive(self):
+        self.timer2.Start(500,oneShot=True)
+        print "ACK"
         pass
                     
     def OnPortSettings(self, event=None):
@@ -209,24 +227,40 @@ class MyCylocFrame (GUI.CylocFrame):
                 dato = int(aenviar[j*2:(j*2)+2],16)
                 print dato,
                 self.serial.write(chr(dato))
-        print ""        
+        self.timer2.Stop()        
         
     def OnIniciarSerie(self,event):
-        print "enviando encabezado"
-        dato = chr(0xaa)
-        for i in range(100):
-            self.serial.write(dato)
-        self.EsperaACK = True
-        self.timer1.Start(500,oneShot=True)
+        if self.tglBtnComenzar.GetValue():
+            print "enviando encabezado"
+            dato = chr(0xaa)
+            for i in range(16):
+                self.serial.write(dato)
+                self.EsperaACK = True
+                self.timer1.Start(1000,oneShot=True)
+                self.tglBtnComenzar.SetLabel(u"Detener Comunicación")
+        
                 
+#####################################################
+#Timers: 
+#Timer1 usado como timeout de conexión serie
+
     def OnTimeout(self,event):
         if self.EsperaACK:
             print "Tiempo fuera"
             self.EsperaACK = False
+            self.tglBtnComenzar.SetValue(False)
+            self.tglBtnComenzar.SetLabel(u"Comenzar Comunicación")
+            self.timer2.Stop()
             
+#timer2 usado para mantener la conexión.
+
     def OnMantenerCom(self,event):
-        self.serial.write(chr(0x55))
+        if self.tglBtnComenzar.GetValue():
+            self.serial.write(chr(0x55))
+            self.timer1.Start(1000,oneShot=True)
+            self.EsperaACK = True
         
+#####################################################       
                 
     def OnBinChar(self,event):
         EsHexa(event)
