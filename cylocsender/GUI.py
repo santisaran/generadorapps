@@ -92,6 +92,9 @@ class CylocFrame ( wx.Frame ):
 		self.m_button5 = wx.Button( self, wx.ID_ANY, u"EnviarInit", wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer3.Add( self.m_button5, 0, wx.ALL, 5 )
 		
+		self.tglBtnComenzar = wx.ToggleButton( self, wx.ID_ANY, u"Comenzar Comunicación", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer3.Add( self.tglBtnComenzar, 0, wx.ALL, 5 )
+		
 		
 		bSizer1.Add( bSizer3, 0, wx.EXPAND, 5 )
 		
@@ -110,6 +113,7 @@ class CylocFrame ( wx.Frame ):
 		self.m_button41.Bind( wx.EVT_BUTTON, self.OnBorrar )
 		self.btnSalir.Bind( wx.EVT_BUTTON, self.OnClose )
 		self.m_button5.Bind( wx.EVT_BUTTON, self.OnIniciarSerie )
+		self.tglBtnComenzar.Bind( wx.EVT_TOGGLEBUTTON, self.OnIniciarSerie )
 	
 	def __del__( self ):
 		pass
@@ -139,5 +143,6 @@ class CylocFrame ( wx.Frame ):
 	
 	def OnIniciarSerie( self, event ):
 		event.Skip()
+	
 	
 
