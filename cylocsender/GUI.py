@@ -98,6 +98,19 @@ class CylocFrame ( wx.Frame ):
 		
 		bSizer1.Add( bSizer3, 0, wx.EXPAND, 5 )
 		
+		bSizer7 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.mifpk = wx.FilePickerCtrl( self, wx.ID_ANY, u"C:\\Users\\santiago\\Documents\\Proyectos\\ATOP\\Soft\\generadorsvn\\generadorapps\\201304.cb", u"Select a file", u"*.*", wx.DefaultPosition, wx.DefaultSize, wx.FLP_DEFAULT_STYLE )
+		bSizer7.Add( self.mifpk, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		self.btnEnviarDatos = wx.Button( self, wx.ID_ANY, u"Enviar datos", wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.btnEnviarDatos.Enable( False )
+		
+		bSizer7.Add( self.btnEnviarDatos, 0, wx.ALL, 5 )
+		
+		
+		bSizer1.Add( bSizer7, 0, wx.EXPAND, 5 )
+		
 		
 		self.SetSizer( bSizer1 )
 		self.Layout()
@@ -114,6 +127,7 @@ class CylocFrame ( wx.Frame ):
 		self.btnSalir.Bind( wx.EVT_BUTTON, self.OnClose )
 		self.m_button5.Bind( wx.EVT_BUTTON, self.OnIniciarSerie )
 		self.tglBtnComenzar.Bind( wx.EVT_TOGGLEBUTTON, self.OnIniciarSerie )
+		self.btnEnviarDatos.Bind( wx.EVT_BUTTON, self.OnEnviarArchivo )
 	
 	def __del__( self ):
 		pass
@@ -144,5 +158,8 @@ class CylocFrame ( wx.Frame ):
 	def OnIniciarSerie( self, event ):
 		event.Skip()
 	
+	
+	def OnEnviarArchivo( self, event ):
+		event.Skip()
 	
 
