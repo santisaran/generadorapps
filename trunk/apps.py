@@ -29,72 +29,74 @@ Cantidad_SMS = 20
 # bits definidos en el archivo CylocDefines.h
 DefinicionesBits = (
 # NombredelBit, descripción, valor inicial, editable, descripción avanzada (para c)
-    ("Contacto", u"Estado de la entrada contacto", "-1", 0, "p2.13"),
-    ("BtnPanic", u"Estado de la entrada Pánico", "-1", 0, "p2.10"),
-    ("pulsdesact", u"Estado de la entrada pulsdesact", "-1", 0, "p0.17"),
-    ("Puerta", u"Estado de la entrada Puerta", "-1", 0, "p1.10"),
-    ("Porton", u"Estado de la entrada Porton", "-1", 0, "p2.11"),
-    ("Trailer", u"Estado de la entrada Trailer", "-1", 0, "p2.12"),
-    ("SetCorteC", u"", "-1", 0, "p1.16"),
-    ("SetCorteNA", u"", "-1", 0, "p0.25"),
-    ("Aux1in", u"", "-1", 0, "p0.01"),
-    ("Aux2in", "", "-1", 0, ""),
-    ("SetCorte", u"Indica si se debe activar el rele de corte.", "-1", 0, ""),
-    ("Aux1out", "", "-1", 0, ""),
-    ("Aux2out", "", "-1", 0, ""),
+    ("False",u"Bit que permanece en 0 siempre","0",1,""),
+    ("True",u"Bit que permanece en 1 siempre","1",1,""),
+    ("Contacto", u"Estado de la entrada contacto", "-1", 1, "p2.13"),
+    ("BtnPanic", u"Estado de la entrada Pánico", "-1", 1, "p2.10"),
+    ("pulsdesact", u"Estado de la entrada pulsdesact", "-1", 1, "p0.17"),
+    ("Puerta", u"Estado de la entrada Puerta", "-1", 1, "p1.10"),
+    ("Porton", u"Estado de la entrada Porton", "-1", 1, "p2.11"),
+    ("Trailer", u"Estado de la entrada Trailer", "-1", 1, "p2.12"),
+    ("SetCorteC", u"", "-1", 1, "p1.16"),
+    ("SetCorteNA", u"", "-1", 1, "p0.25"),
+    ("Aux1in", u"", "-1", 1, "p0.01"),
+    ("Aux2in", "", "-1", 1, ""),
+    ("SetCorte", u"Indica si se debe activar el rele de corte.", "-1", 1, ""),
+    ("Aux1out", "", "-1", 1, ""),
+    ("Aux2out", "", "-1", 1, ""),
     ("an0Zonas", u"""True => usar zonas, False => devolver valor AD
 \t\t              \tb1|b0 |zona
 \t\tLas zonas son \t 0 | 0 | a
 \t\t              \t 0 | 1 | b
 \t\t              \t 1 | 0 | c
-\t\t              \t 1 | 1 | d""", "-1", 0, ""),
+\t\t              \t 1 | 1 | d""", "-1", 1, ""),
 
-    ("an0Zb0", u"indicador zona bit bajo", "-1", 0, ""),
-    ("an0Zb1", u"indicador zona bit alto", "-1", 0, ""),
+    ("an0Zb0", u"indicador zona bit bajo", "-1", 1, ""),
+    ("an0Zb1", u"indicador zona bit alto", "-1", 1, ""),
     
-    ("an0ZVal", u"True => dato de zona válido", "-1", 0, ""),
+    ("an0ZVal", u"True => dato de zona válido", "-1", 1, ""),
     ("an0", u"""False, no hay datos correctos
 True, valor válido con antirrebote. (el antirrebote se define con:
 Frecan0, frecuencia de muestreo en ms de entrada analógica.
 CNTan0, Contador cuantos an0 dentro del rango.
-CfgCNTan0, Cantidad de muestras para validar valor An0. """, "-1", 0, ""),
+CfgCNTan0, Cantidad de muestras para validar valor An0. """, "-1", 1, ""),
     
-    ("an1val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an1VALOR]", "-1", 0, ""),
-    ("an2val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an2VALOR]", "-1", 0, ""),
-    ("an3val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an3VALOR]", "-1", 0, ""),
-    ("an4val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an4VALOR]", "-1", 0, ""),
-    ("an5val", u"""True => dato válido en el vector MemoriaUsuario_Bytes[an5VALOR]""", "-1", 0, ""),
+    ("an1val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an1VALOR]", "-1", 1, ""),
+    ("an2val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an2VALOR]", "-1", 1, ""),
+    ("an3val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an3VALOR]", "-1", 1, ""),
+    ("an4val", u"True => dato válido en el vector MemoriaUsuario_Bytes[an4VALOR]", "-1", 1, ""),
+    ("an5val", u"""True => dato válido en el vector MemoriaUsuario_Bytes[an5VALOR]""", "-1", 1, ""),
     
-    ("LeerAn0", u"True => petición de lectura AD0.", "-1", 0, ""),
-    ("LeerAn1", u"True => petición de lectura AD1.", "-1", 0, ""),
-    ("LeerAn2", u"True => petición de lectura AD2.", "-1", 0, ""),
-    ("LeerAn3", u"True => petición de lectura AD3.", "-1", 0, ""),
-    ("LeerAn4", u"True => petición de lectura AD4.", "-1", 0, ""),
-    ("LeerAn5", u"True => petición de lectura AD5.", "-1", 0, ""),
+    ("LeerAn0", u"True => petición de lectura AD0.", "-1", 1, ""),
+    ("LeerAn1", u"True => petición de lectura AD1.", "-1", 1, ""),
+    ("LeerAn2", u"True => petición de lectura AD2.", "-1", 1, ""),
+    ("LeerAn3", u"True => petición de lectura AD3.", "-1", 1, ""),
+    ("LeerAn4", u"True => petición de lectura AD4.", "-1", 1, ""),
+    ("LeerAn5", u"True => petición de lectura AD5.", "-1", 1, ""),
     
-    ("LeerXYZ", "", "-1", 0, ""),
+    ("LeerXYZ", "", "-1", 1, ""),
     
-    ("Led", u"Led prendido u apagado.", "-1", 0, ""),
-    ("Destellar", "", "-1", 0, ""),
-    ("CLed", "", "-1", 0, ""),
+    ("Led", u"Led prendido u apagado.", "-1", 1, ""),
+    ("Destellar", "", "-1", 1, ""),
+    ("CLed", "", "-1", 1, ""),
     
-    ("Aux1CfgInOut", u"Aux1 1=salida, 0=entrada", "-1", 0, ""),
-    ("Aux2CfgInOut", u"Aux2 1=salida, 0=entrada", "-1", 0, ""),
+    ("Aux1CfgInOut", u"Aux1 1=salida, 0=entrada", "-1", 1, ""),
+    ("Aux2CfgInOut", u"Aux2 1=salida, 0=entrada", "-1", 1, ""),
 
-    ("ErrorLed", u"Falla salida de led.", "-1", 0, ""),
-    ("ErrorCorte", "", "-1", 0, ""),
-    ("ErrorAux1", "", "-1", 0, ""),
-    ("ErrorAux2", "", "-1", 0, ""),
+    ("ErrorLed", u"Falla salida de led.", "-1", 1, ""),
+    ("ErrorCorte", "", "-1", 1, ""),
+    ("ErrorAux1", "", "-1", 1, ""),
+    ("ErrorAux2", "", "-1", 1, ""),
     
-    ("Accel_Flag_DR", u"Flag indicador de dato nuevo de aceleracion disponible", "-1", 0, ""),
-    ("Accel_Flag_Choque", u"Flag de accidente. Para mas informacion, ver Registro STAT", "-1", 0, ""),
+    ("Accel_Flag_DR", u"Flag indicador de dato nuevo de aceleracion disponible", "-1", 1, ""),
+    ("Accel_Flag_Choque", u"Flag de accidente. Para mas informacion, ver Registro STAT", "-1", 1, ""),
     
-    ("Pulsos", "", "-1", 0, ""),
-    ("Buzz", "", "-1", 0, ""),
-    ("AntenaGPSCorto", "", "-1", 0, ""),
-    ("AntenaGPSPresente", "", "-1", 0, ""),
-    ("AntenaGSMCorto", "", "-1", 0, ""),
-    ("AntenaGSMPresente", "", "-1", 0, "")
+    ("Pulsos", "", "-1", 1, ""),
+    ("Buzz", "", "-1", 1, ""),
+    ("AntenaGPSCorto", "", "-1", 1, ""),
+    ("AntenaGPSPresente", "", "-1", 1, ""),
+    ("AntenaGSMCorto", "", "-1", 1, ""),
+    ("AntenaGSMPresente", "", "-1", 1, "")
 )
 
 DefinicionesBits = DefinicionesBits + tuple([["sendSMS%d" % i, u"Envía Mensaje de Texto Nº %d" % i, "-1", 0, ""] for i in range(Cantidad_SMS)])
@@ -406,7 +408,7 @@ Header_Resultado = 0x05
 Header_SMS = 0x06
 Header_BYTE = 0x07
 Header_BIT = 0x08
-
+HEADER_ERROR_LECTURA = 0x09
 
 def GenerarBin(programa):
     binario = ""

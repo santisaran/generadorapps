@@ -74,6 +74,9 @@ class CargarBinario():
     def OnHeader_BIT(self):
         self.binBIT[self.buff[0]][2] = bool(self.buff[1])
         #self.MemoriaUsuario_Bits[self.buff[0]] = bool(self.buff[1])
+        
+    def OnHeader_END(self):
+        pass
     
         
     def CargarArchivo(self):
@@ -85,7 +88,8 @@ class CargarBinario():
                 Header_Resultado:  self.OnHeader_RESULTADO,
                 Header_SMS:        self.OnHeader_SMS,
                 Header_BYTE:       self.OnHeader_BYTE,
-                Header_BIT:        self.OnHeader_BIT
+                Header_BIT:        self.OnHeader_BIT,
+                Header_END:        self.OnHeader_END
                 }
         self.archivo = open(self.nombrearchivo,'rb')
         lectura = self.archivo.read(3)
