@@ -127,12 +127,6 @@ class MiFrame(gui.frmPpal):
             wx.EmptyString, wx.ITEM_NORMAL )
         self.m_drivers.AppendItem ( item )
         self.Bind ( wx.EVT_MENU, self.OnCopiarDesde, id = item.GetId() ) 
-#        for llave in Entradas:
-#            for i,(a,b,c,d) in enumerate(DefinicionesBytes):
-#                if a == EntradasBytes[llave][0]:
-#                    miValoresEntradas[llave][0] = miBytes[i][const.Valor]
-#                if a == EntradasBytes[llave][1]:
-#                    miValoresEntradas[llave][1] = miBytes[i][const.Valor]
         
 
     def AgregarVentana(self):
@@ -429,6 +423,8 @@ class MiFrame(gui.frmPpal):
                     nextstring = ""
                     nextstring += str(chr(i)) + str(miSMS[i].encode('latin1','ignore'))
                     binario += chr(len(nextstring)) + nextstring                
+            
+            binario +=  str(chr(0xAA)) + str(chr(Header_END)) + chr(0)           
             
             
             archivobinario.write(binario)
@@ -1161,7 +1157,7 @@ class mipanelBloque(gui.panelBloque):
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = 0
         self.ValorBloque = ((Bloque_SetBit<<24)|\
-            int(self.choiceParametro1.GetCurrentSelection()<<8))
+            int(self.choiceParametro1.GetCurrentSelection()))
         self.padre.Estado.Bloques[self.numero] = self.ValorBloque
 
         return cadena
@@ -1552,7 +1548,7 @@ class miDlgGenError (gui.DlgGenError):
 ########################################################################
 
 class mifrmEditBit ( gui.frmEditBit ):
-    """Frame para editar los nombres de los bits"""    
+    """Frame para editar los nombres y valores de los bits"""    
     
     def __init__(self, parent, item):
         
@@ -1572,14 +1568,14 @@ class mifrmEditBit ( gui.frmEditBit ):
             # En Windows no se puede hacer wx.TextCtrl readonly luego\
             # de creado, por lo que debe hacerce cuando se crea:
 
-            if valorBit[3] == 0:
+            if valorBit[const.mod] == 0:
                 textCtrl = wx.TextCtrl(self.BitScrolled, wx.ID_ANY,\
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,\
                         wx.TE_READONLY )
                 spinValue =  wx.SpinCtrl(self.BitScrolled, wx.ID_ANY, \
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,\
                     wx.SP_ARROW_KEYS, -1, 1,  int(self.miBits[i][const.Valor]) )
-                    
+                                    
             else:
                 textCtrl = wx.TextCtrl(self.BitScrolled, wx.ID_ANY, \
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -1706,7 +1702,7 @@ class mifrmEditByte ( gui.frmEditByte ):
             # En Windows no se puede hacer wx.TextCtrl readonly luego\
             # de creado, por lo que debe hacerce cuando se crea:
             
-            if valorByte[3] == 0:
+            if valorByte[const.mod] == 0:
                 
                 textCtrl = wx.TextCtrl(self.ByteScrolled, wx.ID_ANY,\
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,  wx.TE_READONLY )
@@ -2136,7 +2132,7 @@ class mifrmSMS ( gui.frmSMS ):
             self.GridSms.Add( smsnum, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
             texto = wx.TextCtrl(self.SmsScrolled, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
             texto.SetMaxLength( 160 ) 
-            texto.SetValue(self.miSMS[i])
+            texto.SetValue(self.miSMS[i].decode('latin1','ignore'))
             self.GridSms.Add( texto, 1, wx.ALL|wx.EXPAND, 5 )
             botonborrar = wx.Button(self.SmsScrolled, wx.ID_ANY, u"Borrar SMS", wx.DefaultPosition, wx.DefaultSize, 0 )
             self.GridSms.Add( botonborrar, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
@@ -2180,7 +2176,7 @@ class mifrmSMS ( gui.frmSMS ):
         global miSMS
         for i,[txtctrl,btn] in enumerate(self.ListaSMS):
             if txtctrl.IsModified():
-                self.miSMS[i] = unicode(txtctrl.GetValue())
+                self.miSMS[i] = txtctrl.GetValue().encode('latin','ignore')
         miSMS = self.miSMS[:]
         for [txtctrl,btn] in self.ListaSMS:
             txtctrl.SetModified(False)
@@ -2217,7 +2213,6 @@ class mifrmSMS ( gui.frmSMS ):
                     txtctrl.SetValue(self.miSMS[i])
                     txtctrl.SetModified(True)
             except:
-                print "El archivo no tiene Valores SMS"
                 pass
             shelf.close()
         dlg.Destroy()
