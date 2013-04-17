@@ -65,6 +65,9 @@ class frmPpal ( wx.Frame ):
 		self.mVariablesSMS = wx.MenuItem( self.m_variables, wx.ID_ANY, _(u"Editar Mensajes de Texto"), wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_variables.AppendItem( self.mVariablesSMS )
 		
+		self.mVariablesIP = wx.MenuItem( self.m_variables, wx.ID_ANY, _(u"Editar Ips"), wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_variables.AppendItem( self.mVariablesIP )
+		
 		self.m_menubar1.Append( self.m_variables, _(u"Va&riables") ) 
 		
 		self.m_aplicaciones = wx.Menu()
@@ -113,6 +116,7 @@ class frmPpal ( wx.Frame ):
 		self.Bind( wx.EVT_MENU, self.OnEditarBytes, id = self.m_variables_Byte.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnEditarBit, id = self.m_variables_bit.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnEditarSMS, id = self.mVariablesSMS.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnEditarIp, id = self.mVariablesIP.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnDriverAnalog, id = self.m_drivers_analog.GetId() )
 		self.m_button22.Bind( wx.EVT_BUTTON, self.OnTest )
 	
@@ -129,6 +133,7 @@ class frmPpal ( wx.Frame ):
 		self.Unbind( wx.EVT_MENU, id = self.m_variables_Byte.GetId() )
 		self.Unbind( wx.EVT_MENU, id = self.m_variables_bit.GetId() )
 		self.Unbind( wx.EVT_MENU, id = self.mVariablesSMS.GetId() )
+		self.Unbind( wx.EVT_MENU, id = self.mVariablesIP.GetId() )
 		self.Unbind( wx.EVT_MENU, id = self.m_drivers_analog.GetId() )
 		self.m_button22.Unbind( wx.EVT_BUTTON, None )
 	
@@ -163,6 +168,9 @@ class frmPpal ( wx.Frame ):
 		event.Skip()
 	
 	def OnEditarSMS( self, event ):
+		event.Skip()
+	
+	def OnEditarIp( self, event ):
 		event.Skip()
 	
 	def OnDriverAnalog( self, event ):
@@ -1465,5 +1473,79 @@ class FrameZonas ( wx.Frame ):
 	
 	
 	
+	
+
+###########################################################################
+## Class frmIPs
+###########################################################################
+
+class frmIPs ( wx.Frame ):
+	
+	def __init__( self, parent ):
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Edición de IP"), pos = wx.DefaultPosition, size = wx.Size( 525,410 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		
+		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
+		
+		bSizer33 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.IpScrolled = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
+		self.IpScrolled.SetScrollRate( 5, 5 )
+		self.GridIps = wx.FlexGridSizer( 0, 3, 0, 0 )
+		self.GridIps.AddGrowableCol( 1 )
+		self.GridIps.SetFlexibleDirection( wx.BOTH )
+		self.GridIps.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+		
+		
+		self.IpScrolled.SetSizer( self.GridIps )
+		self.IpScrolled.Layout()
+		self.GridIps.Fit( self.IpScrolled )
+		bSizer33.Add( self.IpScrolled, 1, wx.EXPAND |wx.ALL, 5 )
+		
+		bSizer35 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.m_button29 = wx.Button( self, wx.ID_ANY, _(u"&Guardar Cambios"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer35.Add( self.m_button29, 1, wx.ALIGN_CENTER_VERTICAL|wx.EXPAND|wx.ALL, 5 )
+		
+		self.m_button30 = wx.Button( self, wx.ID_ANY, _(u"&Deshacer Cambios"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer35.Add( self.m_button30, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
+		
+		self.m_button34 = wx.Button( self, wx.ID_ANY, _(u"&Cargar desde Archivo"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer35.Add( self.m_button34, 1, wx.ALL, 5 )
+		
+		
+		bSizer33.Add( bSizer35, 0, wx.EXPAND, 5 )
+		
+		
+		self.SetSizer( bSizer33 )
+		self.Layout()
+		
+		self.Centre( wx.BOTH )
+		
+		# Connect Events
+		self.Bind( wx.EVT_CLOSE, self.OnClose )
+		self.m_button29.Bind( wx.EVT_BUTTON, self.OnGuardarSMS )
+		self.m_button30.Bind( wx.EVT_BUTTON, self.OnUndo )
+		self.m_button34.Bind( wx.EVT_BUTTON, self.OnCargarSms )
+	
+	def __del__( self ):
+		# Disconnect Events
+		self.Unbind( wx.EVT_CLOSE )
+		self.m_button29.Unbind( wx.EVT_BUTTON, None )
+		self.m_button30.Unbind( wx.EVT_BUTTON, None )
+		self.m_button34.Unbind( wx.EVT_BUTTON, None )
+	
+	
+	# Virtual event handlers, overide them in your derived class
+	def OnClose( self, event ):
+		event.Skip()
+	
+	def OnGuardarSMS( self, event ):
+		event.Skip()
+	
+	def OnUndo( self, event ):
+		event.Skip()
+	
+	def OnCargarSms( self, event ):
+		event.Skip()
 	
 

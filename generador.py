@@ -52,6 +52,9 @@ miBytes= Bytes[:]
 global miSMS
 miSMS = SMS[:]
 
+global miIP
+miIP = IPs[:]
+
 #global ValoresEntradas
 #diccionario con los valores de las entradas
 #global miValoresEntradas
@@ -192,6 +195,13 @@ class MiFrame(gui.frmPpal):
         item.Enable(False)
         win = mifrmSMS(self, item)
         win.Show()
+        
+    def OnEditarIp(self, event):
+        ipod = event.GetId()
+        item = self.GetMenuBar().FindItemById(smsid)
+        item.Enable(False)
+        win = mifrmIPs(self, item)
+        win.Show()      
 
 
     def OnDriverAnalog(self, event):
@@ -1570,12 +1580,14 @@ class mifrmEditBit ( gui.frmEditBit ):
 
             if valorBit[const.mod] == 0:
                 textCtrl = wx.TextCtrl(self.BitScrolled, wx.ID_ANY,\
-                    wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,\
-                        wx.TE_READONLY )
+                    wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,wx.TE_READONLY)
                 spinValue =  wx.SpinCtrl(self.BitScrolled, wx.ID_ANY, \
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize,\
                     wx.SP_ARROW_KEYS, -1, 1,  int(self.miBits[i][const.Valor]) )
-                                    
+                if i<2:
+                    #evita la edición de los bits true y false
+                    spinValue.Enable(False) 
+                                       
             else:
                 textCtrl = wx.TextCtrl(self.BitScrolled, wx.ID_ANY, \
                     wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -1866,6 +1878,13 @@ class miDlgCopiarApp ( gui.DialogoCopiarApp ):
         self.choiceAppA.SetItems(choices)
         self.choiceAppB.SetItems(choices)
 
+########################################################################
+########################################################################
+##############                                      ####################
+##############   Edición del Dialogo copiar estado  ####################
+##############                                      ####################
+########################################################################
+########################################################################
 
 class miDlgCopiarEstado ( gui.DlgCopiarEstado ):
     """Copiar un estado a otro, copia todo menos el número de estado"""
@@ -1911,6 +1930,13 @@ class miDlgCopiarEstado ( gui.DlgCopiarEstado ):
     def OnCerrar(self, event):
         self.Destroy()
 
+########################################################################
+########################################################################
+##############                                   #######################
+##############   Edición del Frame Analog        #######################
+##############                                   #######################
+########################################################################
+########################################################################
 
 class mifrmAnalog ( gui.frmAnalog ):
 
@@ -2108,6 +2134,13 @@ class mifrmAnalog ( gui.frmAnalog ):
     def OnEnter(self, event):
         pass
 
+########################################################################
+########################################################################
+##############                                   #######################
+##############   Edición del Frame Editar Zonas  #######################
+##############                                   #######################
+########################################################################
+########################################################################
 
 class miFrameZonas(gui.FrameZonas):
 
@@ -2116,6 +2149,14 @@ class miFrameZonas(gui.FrameZonas):
 
     def OnClose(self, event):
         self.Destroy()
+
+########################################################################
+########################################################################
+##############                                   #######################
+##############   Edición del Frame Editar SMSs   #######################
+##############                                   #######################
+########################################################################
+########################################################################
 
 class mifrmSMS ( gui.frmSMS ):
     """Frame para editar SMS"""
@@ -2216,6 +2257,116 @@ class mifrmSMS ( gui.frmSMS ):
                 pass
             shelf.close()
         dlg.Destroy()
+
+########################################################################
+########################################################################
+##############                                   #######################
+##############   Edición del Frame Editar SMSs   #######################
+##############                                   #######################
+########################################################################
+########################################################################
+
+class mifrmIPs ( gui.frmIPs ):
+    """Frame para editar IPs"""
+    def __init__(self, parent , item):
+        gui.frmIPs.__init__ (self, parent )
+        self.item = item
+        self.item.Enable(False)
+        global miIP
+        self.miSMS = miSMS[:]
+        self.ListaSMS = []
+        for i in range(Cantidad_SMS):
+            smsnum = wx.StaticText(self.SmsScrolled, wx.ID_ANY, u"SMS %i"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+            smsnum.Wrap( -1 )
+            self.GridSms.Add( smsnum, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+            texto = wx.TextCtrl(self.SmsScrolled, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
+            texto.SetMaxLength( 160 ) 
+            texto.SetValue(self.miSMS[i].decode('latin1','ignore'))
+            self.GridSms.Add( texto, 1, wx.ALL|wx.EXPAND, 5 )
+            botonborrar = wx.Button(self.SmsScrolled, wx.ID_ANY, u"Borrar SMS", wx.DefaultPosition, wx.DefaultSize, 0 )
+            self.GridSms.Add( botonborrar, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+            botonborrar.Bind(wx.EVT_BUTTON , self.OnBorrarSMS)
+            self.ListaSMS.append([texto,botonborrar]) #Asocio el boton borrar con el texto
+        self.SmsScrolled.SetSizer(self.GridSms )
+        self.SmsScrolled.Layout()
+        self.SmsScrolled.SetAutoLayout(True)
+        self.GridSms.Fit(self.SmsScrolled )
+            
+    def OnClose(self, event):
+        cambios = False
+        for i,[txtctrl,boton] in enumerate(self.ListaSMS):
+            if txtctrl.IsModified():
+                cambios = True
+                break
+        if cambios:
+            dlg = wx.MessageDialog(self, u"Guardar cambios?",\
+            caption=u"Cerrar Edición SMS",
+            style=wx.YES | wx.NO,
+            pos=wx.DefaultPosition)
+            val = dlg.ShowModal()
+            if val == wx.ID_YES:
+                global miSMS
+                for i,[txtctrl,boton] in enumerate(self.ListaSMS):
+                    if txtctrl.IsModified():
+                        self.miSMS[i] = txtctrl.GetValue()
+                        miSMS = self.miSMS[:]
+        
+        self.item.Enable(True)
+        self.Destroy()
+        
+    def OnBorrarSMS (self, event):
+        btn = event.GetEventObject()
+        for texto ,boton in self.ListaSMS:
+            if btn is boton:
+                texto.SetValue("")
+                texto.SetModified(True)
+                
+    def OnGuardarSMS(self, event):
+        global miSMS
+        for i,[txtctrl,btn] in enumerate(self.ListaSMS):
+            if txtctrl.IsModified():
+                self.miSMS[i] = txtctrl.GetValue().encode('latin','ignore')
+        miSMS = self.miSMS[:]
+        for [txtctrl,btn] in self.ListaSMS:
+            txtctrl.SetModified(False)
+        global Modificado
+        Modificado = True
+        
+    def OnUndo (self, event) :
+        global miSMS
+        self.miSMS= miSMS[:]
+        for i,[txtctrl,btn] in enumerate(self.ListaSMS):
+            txtctrl.SetValue(self.miSMS[i])
+    
+    def OnCargarSms(self, event):
+        global DIRACTUAL
+        dlg = wx.FileDialog(
+            self, message="Copiar Desde ...", defaultDir=DIRACTUAL,
+            defaultFile="", wildcard=wildcard, style=wx.OPEN)
+        dlg.SetFilterIndex(2)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            try:
+                shelf = shelve.open(path)
+            except:
+                dlg = wx.MessageDialog(self, u"No es un archivo válido",\
+                    caption="Error al abrir archivo",\
+                    pos=wx.DefaultPosition)
+                dlg.ShowModal()
+                dlg.Destroy()
+                return
+            global miSMS
+            try: 
+                self.miSMS = shelf["SMS"]
+                for i,[txtctrl,btn] in enumerate(self.ListaSMS):
+                    txtctrl.SetValue(self.miSMS[i])
+                    txtctrl.SetModified(True)
+            except:
+                pass
+            shelf.close()
+        dlg.Destroy()
+
+
 
 def EsNumero(event):
 
