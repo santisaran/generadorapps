@@ -25,7 +25,7 @@ Cantidad_Bloques = 5
 Cantidad_Bits_Usuario = 256
 Cantidad_Bytes_Usuario = 256
 Cantidad_SMS = 20
-Cantidad_IPs = 10
+Cantidad_IPs = 16
 Cantidad_TEL = 10
 Cantidad_WWW = 10
 Cantidad_MAIL = 10
@@ -233,8 +233,20 @@ for i in range(Cantidad_SMS):
 
 IPs = []
 for i in range(Cantidad_IPs):
-    IPs.append([-1,-1,-1,-1])
-
+    IPs.append("0.0.0.0")
+    
+TEL = []
+for i in range(Cantidad_TEL):
+    TEL.append("")
+                    
+WWW = []
+for i in range(Cantidad_IPs):
+    WWW.append("")
+                    
+MAIL= []
+for i in range(Cantidad_MAIL):
+    MAIL.append("")
+    
 # /*
 # * BLOQUES:
 # *  [31 30 29 28 27 26 25 24 23 22 21 20 19 18 17 16 15 14 13 12 11 10 9  8  7  6  5  4  3  2  1  0 ]
