@@ -15,6 +15,7 @@ import os
 import shelve
 
 import wx
+import wx.lib.masked as  masked
 
 import gui
 
@@ -54,6 +55,15 @@ miSMS = SMS[:]
 
 global miIP
 miIP = IPs[:]
+
+global miTEL
+miTEL = TEL[:]
+
+global miWWW
+miWWW = WWW[:]
+
+global miMAIL                    
+miMAIL = MAIL[:]
 
 #global ValoresEntradas
 #diccionario con los valores de las entradas
@@ -197,11 +207,34 @@ class MiFrame(gui.frmPpal):
         win.Show()
         
     def OnEditarIp(self, event):
-        ipod = event.GetId()
-        item = self.GetMenuBar().FindItemById(smsid)
+        ipsid = event.GetId()
+        item = self.GetMenuBar().FindItemById(ipsid)
         item.Enable(False)
         win = mifrmIPs(self, item)
-        win.Show()      
+        win.Show()
+        
+    def OnEditarTEL(self, event):
+        telid = event.GetId()
+        item = self.GetMenuBar().FindItemById(telid)
+        item.Enable(False)
+        win = mifrmTEL(self, item)
+        win.Show()
+    
+    def OnEditarMAIL(self, event):
+        mailid = event.GetId()
+        item = self.GetMenuBar().FindItemById(mailid)
+        item.Enable(False)
+        win = mifrmMAIL(self, item)
+        win.Show()
+    
+    def OnEditarWWW(self, event):
+        mailid = event.GetId()
+        item = self.GetMenuBar().FindItemById(mailid)
+        item.Enable(False)
+        win = mifrmWWW(self, item)
+        win.Show()
+    
+          
 
 
     def OnDriverAnalog(self, event):
@@ -474,14 +507,31 @@ class MiFrame(gui.frmPpal):
                     NombreArchivo = path
                     shelf = shelve.open(NombreArchivo)
                     shelf["programa"] = self.aplicaciones
+                    
                     global miSMS
                     shelf["SMS"] = miSMS
+                    
                     global miBits
                     shelf["bits"] = miBits
+                    
                     global miBytes
                     shelf["bytes"] = miBytes
+                    
+                    global miIP
+                    shelf["IP"] = miIP
+                    
+                    global miTEL
+                    shelf["TEL"] = miTEL
+                    
+                    global miWWW
+                    shelf["WWW"] = miWWW
+                    
+                    global miMAIL
+                    shelf["MAIL"] = miMAIL
+                    
                     global miAnalogica
                     shelf["miAnalogica"] = miAnalogica
+                    
                     shelf["version"] = const.VERSION
                     shelf.close()
                     Modificado = False
@@ -2158,31 +2208,31 @@ class miFrameZonas(gui.FrameZonas):
 ########################################################################
 ########################################################################
 
-class mifrmSMS ( gui.frmSMS ):
+class mifrmSMS ( gui.frmCfgServers ):
     """Frame para editar SMS"""
     def __init__(self, parent , item):
-        gui.frmSMS.__init__ (self, parent )
+        gui.frmCfgServers.__init__ (self, parent )
         self.item = item
         self.item.Enable(False)
         global miSMS
         self.miSMS = miSMS[:]
         self.ListaSMS = []
         for i in range(Cantidad_SMS):
-            smsnum = wx.StaticText(self.SmsScrolled, wx.ID_ANY, u"SMS %i"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+            smsnum = wx.StaticText(self.CfgScrolled, wx.ID_ANY, u"SMS %i"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
             smsnum.Wrap( -1 )
-            self.GridSms.Add( smsnum, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-            texto = wx.TextCtrl(self.SmsScrolled, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
+            self.GridCfg.Add( smsnum, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+            texto = wx.TextCtrl(self.CfgScrolled, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
             texto.SetMaxLength( 160 ) 
             texto.SetValue(self.miSMS[i].decode('latin1','ignore'))
-            self.GridSms.Add( texto, 1, wx.ALL|wx.EXPAND, 5 )
-            botonborrar = wx.Button(self.SmsScrolled, wx.ID_ANY, u"Borrar SMS", wx.DefaultPosition, wx.DefaultSize, 0 )
-            self.GridSms.Add( botonborrar, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+            self.GridCfg.Add( texto, 1, wx.ALL|wx.EXPAND, 5 )
+            botonborrar = wx.Button(self.CfgScrolled, wx.ID_ANY, u"Borrar SMS", wx.DefaultPosition, wx.DefaultSize, 0 )
+            self.GridCfg.Add( botonborrar, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
             botonborrar.Bind(wx.EVT_BUTTON , self.OnBorrarSMS)
             self.ListaSMS.append([texto,botonborrar]) #Asocio el boton borrar con el texto
-        self.SmsScrolled.SetSizer(self.GridSms )
-        self.SmsScrolled.Layout()
-        self.SmsScrolled.SetAutoLayout(True)
-        self.GridSms.Fit(self.SmsScrolled )
+        self.CfgScrolled.SetSizer(self.GridCfg )
+        self.CfgScrolled.Layout()
+        self.CfgScrolled.SetAutoLayout(True)
+        self.GridCfg.Fit(self.CfgScrolled )
             
     def OnClose(self, event):
         cambios = False
@@ -2261,84 +2311,107 @@ class mifrmSMS ( gui.frmSMS ):
 ########################################################################
 ########################################################################
 ##############                                   #######################
-##############   Edición del Frame Editar SMSs   #######################
+##############   Edición del Frame Editar IPs    #######################
 ##############                                   #######################
 ########################################################################
 ########################################################################
 
-class mifrmIPs ( gui.frmIPs ):
-    """Frame para editar IPs"""
+class mifrmIPs ( gui.frmCfgServers ):
+    """Frame para editar IP"""
     def __init__(self, parent , item):
-        gui.frmIPs.__init__ (self, parent )
+        gui.frmCfgServers.__init__ (self, parent )
         self.item = item
         self.item.Enable(False)
         global miIP
-        self.miSMS = miSMS[:]
-        self.ListaSMS = []
-        for i in range(Cantidad_SMS):
-            smsnum = wx.StaticText(self.SmsScrolled, wx.ID_ANY, u"SMS %i"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
-            smsnum.Wrap( -1 )
-            self.GridSms.Add( smsnum, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-            texto = wx.TextCtrl(self.SmsScrolled, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.TE_MULTILINE )
-            texto.SetMaxLength( 160 ) 
-            texto.SetValue(self.miSMS[i].decode('latin1','ignore'))
-            self.GridSms.Add( texto, 1, wx.ALL|wx.EXPAND, 5 )
-            botonborrar = wx.Button(self.SmsScrolled, wx.ID_ANY, u"Borrar SMS", wx.DefaultPosition, wx.DefaultSize, 0 )
-            self.GridSms.Add( botonborrar, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-            botonborrar.Bind(wx.EVT_BUTTON , self.OnBorrarSMS)
-            self.ListaSMS.append([texto,botonborrar]) #Asocio el boton borrar con el texto
-        self.SmsScrolled.SetSizer(self.GridSms )
-        self.SmsScrolled.Layout()
-        self.SmsScrolled.SetAutoLayout(True)
-        self.GridSms.Fit(self.SmsScrolled )
+        self.miIP = miIP[:]
+        global miWWW
+        self.miWWW = miWWW[:]
+        
+        self.ListaIPs = []
+        self.GridCfg = wx.FlexGridSizer( 0, 6, 0, 0 ) #Agrego dos columnas para centrar 
+        self.GridCfg.AddGrowableCol(0)
+        self.GridCfg.AddGrowableCol(2)
+        for i in range(Cantidad_IPs):  
+            ipnum = wx.StaticText(self.CfgScrolled, wx.ID_ANY, u"IP %i"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+            ipnum.Wrap( -1 )
+            self.GridCfg.Add( ipnum, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+            self.ChkBoxIp = wx.CheckBox( self.CfgScrolled, wx.ID_ANY, u"Usar IP", wx.DefaultPosition, wx.DefaultSize, 0 )
+            self.GridCfg.Add( self.ChkBoxIp, 0, wx.ALL, 5 )
+            
+            ipaddr = masked.IpAddrCtrl( self.CfgScrolled, -1, style = wx.TE_PROCESS_TAB )
+            ipaddr.SetValue(self.miIP[i])
+            self.GridCfg.Add( ipaddr, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+            
+            netaddr = wx.TextCtrl(self.CfgScrolled, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0) 
+            netaddr.SetValue(self.miWWW[i].decode('latin1','ignore'))
+            netaddr.SetMaxLength( 160 ) 
+            self.GridCfg.Add( netaddr, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+            
+            botonborrar = wx.Button(self.CfgScrolled, wx.ID_ANY, u"Borrar IP", wx.DefaultPosition, wx.DefaultSize, 0 )
+            self.GridCfg.Add( botonborrar, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+            botonborrar.Bind(wx.EVT_BUTTON , self.OnBorrarIP)
+            self.ListaIPs.append([ipaddr,botonborrar]) #Asocio el boton borrar con el texto
+            self.GridCfg.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
+            self.Bind(wx.EVT_TEXT, self.OnIpAddrChange, id=ipaddr.GetId())
+            
+        self.CfgScrolled.SetSizer(self.GridCfg )
+        self.CfgScrolled.Layout()
+        self.CfgScrolled.SetAutoLayout(True)
+        self.GridCfg.Fit(self.CfgScrolled )
+           
+    def OnIpAddrChange( self, event ):
+        ipaddr = self.FindWindowById( event.GetId() )
+        if ipaddr.IsValid():
+            print "new addr = %s\n"%ipaddr.GetAddress()
             
     def OnClose(self, event):
         cambios = False
-        for i,[txtctrl,boton] in enumerate(self.ListaSMS):
+        for i,[txtctrl,boton] in enumerate(self.ListaIPs):
             if txtctrl.IsModified():
                 cambios = True
                 break
         if cambios:
             dlg = wx.MessageDialog(self, u"Guardar cambios?",\
-            caption=u"Cerrar Edición SMS",
+            caption=u"Cerrar Edición IPs",
             style=wx.YES | wx.NO,
             pos=wx.DefaultPosition)
             val = dlg.ShowModal()
             if val == wx.ID_YES:
-                global miSMS
-                for i,[txtctrl,boton] in enumerate(self.ListaSMS):
+                global miIP
+                for i,[txtctrl,boton] in enumerate(self.ListaIPs):
                     if txtctrl.IsModified():
-                        self.miSMS[i] = txtctrl.GetValue()
-                        miSMS = self.miSMS[:]
+                        self.miIP[i] = txtctrl.GetValue()
+                        miIP = self.miIP[:]
         
         self.item.Enable(True)
         self.Destroy()
         
-    def OnBorrarSMS (self, event):
+    def OnBorrarIP (self, event):
         btn = event.GetEventObject()
-        for texto ,boton in self.ListaSMS:
+        for ipaddr ,boton in self.ListaIPs:
             if btn is boton:
-                texto.SetValue("")
-                texto.SetModified(True)
+                ipaddr.Clear()
+                ipaddr.SetModified(True)
                 
-    def OnGuardarSMS(self, event):
-        global miSMS
-        for i,[txtctrl,btn] in enumerate(self.ListaSMS):
-            if txtctrl.IsModified():
-                self.miSMS[i] = txtctrl.GetValue().encode('latin','ignore')
-        miSMS = self.miSMS[:]
-        for [txtctrl,btn] in self.ListaSMS:
-            txtctrl.SetModified(False)
+    def OnGuardar(self, event):
+        global miIP
+        for i,[ipaddr,btn] in enumerate(self.ListaIPs):
+            if ipaddr.IsModified():
+                self.miIP[i] = ipaddr.GetValue()
+        miIP = self.miIP[:]
+        print miIP
+        for [ipaddr,btn] in self.ListaIPs:
+            ipaddr.SetModified(False)
         global Modificado
         Modificado = True
         
     def OnUndo (self, event) :
-        global miSMS
-        self.miSMS= miSMS[:]
-        for i,[txtctrl,btn] in enumerate(self.ListaSMS):
-            txtctrl.SetValue(self.miSMS[i])
+        global miIP
+        self.miIP= miIP[:]
+        for i,[txtctrl,btn] in enumerate(self.ListaIPs):
+            txtctrl.SetValue(self.miIP[i])
     
-    def OnCargarSms(self, event):
+    def OnCargar(self, event):
         global DIRACTUAL
         dlg = wx.FileDialog(
             self, message="Copiar Desde ...", defaultDir=DIRACTUAL,
@@ -2355,17 +2428,372 @@ class mifrmIPs ( gui.frmIPs ):
                 dlg.ShowModal()
                 dlg.Destroy()
                 return
-            global miSMS
+            global miIP
             try: 
-                self.miSMS = shelf["SMS"]
-                for i,[txtctrl,btn] in enumerate(self.ListaSMS):
-                    txtctrl.SetValue(self.miSMS[i])
+                self.miIP = shelf["IP"]
+                for i,[txtctrl,btn] in enumerate(self.ListaIPs):
+                    txtctrl.SetValue(self.miIP[i])
                     txtctrl.SetModified(True)
             except:
                 pass
             shelf.close()
         dlg.Destroy()
 
+########################################################################
+########################################################################
+##############                                   #######################
+##############   Edición del Frame Editar TELs   #######################
+##############                                   #######################
+########################################################################
+########################################################################
+
+class mifrmTEL ( gui.frmCfgServers ):
+    """Frame para editar TEL"""
+    def __init__(self, parent , item):
+        gui.frmCfgServers.__init__ (self, parent )
+        self.item = item
+        self.item.Enable(False)
+        global miTEL
+        self.miTEL = miTEL[:]
+        self.ListaTELs = []
+        self.GridCfg = wx.FlexGridSizer( 0, 5, 0, 0 ) #Agrego dos columnas para centrar 
+        self.GridCfg.AddGrowableCol(0)
+        self.GridCfg.AddGrowableCol(4)
+        control = ("Phone No","##############","",'F',"",'','','')
+        for i in range(Cantidad_TEL):
+            self.GridCfg.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )  
+            telnum = wx.StaticText(self.CfgScrolled, wx.ID_ANY, u"TEL %i"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+            telnum.Wrap( -1 )
+            self.GridCfg.Add( telnum, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+            
+            teladdr  = masked.TextCtrl( self.CfgScrolled , -1, "",
+                                                mask         = control[1],
+                                                excludeChars = control[2],
+                                                formatcodes  = control[3],
+                                                includeChars = "",
+                                                validRegex   = control[4],
+                                                validRange   = control[5],
+                                                choices      = control[6],
+                                                choiceRequired = True,
+                                                defaultValue = control[7],
+                                                demo         = True,
+                                                name         = control[0])
+              
+            #teladdr.SetValue(self.miIP[i])
+            self.GridCfg.Add( teladdr, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+            botonborrar = wx.Button(self.CfgScrolled, wx.ID_ANY, u"Borrar TEL", wx.DefaultPosition, wx.DefaultSize, 0 )
+            self.GridCfg.Add( botonborrar, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+            botonborrar.Bind(wx.EVT_BUTTON , self.OnBorrarTEL)
+            self.ListaTELs.append([teladdr,botonborrar]) #Asocio el boton borrar con el texto
+            self.GridCfg.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
+
+        self.CfgScrolled.SetSizer(self.GridCfg )
+        self.CfgScrolled.Layout()
+        self.CfgScrolled.SetAutoLayout(True)
+        self.GridCfg.Fit(self.CfgScrolled )
+            
+    def OnClose(self, event):
+        cambios = False
+        for i,[txtctrl,boton] in enumerate(self.ListaTELs):
+            if txtctrl.IsModified():
+                cambios = True
+                break
+        if cambios:
+            dlg = wx.MessageDialog(self, u"Guardar cambios?",\
+                                   caption=u"Cerrar Edición Teléfonos",
+                                   style=wx.YES | wx.NO,
+                                   pos=wx.DefaultPosition)
+            val = dlg.ShowModal()
+            if val == wx.ID_YES:
+                global miTEL
+                for i,[txtctrl,boton] in enumerate(self.ListaIPs):
+                    if txtctrl.IsModified():
+                        self.miTEL[i] = txtctrl.GetValue()
+                        miTEL = self.miTEL[:]
+        
+        self.item.Enable(True)
+        self.Destroy()
+        
+    def OnBorrarTEL (self, event):
+        btn = event.GetEventObject()
+        for teladdr ,boton in self.ListaTELs:
+            if btn is boton:
+                teladdr.Clear()
+                teladdr.SetModified(True)
+                
+    def OnGuardar(self, event):
+        global miTEL
+        for i,[teladdr,btn] in enumerate(self.ListaTELs):
+            if teladdr.IsModified():
+                self.miTEL[i] = teladdr.GetValue()
+        miTEL = self.miTEL[:]
+        print miTEL
+        for [ipaddr,btn] in self.ListaTELs:
+            teladdr.SetModified(False)
+        global Modificado
+        Modificado = True
+        
+    def OnUndo (self, event) :
+        global miTEL
+        self.miTEL= miTEL[:]
+        for i,[txtctrl,btn] in enumerate(self.ListaTELs):
+            txtctrl.SetValue(self.miTEL[i])
+    
+    def OnCargar(self, event):
+        global DIRACTUAL
+        dlg = wx.FileDialog(
+            self, message="Copiar Desde ...", defaultDir=DIRACTUAL,
+            defaultFile="", wildcard=wildcard, style=wx.OPEN)
+        dlg.SetFilterIndex(2)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            try:
+                shelf = shelve.open(path)
+            except:
+                dlg = wx.MessageDialog(self, u"No es un archivo válido",\
+                    caption="Error al abrir archivo",\
+                    pos=wx.DefaultPosition)
+                dlg.ShowModal()
+                dlg.Destroy()
+                return
+            global miTEL
+            try: 
+                self.miTEL = shelf["TEL"]
+                for i,[txtctrl,btn] in enumerate(self.ListaTELs):
+                    txtctrl.SetValue(self.miTEL[i])
+                    txtctrl.SetModified(True)
+            except:
+                pass
+            shelf.close()
+        dlg.Destroy()
+        
+########################################################################
+########################################################################
+##############                                   #######################
+##############    Edición del Frame Editar       #######################
+##############    direcciones de internet        #######################
+##############                                   #######################
+########################################################################
+########################################################################
+
+class mifrmWWW ( gui.frmCfgServers ):
+    """Frame para editar Direcciones WWW"""
+    def __init__(self, parent , item):
+        gui.frmCfgServers.__init__ (self, parent )
+        self.item = item
+        self.item.Enable(False)
+        global miWWW
+        self.miWWW = miWWW[:]
+        self.ListaWWWs = [] 
+        for i in range(Cantidad_WWW):
+              
+            wwwnum = wx.StaticText(self.CfgScrolled, wx.ID_ANY, u"Dirección %i"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+            wwwnum.Wrap( -1 )
+            self.GridCfg.Add( wwwnum, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+            teladdr = wx.TextCtrl(self.CfgScrolled, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0) 
+            teladdr.SetValue(self.miWWW[i].decode('latin1','ignore'))
+            teladdr.SetMaxLength( 160 ) 
+            self.GridCfg.Add( teladdr, 1, wx.ALL|wx.EXPAND, 5 )
+            botonborrar = wx.Button(self.CfgScrolled, wx.ID_ANY, u"Borrar WWW", wx.DefaultPosition, wx.DefaultSize, 0 )
+            self.GridCfg.Add( botonborrar, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+            botonborrar.Bind(wx.EVT_BUTTON , self.OnBorrarWWW)
+            self.ListaWWWs.append([teladdr,botonborrar]) #Asocio el boton borrar con el texto
+            
+        self.CfgScrolled.SetSizer(self.GridCfg )
+        self.CfgScrolled.Layout()
+        self.CfgScrolled.SetAutoLayout(True)
+        self.GridCfg.Fit(self.CfgScrolled )
+            
+    def OnClose(self, event):
+        cambios = False
+        for i,[txtctrl,boton] in enumerate(self.ListaWWWs):
+            if txtctrl.IsModified():
+                cambios = True
+                break
+        if cambios:
+            dlg = wx.MessageDialog(self, u"Guardar cambios?",\
+            caption=u"Cerrar Edición WWWs",
+            style=wx.YES | wx.NO,
+            pos=wx.DefaultPosition)
+            val = dlg.ShowModal()
+            if val == wx.ID_YES:
+                global miWWW
+                for i,[txtctrl,boton] in enumerate(self.ListaWWWs):
+                    if txtctrl.IsModified():
+                        self.miWWW[i] = txtctrl.GetValue()
+                        miWWW = self.miWWW[:]
+        
+        self.item.Enable(True)
+        self.Destroy()
+        
+    def OnBorrarWWW (self, event):
+        btn = event.GetEventObject()
+        for ipaddr ,boton in self.ListaWWWs:
+            if btn is boton:
+                ipaddr.Clear()
+                ipaddr.SetModified(True)
+                
+    def OnGuardar(self, event):
+        global miWWW
+        for i,[ipaddr,btn] in enumerate(self.ListaWWWs):
+            if ipaddr.IsModified():
+                self.miWWW[i] = ipaddr.GetValue()
+        miWWW = self.miWWW[:]
+        print miWWW
+        for [ipaddr,btn] in self.ListaWWWs:
+            ipaddr.SetModified(False)
+        global Modificado
+        Modificado = True
+        
+    def OnUndo (self, event) :
+        global miWWW
+        self.miWWW= miWWW[:]
+        for i,[txtctrl,btn] in enumerate(self.ListaWWWs):
+            txtctrl.SetValue(self.miWWW[i])
+    
+    def OnCargar(self, event):
+        global DIRACTUAL
+        dlg = wx.FileDialog(
+            self, message="Copiar Desde ...", defaultDir=DIRACTUAL,
+            defaultFile="", wildcard=wildcard, style=wx.OPEN)
+        dlg.SetFilterIndex(2)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            try:
+                shelf = shelve.open(path)
+            except:
+                dlg = wx.MessageDialog(self, u"No es un archivo válido",\
+                    caption="Error al abrir archivo",\
+                    pos=wx.DefaultPosition)
+                dlg.ShowModal()
+                dlg.Destroy()
+                return
+            global miWWW
+            try: 
+                self.miWWW = shelf["IP"]
+                for i,[txtctrl,btn] in enumerate(self.ListaWWWs):
+                    txtctrl.SetValue(self.miWWW[i])
+                    txtctrl.SetModified(True)
+            except:
+                pass
+            shelf.close()
+        dlg.Destroy()
+
+
+########################################################################
+########################################################################
+##############                                   #######################
+##############    Edición del Frame Editar       #######################
+##############      Mails                        #######################
+##############                                   #######################
+########################################################################
+########################################################################
+
+class mifrmMAIL ( gui.frmCfgServers ):
+    """Frame para editar Direcciones mail"""
+    def __init__(self, parent , item):
+        gui.frmCfgServers.__init__ (self, parent )
+        self.item = item
+        self.item.Enable(False)
+        global miMAIL
+        self.miMAIL = miMAIL[:]
+        self.ListaMAILs = [] 
+        for i in range(Cantidad_MAIL):
+              
+            mailnum = wx.StaticText(self.CfgScrolled, wx.ID_ANY, u"Dirección %i"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
+            mailnum.Wrap( -1 )
+            self.GridCfg.Add( mailnum, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+            mailaddr = masked.Ctrl( self.CfgScrolled, -1, "",
+                                    autoformat       = 'EMAIL',
+                                    demo             = True,
+                                    name             = 'EMAIL')
+ 
+            mailaddr.SetValue(self.miMAIL[i].decode('latin1','ignore')) 
+            self.GridCfg.Add( mailaddr, 1, wx.ALL|wx.EXPAND, 5 )
+            botonborrar = wx.Button(self.CfgScrolled, wx.ID_ANY, u"Borrar MAIL", wx.DefaultPosition, wx.DefaultSize, 0 )
+            self.GridCfg.Add( botonborrar, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+            botonborrar.Bind(wx.EVT_BUTTON , self.OnBorrarMAIL)
+            self.ListaMAILs.append([mailaddr,botonborrar]) #Asocio el boton borrar con el texto
+            
+        self.CfgScrolled.SetSizer(self.GridCfg )
+        self.CfgScrolled.Layout()
+        self.CfgScrolled.SetAutoLayout(True)
+        self.GridCfg.Fit(self.CfgScrolled )
+            
+    def OnClose(self, event):
+        cambios = False
+        for i,[txtctrl,boton] in enumerate(self.ListaMAILs):
+            if txtctrl.IsModified():
+                cambios = True
+                break
+        if cambios:
+            dlg = wx.MessageDialog(self, u"Guardar cambios?",\
+            caption=u"Cerrar Edición MAILs",
+            style=wx.YES | wx.NO,
+            pos=wx.DefaultPosition)
+            val = dlg.ShowModal()
+            if val == wx.ID_YES:
+                global miMAIL
+                for i,[txtctrl,boton] in enumerate(self.ListaMAILs):
+                    if txtctrl.IsModified():
+                        self.miMAIL[i] = txtctrl.GetValue()
+                        miMAIL = self.miMAIL[:]
+        
+        self.item.Enable(True)
+        self.Destroy()
+        
+    def OnBorrarMAIL (self, event):
+        btn = event.GetEventObject()
+        for ipaddr ,boton in self.ListaMAILs:
+            if btn is boton:
+                ipaddr.Clear()
+                ipaddr.SetModified(True)
+                
+    def OnGuardar(self, event):
+        global miMAIL
+        for i,[ipaddr,btn] in enumerate(self.ListaMAILs):
+            if ipaddr.IsModified():
+                self.miMAIL[i] = ipaddr.GetValue()
+        miMAIL = self.miMAIL[:]
+        print miMAIL
+        for [ipaddr,btn] in self.ListaMAILs:
+            ipaddr.SetModified(False)
+        global Modificado
+        Modificado = True
+        
+    def OnUndo (self, event) :
+        global miMAIL
+        self.miMAIL= miMAIL[:]
+        for i,[txtctrl,btn] in enumerate(self.ListaMAILs):
+            txtctrl.SetValue(self.miMAIL[i])
+    
+    def OnCargar(self, event):
+        global DIRACTUAL
+        dlg = wx.FileDialog(
+            self, message="Copiar Desde ...", defaultDir=DIRACTUAL,
+            defaultFile="", wildcard=wildcard, style=wx.OPEN)
+        dlg.SetFilterIndex(2)
+        if dlg.ShowModal() == wx.ID_OK:
+            path = dlg.GetPath()
+            try:
+                shelf = shelve.open(path)
+            except:
+                dlg = wx.MessageDialog(self, u"No es un archivo válido",\
+                    caption="Error al abrir archivo",\
+                    pos=wx.DefaultPosition)
+                dlg.ShowModal()
+                dlg.Destroy()
+                return
+            global miMAIL
+            try: 
+                self.miMAIL = shelf["IP"]
+                for i,[txtctrl,btn] in enumerate(self.ListaMAILs):
+                    txtctrl.SetValue(self.miMAIL[i])
+                    txtctrl.SetModified(True)
+            except:
+                pass
+            shelf.close()
+        dlg.Destroy()
 
 
 def EsNumero(event):

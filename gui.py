@@ -56,17 +56,26 @@ class frmPpal ( wx.Frame ):
 		self.m_menubar1.Append( self.m_archivo, _(u"&Archivo") ) 
 		
 		self.m_variables = wx.Menu()
-		self.m_variables_Byte = wx.MenuItem( self.m_variables, wx.ID_ANY, _(u"Editar Variables Byte"), wx.EmptyString, wx.ITEM_NORMAL )
-		self.m_variables.AppendItem( self.m_variables_Byte )
+		self.mVariables_Byte = wx.MenuItem( self.m_variables, wx.ID_ANY, _(u"Editar Variables Byte"), wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_variables.AppendItem( self.mVariables_Byte )
 		
-		self.m_variables_bit = wx.MenuItem( self.m_variables, wx.ID_ANY, _(u"Editar variables Bit"), wx.EmptyString, wx.ITEM_NORMAL )
-		self.m_variables.AppendItem( self.m_variables_bit )
+		self.mVariables_bit = wx.MenuItem( self.m_variables, wx.ID_ANY, _(u"Editar Variables Bit"), wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_variables.AppendItem( self.mVariables_bit )
 		
 		self.mVariablesSMS = wx.MenuItem( self.m_variables, wx.ID_ANY, _(u"Editar Mensajes de Texto"), wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_variables.AppendItem( self.mVariablesSMS )
 		
 		self.mVariablesIP = wx.MenuItem( self.m_variables, wx.ID_ANY, _(u"Editar Ips"), wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_variables.AppendItem( self.mVariablesIP )
+		
+		self.mVariablesTEL = wx.MenuItem( self.m_variables, wx.ID_ANY, _(u"Editar Teléfonos"), wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_variables.AppendItem( self.mVariablesTEL )
+		
+		self.mVariablesMAIL = wx.MenuItem( self.m_variables, wx.ID_ANY, _(u"Editar mails"), wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_variables.AppendItem( self.mVariablesMAIL )
+		
+		self.mVariablesWWW = wx.MenuItem( self.m_variables, wx.ID_ANY, _(u"Editar direcciones web"), wx.EmptyString, wx.ITEM_NORMAL )
+		self.m_variables.AppendItem( self.mVariablesWWW )
 		
 		self.m_menubar1.Append( self.m_variables, _(u"Va&riables") ) 
 		
@@ -113,10 +122,13 @@ class frmPpal ( wx.Frame ):
 		self.Bind( wx.EVT_MENU, self.OnGenerar, id = self.m_file_gen.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnImportarDesdeBin, id = self.m_menuItem11.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnCerrar, id = self.OnClose.GetId() )
-		self.Bind( wx.EVT_MENU, self.OnEditarBytes, id = self.m_variables_Byte.GetId() )
-		self.Bind( wx.EVT_MENU, self.OnEditarBit, id = self.m_variables_bit.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnEditarBytes, id = self.mVariables_Byte.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnEditarBit, id = self.mVariables_bit.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnEditarSMS, id = self.mVariablesSMS.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnEditarIp, id = self.mVariablesIP.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnEditarTEL, id = self.mVariablesTEL.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnEditarMAIL, id = self.mVariablesMAIL.GetId() )
+		self.Bind( wx.EVT_MENU, self.OnEditarWWW, id = self.mVariablesWWW.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnDriverAnalog, id = self.m_drivers_analog.GetId() )
 		self.m_button22.Bind( wx.EVT_BUTTON, self.OnTest )
 	
@@ -130,10 +142,13 @@ class frmPpal ( wx.Frame ):
 		self.Unbind( wx.EVT_MENU, id = self.m_file_gen.GetId() )
 		self.Unbind( wx.EVT_MENU, id = self.m_menuItem11.GetId() )
 		self.Unbind( wx.EVT_MENU, id = self.OnClose.GetId() )
-		self.Unbind( wx.EVT_MENU, id = self.m_variables_Byte.GetId() )
-		self.Unbind( wx.EVT_MENU, id = self.m_variables_bit.GetId() )
+		self.Unbind( wx.EVT_MENU, id = self.mVariables_Byte.GetId() )
+		self.Unbind( wx.EVT_MENU, id = self.mVariables_bit.GetId() )
 		self.Unbind( wx.EVT_MENU, id = self.mVariablesSMS.GetId() )
 		self.Unbind( wx.EVT_MENU, id = self.mVariablesIP.GetId() )
+		self.Unbind( wx.EVT_MENU, id = self.mVariablesTEL.GetId() )
+		self.Unbind( wx.EVT_MENU, id = self.mVariablesMAIL.GetId() )
+		self.Unbind( wx.EVT_MENU, id = self.mVariablesWWW.GetId() )
 		self.Unbind( wx.EVT_MENU, id = self.m_drivers_analog.GetId() )
 		self.m_button22.Unbind( wx.EVT_BUTTON, None )
 	
@@ -171,6 +186,15 @@ class frmPpal ( wx.Frame ):
 		event.Skip()
 	
 	def OnEditarIp( self, event ):
+		event.Skip()
+	
+	def OnEditarTEL( self, event ):
+		event.Skip()
+	
+	def OnEditarMAIL( self, event ):
+		event.Skip()
+	
+	def OnEditarWWW( self, event ):
 		event.Skip()
 	
 	def OnDriverAnalog( self, event ):
@@ -313,30 +337,30 @@ class frmEditByte ( wx.Frame ):
 	
 
 ###########################################################################
-## Class frmSMS
+## Class frmCfgServers
 ###########################################################################
 
-class frmSMS ( wx.Frame ):
+class frmCfgServers ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Edición de SMS"), pos = wx.DefaultPosition, size = wx.Size( 525,410 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Edición de"), pos = wx.DefaultPosition, size = wx.Size( 525,410 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
 		bSizer33 = wx.BoxSizer( wx.VERTICAL )
 		
-		self.SmsScrolled = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
-		self.SmsScrolled.SetScrollRate( 5, 5 )
-		self.GridSms = wx.FlexGridSizer( 0, 3, 0, 0 )
-		self.GridSms.AddGrowableCol( 1 )
-		self.GridSms.SetFlexibleDirection( wx.BOTH )
-		self.GridSms.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+		self.CfgScrolled = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
+		self.CfgScrolled.SetScrollRate( 5, 5 )
+		self.GridCfg = wx.FlexGridSizer( 0, 3, 0, 0 )
+		self.GridCfg.AddGrowableCol( 1 )
+		self.GridCfg.SetFlexibleDirection( wx.BOTH )
+		self.GridCfg.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 		
 		
-		self.SmsScrolled.SetSizer( self.GridSms )
-		self.SmsScrolled.Layout()
-		self.GridSms.Fit( self.SmsScrolled )
-		bSizer33.Add( self.SmsScrolled, 1, wx.EXPAND |wx.ALL, 5 )
+		self.CfgScrolled.SetSizer( self.GridCfg )
+		self.CfgScrolled.Layout()
+		self.GridCfg.Fit( self.CfgScrolled )
+		bSizer33.Add( self.CfgScrolled, 1, wx.EXPAND |wx.ALL, 5 )
 		
 		bSizer35 = wx.BoxSizer( wx.HORIZONTAL )
 		
@@ -360,9 +384,9 @@ class frmSMS ( wx.Frame ):
 		
 		# Connect Events
 		self.Bind( wx.EVT_CLOSE, self.OnClose )
-		self.m_button29.Bind( wx.EVT_BUTTON, self.OnGuardarSMS )
+		self.m_button29.Bind( wx.EVT_BUTTON, self.OnGuardar )
 		self.m_button30.Bind( wx.EVT_BUTTON, self.OnUndo )
-		self.m_button34.Bind( wx.EVT_BUTTON, self.OnCargarSms )
+		self.m_button34.Bind( wx.EVT_BUTTON, self.OnCargar )
 	
 	def __del__( self ):
 		# Disconnect Events
@@ -376,13 +400,13 @@ class frmSMS ( wx.Frame ):
 	def OnClose( self, event ):
 		event.Skip()
 	
-	def OnGuardarSMS( self, event ):
+	def OnGuardar( self, event ):
 		event.Skip()
 	
 	def OnUndo( self, event ):
 		event.Skip()
 	
-	def OnCargarSms( self, event ):
+	def OnCargar( self, event ):
 		event.Skip()
 	
 
