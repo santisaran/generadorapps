@@ -86,7 +86,7 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxMenuBar" expanded="0">
+            <object class="wxMenuBar" expanded="1">
                 <property name="bg"></property>
                 <property name="context_help"></property>
                 <property name="context_menu">1</property>
@@ -249,7 +249,7 @@
                         <event name="OnUpdateUI"></event>
                     </object>
                 </object>
-                <object class="wxMenu" expanded="0">
+                <object class="wxMenu" expanded="1">
                     <property name="label">Va&amp;riables</property>
                     <property name="name">m_variables</property>
                     <property name="permission">protected</property>
@@ -341,21 +341,6 @@
                         <property name="shortcut"></property>
                         <property name="unchecked_bitmap"></property>
                         <event name="OnMenuSelection">OnEditarMAIL</event>
-                        <event name="OnUpdateUI"></event>
-                    </object>
-                    <object class="wxMenuItem" expanded="0">
-                        <property name="bitmap"></property>
-                        <property name="checked">0</property>
-                        <property name="enabled">1</property>
-                        <property name="help"></property>
-                        <property name="id">wxID_ANY</property>
-                        <property name="kind">wxITEM_NORMAL</property>
-                        <property name="label">Editar direcciones web</property>
-                        <property name="name">mVariablesWWW</property>
-                        <property name="permission">none</property>
-                        <property name="shortcut"></property>
-                        <property name="unchecked_bitmap"></property>
-                        <event name="OnMenuSelection">OnEditarWWW</event>
                         <event name="OnUpdateUI"></event>
                     </object>
                 </object>
@@ -1335,16 +1320,16 @@
             <event name="OnSetFocus"></event>
             <event name="OnSize"></event>
             <event name="OnUpdateUI"></event>
-            <object class="wxBoxSizer" expanded="1">
+            <object class="wxBoxSizer" expanded="0">
                 <property name="minimum_size"></property>
                 <property name="name">bSizer33</property>
                 <property name="orient">wxVERTICAL</property>
                 <property name="permission">none</property>
-                <object class="sizeritem" expanded="1">
+                <object class="sizeritem" expanded="0">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND | wxALL</property>
                     <property name="proportion">1</property>
-                    <object class="wxScrolledWindow" expanded="1">
+                    <object class="wxScrolledWindow" expanded="0">
                         <property name="BottomDockable">1</property>
                         <property name="LeftDockable">1</property>
                         <property name="RightDockable">1</property>
@@ -1420,26 +1405,25 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnUpdateUI"></event>
-                        <object class="wxFlexGridSizer" expanded="1">
-                            <property name="cols">3</property>
-                            <property name="flexible_direction">wxBOTH</property>
+                        <object class="wxGridBagSizer" expanded="0">
+                            <property name="empty_cell_size"></property>
+                            <property name="flexible_direction">wxHORIZONTAL</property>
                             <property name="growablecols">1</property>
                             <property name="growablerows"></property>
                             <property name="hgap">0</property>
-                            <property name="minimum_size">-1,-1</property>
+                            <property name="minimum_size"></property>
                             <property name="name">self.GridCfg</property>
-                            <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_SPECIFIED</property>
+                            <property name="non_flexible_grow_mode">wxFLEX_GROWMODE_ALL</property>
                             <property name="permission">none</property>
-                            <property name="rows">0</property>
                             <property name="vgap">0</property>
                         </object>
                     </object>
                 </object>
-                <object class="sizeritem" expanded="1">
+                <object class="sizeritem" expanded="0">
                     <property name="border">5</property>
                     <property name="flag">wxEXPAND</property>
                     <property name="proportion">0</property>
-                    <object class="wxBoxSizer" expanded="1">
+                    <object class="wxBoxSizer" expanded="0">
                         <property name="minimum_size"></property>
                         <property name="name">bSizer35</property>
                         <property name="orient">wxHORIZONTAL</property>
