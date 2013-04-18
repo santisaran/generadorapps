@@ -230,10 +230,6 @@ DefinicionesBytes = (\
 SMS = []
 for i in range(Cantidad_SMS):
     SMS.append("")
-
-IPs = []
-for i in range(Cantidad_IPs):
-    IPs.append("0.0.0.0")
     
 TEL = []
 for i in range(Cantidad_TEL):
@@ -241,7 +237,9 @@ for i in range(Cantidad_TEL):
                     
 WWW = []
 for i in range(Cantidad_IPs):
-    WWW.append("")
+    #el primer campo es true si se trata de una dirección web
+    #o false si es una dirección IP
+    WWW.append([True,""])
                     
 MAIL= []
 for i in range(Cantidad_MAIL):

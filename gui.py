@@ -74,9 +74,6 @@ class frmPpal ( wx.Frame ):
 		self.mVariablesMAIL = wx.MenuItem( self.m_variables, wx.ID_ANY, _(u"Editar mails"), wx.EmptyString, wx.ITEM_NORMAL )
 		self.m_variables.AppendItem( self.mVariablesMAIL )
 		
-		self.mVariablesWWW = wx.MenuItem( self.m_variables, wx.ID_ANY, _(u"Editar direcciones web"), wx.EmptyString, wx.ITEM_NORMAL )
-		self.m_variables.AppendItem( self.mVariablesWWW )
-		
 		self.m_menubar1.Append( self.m_variables, _(u"Va&riables") ) 
 		
 		self.m_aplicaciones = wx.Menu()
@@ -128,7 +125,6 @@ class frmPpal ( wx.Frame ):
 		self.Bind( wx.EVT_MENU, self.OnEditarIp, id = self.mVariablesIP.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnEditarTEL, id = self.mVariablesTEL.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnEditarMAIL, id = self.mVariablesMAIL.GetId() )
-		self.Bind( wx.EVT_MENU, self.OnEditarWWW, id = self.mVariablesWWW.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnDriverAnalog, id = self.m_drivers_analog.GetId() )
 		self.m_button22.Bind( wx.EVT_BUTTON, self.OnTest )
 	
@@ -148,7 +144,6 @@ class frmPpal ( wx.Frame ):
 		self.Unbind( wx.EVT_MENU, id = self.mVariablesIP.GetId() )
 		self.Unbind( wx.EVT_MENU, id = self.mVariablesTEL.GetId() )
 		self.Unbind( wx.EVT_MENU, id = self.mVariablesMAIL.GetId() )
-		self.Unbind( wx.EVT_MENU, id = self.mVariablesWWW.GetId() )
 		self.Unbind( wx.EVT_MENU, id = self.m_drivers_analog.GetId() )
 		self.m_button22.Unbind( wx.EVT_BUTTON, None )
 	
@@ -192,9 +187,6 @@ class frmPpal ( wx.Frame ):
 		event.Skip()
 	
 	def OnEditarMAIL( self, event ):
-		event.Skip()
-	
-	def OnEditarWWW( self, event ):
 		event.Skip()
 	
 	def OnDriverAnalog( self, event ):
@@ -351,11 +343,12 @@ class frmCfgServers ( wx.Frame ):
 		
 		self.CfgScrolled = wx.ScrolledWindow( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.HSCROLL|wx.VSCROLL )
 		self.CfgScrolled.SetScrollRate( 5, 5 )
-		self.GridCfg = wx.FlexGridSizer( 0, 3, 0, 0 )
-		self.GridCfg.AddGrowableCol( 1 )
-		self.GridCfg.SetFlexibleDirection( wx.BOTH )
-		self.GridCfg.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
+		self.GridCfg = wx.GridBagSizer( 0, 0 )
+		self.GridCfg.SetFlexibleDirection( wx.HORIZONTAL )
+		self.GridCfg.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_ALL )
 		
+		
+		self.GridCfg.AddGrowableCol( 1 )
 		
 		self.CfgScrolled.SetSizer( self.GridCfg )
 		self.CfgScrolled.Layout()
