@@ -16,7 +16,7 @@ import threading
 import serial
 
 import wxSerialConfigDialog
-
+from struct import pack, unpack
 
 import GUI
 
@@ -43,7 +43,7 @@ class SerialRxEvent(wx.PyCommandEvent):
 class MyCylocFrame (GUI.CylocFrame):
     def __init__(self):
         super(MyCylocFrame,self).__init__(None)
-        self.anterior = False
+        
         self.timer1 = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.OnTimeout, self.timer1)
         self.timer2 = wx.Timer(self)
@@ -71,8 +71,13 @@ class MyCylocFrame (GUI.CylocFrame):
                 )
             )        
         self.Bind(EVT_SERIALRX, self.OnSerialRead)
+        
+        self.anterior = False
+        self.EnviandoArchivo = False
         self.EsperaACK = False
-        self.ESTADOSSERIE = {0x55:self.RecvACK,0x01:self.RecvStart,0x02:self.RecvStop,0x03:self.RecvResend, 0x04:self.RecvAlive}
+        self.ESTADOSSERIE = {0x55:self.RecvACK,0x01:self.RecvStart,\
+                             0x02:self.RecvStop,0x03:self.RecvResend,\
+                             0x04:self.RecvAlive, 0x05:self.RecvData}
         
         
     def StartThread(self):
@@ -117,19 +122,20 @@ class MyCylocFrame (GUI.CylocFrame):
         text = event.data
         try:
             #Agregar cadena de texto en el cuadro de izquierda
-            self.textCtrlEntrada.AppendText(text.encode('latin1','ignore'))            
+            self.textCtrlEntrada.AppendText(text.encode('latin1','ignore'))
         except:
             pass
         #Agregar lo recibido por el puerto serie en fomato hexadecimal
         self.textCtrlEntradaHex.AppendText(str(map(hex,map(ord,text))))
-        
         if self.EsperaACK:
             retorno = map(ord,text)
-            print "recibido: " + str(retorno)
+            #print "recibido: " + str(retorno)
             if (len(retorno) == 2) and (retorno[0] == 0xaa): 
+                #Recibió los dos datos de respuesta
                 if self.ESTADOSSERIE.has_key(retorno[1]):
                     self.ESTADOSSERIE[retorno[1]]()
             elif (len(retorno) == 1):
+                #Recibió solo un dato
                 if retorno[0] == 0xaa:
                     self.anterior = True
                 elif self.anterior:
@@ -146,25 +152,36 @@ class MyCylocFrame (GUI.CylocFrame):
             self.serial.write(COMENZARPROG)
             self.EsperaACK = True
             self.timer2.Start(500,oneShot=True)
+            self.timer1.Start(1000,oneShot=True)
         except:
             self.StopThread()
                 
     def RecvStart(self):
         print "Recibido Start"
-        pass
     
     def RecvStop(self):
         print "Recibido Stop"
-        pass
     
     def RecvResend(self):
         print "Recibido Resend"
-        pass
     
     def RecvAlive(self):
         self.timer2.Start(500,oneShot=True)
         print "ACK"
-        pass
+        self.btnEnviarDatos.Enable(True)
+    
+    def RecvData(self):
+        try:
+            self.serial.write(COMENZARPROG)
+            self.EsperaACK = True
+            self.timer2.Start(500,oneShot=True)
+            self.timer1.Start(1000,oneShot=True)
+        except:
+            self.StopThread()
+        #Ya recibió el ack de datos, le envío mas
+        self.Enviando()
+        self.btnEnviarDatos.Enable(True)
+        
                     
     def OnPortSettings(self, event=None):
         """Show the portsettings dialog. The reader thread is stopped for the
@@ -224,10 +241,58 @@ class MyCylocFrame (GUI.CylocFrame):
             if len(aenviar)%2:
                 aenviar = "0" + aenviar
             for j in range(len(aenviar)/2):
-                dato = int(aenviar[j*2:(j*2)+2],16)
+        #tomo datos hexadecimales de a dos para generar un byte por cada dos caracteres.
+                dato = int(aenviar[j*2:(j*2)+2],16) 
                 print dato,
                 self.serial.write(chr(dato))
-        self.timer2.Stop()        
+        self.timer2.Stop()  
+        
+    def OnEnviarArchivo(self , event):
+        path = self.mifpk.GetPath()
+        self.archivo = open(path,'rb')
+        self.sizefile = len(self.archivo.read())
+        self.leidos = 0.0
+        self.archivo.seek(0)
+        self.EnviandoArchivo = True
+        self.Enviando()
+        self.btnEnviarDatos.Enable(False)
+        
+    def Enviando(self):
+        if self.EnviandoArchivo:
+            lectura = self.archivo.read(3) 
+            self.leidos += len(lectura)
+            if self.leidos != self.sizefile:
+                if lectura == "":
+                    self.EnviandoArchivo = False
+                    return                  
+                self.buff = unpack('BBB',lectura)
+                if self.buff[0] == 0xAA:
+                    TIPOHEADER = self.buff[1]
+                    CANTIDAD = self.buff[2]
+                    self.serial.write(lectura)
+                    lectura = self.archivo.read(CANTIDAD)
+                    self.leidos += len(lectura)
+                    self.progreso.SetValue(self.leidos/self.sizefile*100.0)
+                    #incrementa barra de progreso
+                    try:
+                        self.buff = unpack('B'*(CANTIDAD),lectura)                    
+                    except:
+                        self.archivo.close()
+                        return False
+                    if self.buff != "":
+                        self.serial.write(lectura)
+                        
+    
+                else: 
+                    print "Error al cargar archivo binario"
+                    self.archivo.close()
+                    self.EnviandoArchivo = False
+                    return False                    
+            else:
+                print "fin de archivo"
+                self.archivo.close()
+                self.EnviandoArchivo = False
+              
         
     def OnIniciarSerie(self,event):
         if self.tglBtnComenzar.GetValue():
@@ -248,6 +313,7 @@ class MyCylocFrame (GUI.CylocFrame):
         if self.EsperaACK:
             print "Tiempo fuera"
             self.EsperaACK = False
+            self.btnEnviarDatos.Enable(False)
             self.tglBtnComenzar.SetValue(False)
             self.tglBtnComenzar.SetLabel(u"Comenzar Comunicación")
             self.timer2.Stop()
