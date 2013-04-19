@@ -25,9 +25,8 @@ Cantidad_Bloques = 5
 Cantidad_Bits_Usuario = 256
 Cantidad_Bytes_Usuario = 256
 Cantidad_SMS = 20
-Cantidad_IPs = 16
+Cantidad_WEBs = 16
 Cantidad_TEL = 10
-Cantidad_WWW = 10
 Cantidad_MAIL = 10
 
 # bits definidos en el archivo CylocDefines.h
@@ -233,13 +232,13 @@ for i in range(Cantidad_SMS):
     
 TEL = []
 for i in range(Cantidad_TEL):
-    TEL.append("")
+    TEL.append(u"")
                     
-WWW = []
-for i in range(Cantidad_IPs):
+SERVERS = []
+for i in range(Cantidad_WEBs):
     #el primer campo es true si se trata de una dirección web
     #o false si es una dirección IP
-    WWW.append([True,""])
+    SERVERS.append([True,""])
                     
 MAIL= []
 for i in range(Cantidad_MAIL):
@@ -420,20 +419,25 @@ Analogica = { nZonas[0]:100, nZonas[1]:90, nZonas[2]:80, nZonas[3]:70, nZonas[4]
 
 # Acerca del modo : 0 modo 4 zonas, 1 modo valor ADC.
 
-Header_App = 0x01
-Header_Bloques = 0x02
-Header_Estado = 0x03
-Header_Condicion = 0x04
-Header_Resultado = 0x05
-Header_SMS = 0x06
-Header_BYTE = 0x07
-Header_BIT = 0x08
-HEADER_ERROR_LECTURA = 0x09
+HEADER_APP = 0x01
+HEADER_BLOQUES = 0x02
+HEADER_ESTADO = 0x03
+HEADER_CONDICION = 0x04
+HEADER_RESULTADO = 0x05
+HEADER_SMS = 0x06
+HEADER_BYTE = 0x07
+HEADER_BIT = 0x08
+HEADER_TEL = 0x09
+HEADER_IP = 0x0a
+HEADER_WWW = 0x0b
+HEADER_MAIL = 0x0c
+HEADER_END = 0x0d
+HEADER_ERROR_LECTURA = 0x0d
 
 def GenerarBin(programa):
     binario = ""
     for app in programa:
-        binario = binario + chr(0xAA) + chr(Header_App)
+        binario = binario + chr(0xAA) + chr(HEADER_APP)
         # Enviar encabezado de tipo App y tamaño
         nextstring = ""
         nextstring += chr(app.AppNum) + chr(app.EstadoActual)
@@ -443,12 +447,12 @@ def GenerarBin(programa):
             EstadoAbs = (app.AppNum * Cantidad_Estados + i)
             # print "Estado: " + str(EstadoAbs)
             
-            binario = binario + chr(0xAA) + chr(Header_Estado)
+            binario = binario + chr(0xAA) + chr(HEADER_ESTADO)
             nextstring = ""
             nextstring += chr(EstadoAbs & 0x0FF) + chr((EstadoAbs >> 8) & 0x0FF)
             binario += chr(len(nextstring)) + nextstring
             
-            binario += str(chr(0xAA)) + str(chr(Header_Bloques))
+            binario += str(chr(0xAA)) + str(chr(HEADER_BLOQUES))
             nextstring = ""
             for j, bloque in enumerate(estado.Bloques):
                 BloqueAbs = app.AppNum * Cantidad_Estados * Cantidad_Bloques + i * Cantidad_Bloques + j
@@ -457,14 +461,14 @@ def GenerarBin(programa):
                     chr(bloque >> 16 & 0x0FF) + chr(bloque >> 24 & 0x0FF)
             binario += chr(len(nextstring)) + nextstring
                     
-            binario = binario + chr(0xAA) + chr(Header_Condicion)
+            binario = binario + chr(0xAA) + chr(HEADER_CONDICION)
             nextstring = ""
             for i in estado.Condiciones:
                 nextstring += chr(i)
             binario += chr(len(nextstring)) + nextstring
             
             nextstring = ""
-            binario += chr(0xAA) + chr(Header_Resultado)
+            binario += chr(0xAA) + chr(HEADER_RESULTADO)
             for i in estado.Resultados:
                 nextstring += chr(i)
             binario += chr(len(nextstring)) + nextstring

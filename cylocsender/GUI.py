@@ -17,7 +17,7 @@ import wx.xrc
 class CylocFrame ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 629,465 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 529,465 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -78,26 +78,6 @@ class CylocFrame ( wx.Frame ):
 		
 		bSizer1.Add( bSizer5, 0, wx.EXPAND, 5 )
 		
-		bSizer3 = wx.BoxSizer( wx.HORIZONTAL )
-		
-		self.m_button41 = wx.Button( self, wx.ID_ANY, u"Borrar Pantalla", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer3.Add( self.m_button41, 0, wx.ALL, 5 )
-		
-		self.btnSalir = wx.Button( self, wx.ID_ANY, u"Cerrar", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer3.Add( self.btnSalir, 0, wx.ALL|wx.EXPAND, 5 )
-		
-		
-		bSizer3.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
-		
-		self.m_button5 = wx.Button( self, wx.ID_ANY, u"EnviarInit", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer3.Add( self.m_button5, 0, wx.ALL, 5 )
-		
-		self.tglBtnComenzar = wx.ToggleButton( self, wx.ID_ANY, u"Comenzar Comunicación", wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer3.Add( self.tglBtnComenzar, 0, wx.ALL, 5 )
-		
-		
-		bSizer1.Add( bSizer3, 0, wx.EXPAND, 5 )
-		
 		bSizer7 = wx.BoxSizer( wx.HORIZONTAL )
 		
 		self.mifpk = wx.FilePickerCtrl( self, wx.ID_ANY, u"C:\\Users\\santiago\\Documents\\Proyectos\\ATOP\\Soft\\generadorsvn\\generadorapps\\201304.cb", u"Select a file", u"*.*", wx.DefaultPosition, wx.DefaultSize, wx.FLP_DEFAULT_STYLE )
@@ -111,6 +91,35 @@ class CylocFrame ( wx.Frame ):
 		
 		bSizer1.Add( bSizer7, 0, wx.EXPAND, 5 )
 		
+		bSizer71 = wx.BoxSizer( wx.VERTICAL )
+		
+		self.progreso = wx.Gauge( self, wx.ID_ANY, 100, wx.DefaultPosition, wx.DefaultSize, wx.GA_HORIZONTAL )
+		self.progreso.SetValue( 0 ) 
+		bSizer71.Add( self.progreso, 0, wx.ALL|wx.EXPAND, 5 )
+		
+		
+		bSizer1.Add( bSizer71, 0, wx.EXPAND, 5 )
+		
+		bSizer3 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.m_button41 = wx.Button( self, wx.ID_ANY, u"Borrar Pantalla", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer3.Add( self.m_button41, 0, wx.ALL, 5 )
+		
+		
+		bSizer3.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
+		
+		self.tglBtnComenzar = wx.ToggleButton( self, wx.ID_ANY, u"Comenzar Comunicación", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer3.Add( self.tglBtnComenzar, 0, wx.ALL, 5 )
+		
+		
+		bSizer3.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
+		
+		self.btnSalir = wx.Button( self, wx.ID_ANY, u"Cerrar", wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer3.Add( self.btnSalir, 0, wx.ALL|wx.EXPAND, 5 )
+		
+		
+		bSizer1.Add( bSizer3, 0, wx.EXPAND, 5 )
+		
 		
 		self.SetSizer( bSizer1 )
 		self.Layout()
@@ -123,11 +132,10 @@ class CylocFrame ( wx.Frame ):
 		self.textCtrlBin.Bind( wx.EVT_CHAR, self.OnBinChar )
 		self.textCtrlBin.Bind( wx.EVT_TEXT_ENTER, self.OnEnterBin )
 		self.m_button4.Bind( wx.EVT_BUTTON, self.OnEnviarBinario )
-		self.m_button41.Bind( wx.EVT_BUTTON, self.OnBorrar )
-		self.btnSalir.Bind( wx.EVT_BUTTON, self.OnClose )
-		self.m_button5.Bind( wx.EVT_BUTTON, self.OnIniciarSerie )
-		self.tglBtnComenzar.Bind( wx.EVT_TOGGLEBUTTON, self.OnIniciarSerie )
 		self.btnEnviarDatos.Bind( wx.EVT_BUTTON, self.OnEnviarArchivo )
+		self.m_button41.Bind( wx.EVT_BUTTON, self.OnBorrar )
+		self.tglBtnComenzar.Bind( wx.EVT_TOGGLEBUTTON, self.OnIniciarSerie )
+		self.btnSalir.Bind( wx.EVT_BUTTON, self.OnClose )
 	
 	def __del__( self ):
 		pass
@@ -149,17 +157,16 @@ class CylocFrame ( wx.Frame ):
 	def OnEnviarBinario( self, event ):
 		event.Skip()
 	
-	def OnBorrar( self, event ):
+	def OnEnviarArchivo( self, event ):
 		event.Skip()
 	
-	def OnClose( self, event ):
+	def OnBorrar( self, event ):
 		event.Skip()
 	
 	def OnIniciarSerie( self, event ):
 		event.Skip()
 	
-	
-	def OnEnviarArchivo( self, event ):
+	def OnClose( self, event ):
 		event.Skip()
 	
 

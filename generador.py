@@ -56,19 +56,11 @@ miSMS = SMS[:]
 global miTEL
 miTEL = TEL[:]
 
-global miWWW
-miWWW = WWW[:]
+global miSERVERS
+miSERVERS = SERVERS[:]
 
 global miMAIL                    
 miMAIL = MAIL[:]
-
-#global ValoresEntradas
-#diccionario con los valores de las entradas
-#global miValoresEntradas
-#copia del diccionario, con los valores del programa actual
-#miValoresEntradas = {}
-#for i in ValoresEntradas.keys():
-    #miValoresEntradas[i] = ValoresEntradas[i][:]
 
 global Analogica
 #Diccionario con los valores de cfg de la entra analógica
@@ -369,24 +361,29 @@ class MiFrame(gui.frmPpal):
                 self.aplicaciones = shelf["programa"]
                 global miBits
                 miBits = shelf["bits"]
+                
                 global miBytes
                 miBytes = shelf["bytes"]
-                global miValoresEntradas                
-                miValoresEntradas = shelf["miValoresEntradas"]
-                
-                for llave in Entradas:
-                    for i,(a,b,c,d) in enumerate(DefinicionesBytes):
-                        if a == EntradasBytes[llave][const.Nombre]:
-                            miValoresEntradas[llave][const.Nombre] = miBytes[i][const.Valor]
-                        if a == EntradasBytes[llave][1]:
-                            miValoresEntradas[llave][1] = miBytes[i][const.Valor]
                     
                 global miAnalogica
                 miAnalogica = shelf["miAnalogica"]
+
                 global miSMS
                 miSMS = shelf["SMS"]
+
+                global miTEL
+                miTEL = shelf["TEL"]
+
+                global miSERVERS
+                miSERVERS = shelf["SERVERS"]
+
+                global miMAIL
+                miMAIL = shelf["MAIL"]
+
             except:
+                print "Error abriendo archivo"
                 pass
+
             shelf.close()
             self.Title = "Generador de programas: " + NombreArchivo.split(os.sep)[-1]
             for i in range(Cantidad_Apps):
@@ -435,13 +432,13 @@ class MiFrame(gui.frmPpal):
             for i in range(Cantidad_Bytes_Usuario):
                 if miBytes[i][const.Valor] != "-1":
                     #Si el valor del byte se deja en -1, no se modifica
-                    binario = binario + str(chr(0xAA)) + str(chr(Header_BYTE)) + \
+                    binario = binario + str(chr(0xAA)) + str(chr(HEADER_BYTE)) + \
                         str(chr(2)) + str(chr(i)) + str(chr(int(miBytes[i][const.Valor])))
                 
             for i in range(Cantidad_Bits_Usuario):
                 if miBits[i][const.Valor] != "-1":
                     #Si el valor del bit se deja en -1, no se modifica
-                    binario = binario + str(chr(0xAA)) + str(chr(Header_BIT)) + \
+                    binario = binario + str(chr(0xAA)) + str(chr(HEADER_BIT)) + \
                         str(chr(2)) + str(chr(i)) + str(chr(int(miBits[i][const.Valor])))
             
             #Agregar Sms al binario:
@@ -449,12 +446,52 @@ class MiFrame(gui.frmPpal):
             #Solo Agrega SMS que no estén vacíos
             for i in range(Cantidad_SMS):
                 if miSMS[i] != "":
-                    binario +=  str(chr(0xAA)) + str(chr(Header_SMS))
+                    binario +=  str(chr(0xAA)) + str(chr(HEADER_SMS))
                     nextstring = ""
                     nextstring += str(chr(i)) + str(miSMS[i].encode('latin1','ignore'))
                     binario += chr(len(nextstring)) + nextstring                
             
-            binario +=  str(chr(0xAA)) + str(chr(Header_END)) + chr(0)           
+            #Agregar Ips al binario:
+            # 0xAA, HEADER_IP, SIZE, NºIP,IP
+            # o 0xAA, HEADER_WWW, SIZE, NºSERVERS, SERVERS
+            #Solo Agrega IPs que no estén vacías
+            for i in range(Cantidad_WEBs):
+                
+                if miSERVERS[i][0]:
+                    cadena = miSERVERS[i][1].encode('latin1','ignore').strip()
+                    if cadena != "":
+                        binario +=  str(chr(0xAA)) + str(chr(HEADER_WWW))
+                        nextstring = ""
+                        nextstring += str(chr(i)) + cadena
+                        cadena = ""
+                        binario += chr(len(nextstring)) + nextstring
+                    
+                else: 
+                    binario +=  str(chr(0xAA)) + str(chr(HEADER_IP))
+                    nextstring = ""
+                    cadena = ""
+                    for j in map(chr,map(int,miSERVERS[i][1].split('.'))):
+                        cadena += str(j) 
+                    nextstring += str(chr(i)) + cadena
+                    binario += chr(len(nextstring)) + nextstring
+                    
+                                
+                    
+            
+            #Agregar direcciones Mail al binario:
+            # 0xAA, HEADER_MAIL, SIZE, NºMAIL, direccionMail
+            #Solo Agrega Mails que no estén vacíos
+            for i in range(Cantidad_MAIL):
+                if miMAIL[i] != "":
+                    binario +=  str(chr(0xAA)) + str(chr(HEADER_MAIL))
+                    nextstring = ""
+                    cadena = str(miMAIL[i].encode('latin1','ignore'))
+                    nextstring += str(chr(i)) + cadena.strip()
+                    binario += chr(len(nextstring)) + nextstring
+                                       
+            binario +=  str(chr(0xAA)) + str(chr(HEADER_END)) + chr(0)           
+            
+                       
             
             
             archivobinario.write(binario)
@@ -503,15 +540,12 @@ class MiFrame(gui.frmPpal):
                     
                     global miBytes
                     shelf["bytes"] = miBytes
-                    
-                    global miIP
-                    shelf["IP"] = miIP
-                    
+  
                     global miTEL
                     shelf["TEL"] = miTEL
                     
-                    global miWWW
-                    shelf["WWW"] = miWWW
+                    global miSERVERS
+                    shelf["SERVERS"] = miSERVERS
                     
                     global miMAIL
                     shelf["MAIL"] = miMAIL
@@ -557,10 +591,6 @@ class MiFrame(gui.frmPpal):
         
         self.Title = "Generador de Programas: "
         global ValoresEntradas
-        global miValoresEntradas
-        #miValoresEntradas = {}
-        #for i in Entradas:
-        #    miValoresEntradas[i] = ValoresEntradas[i][:]
         
         
         global Analogica
@@ -1527,7 +1557,6 @@ class  mifrmEntrada (gui.frmEntrada):
         self.entrada = self.item.GetText()
         self.Title = self.Title + self.item.GetText()
         global miBytes
-        #global miValoresEntradas
         for i,(a,b,c,d) in enumerate(miBytes):
             if a == EntradasBytes[self.entrada][0]:
                 # self.muestras queda con el valor del numero de byte que 
@@ -1542,18 +1571,14 @@ class  mifrmEntrada (gui.frmEntrada):
 
 
     def OnGuardar(self, event):
-        global miValoresEntradas
         miBytes[self.muestras][2] = self.txtctrlMuestras.GetValue()
         miBytes[self.tiempo][2]   = self.txtctrlTiempo.GetValue()
-        #miValoresEntradas[self.item.GetText()][0] = self.muestras
-        #miValoresEntradas[self.item.GetText()][1] = self.tiempo
         global Modificado
         Modificado = True
        
         
 
     def OnCerrar(self, event):
-        global miValoresEntradas
         self.item.Enable(True)
         self.Destroy()
 
@@ -2311,8 +2336,8 @@ class mifrmIPs ( gui.frmCfgServers ):
         self.item = item
         self.SetTitle(u"Edición de servidores IP")
         self.item.Enable(False)
-        global miWWW
-        self.miWWW = miWWW[:]
+        global miSERVERS
+        self.miSERVERS = miSERVERS[:]
         
         self.ListaIPs = []
         #self.GridCfg = wx.FlexGridSizer( 0, 6, 0, 0 ) #Agrego dos columnas para centrar 
@@ -2320,28 +2345,29 @@ class mifrmIPs ( gui.frmCfgServers ):
         #self.GridCfg.AddGrowableCol(2)
         self.GridCfg.RemoveGrowableCol(1)
         self.GridCfg.AddGrowableCol(2)
-        for i in range(Cantidad_IPs):  
+        for i in range(Cantidad_WEBs):  
          
             ipnum = wx.StaticText(self.CfgScrolled, wx.ID_ANY, u"IP %i"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
             ipnum.Wrap( -1 )
             self.GridCfg.Add( ipnum , wx.GBPosition( i, 0 ), wx.GBSpan( 1, 1 ), wx.ALL, 5 )
             ChkBoxIp = wx.CheckBox( self.CfgScrolled, wx.ID_ANY, u"Usar IP", wx.DefaultPosition, wx.DefaultSize, 0 )
-            ChkBoxIp.SetValue(not self.miWWW[i][0])
+            ChkBoxIp.SetValue(not self.miSERVERS[i][0])
             
             self.GridCfg.Add( ChkBoxIp, wx.GBPosition( i, 1 ), wx.GBSpan( 1, 1 ), wx.ALL, 5 )
             
             ipaddr = masked.IpAddrCtrl( self.CfgScrolled, -1, style = wx.TE_PROCESS_TAB )
             netaddr = wx.TextCtrl(self.CfgScrolled, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0) 
             netaddr.SetMaxLength( 160 ) 
-            if self.miWWW[i][0]:
+            if self.miSERVERS[i][0]:
             #Verifico si el campo a cargar es una IP o una www
                 self.GridCfg.Add( netaddr , wx.GBPosition( i, 2 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.EXPAND, 5 )
-                netaddr.SetValue(self.miWWW[i][1].decode('latin1','ignore'))
+                netaddr.SetValue(self.miSERVERS[i][1].decode('latin1','ignore'))
+
                 ipaddr.Hide()
             else:
                 self.GridCfg.Add( ipaddr , wx.GBPosition( i, 2 ), wx.GBSpan( 1, 1 ), wx.ALL, 5 )
                 try:
-                    ipaddr.SetValue(self.miWWW[i][1])
+                    ipaddr.SetValue(self.miSERVERS[i][1])
                 except:
                     ipaddr.SetValue("0.0.0.0")
                 netaddr.Hide()
@@ -2406,25 +2432,22 @@ class mifrmIPs ( gui.frmCfgServers ):
                 netaddr.SetModified(True)
                                 
     def OnGuardar(self, event):
-        global miWWW
+        global miSERVERS
         self.Guardar()
         
     def Guardar(self):
         for i,[ipaddr ,netaddr, chkboxip, boton] in enumerate(self.ListaIPs):
         
             if chkboxip.GetValue():
-            #Chekear si es una dirección IP o WWWW
-            
-                self.miWWW[i][0]=False
-                if ipaddr.IsModified():
-                    self.miWWW[i][1] = ipaddr.GetValue()
-                    miWWW = self.miWWW[:]
+            #Chekear si es una dirección IP o web
+                        
+                self.miSERVERS[i][0]=False
+                self.miSERVERS[i][1] = ipaddr.GetValue()
+                miSERVERS = self.miSERVERS[:]
             else:    
-                self.miWWW[i][0]=True
-                if netaddr.IsModified():
-                    self.miWWW[i][1] = netaddr.GetValue()
-                    miWWW = self.miWWW[:]
-        print self.miWWW
+                self.miSERVERS[i][0]=True
+                self.miSERVERS[i][1] = netaddr.GetValue()
+                miSERVERS = self.miSERVERS[:]
                
         for [ipaddr ,netaddr, chkboxip, boton] in self.ListaIPs:
             ipaddr.SetModified(False)
@@ -2432,11 +2455,28 @@ class mifrmIPs ( gui.frmCfgServers ):
             global Modificado
             Modificado = True
         
-    def OnUndo (self, event) :
-        global miIP
-        self.miIP= miIP[:]
+    def OnUndo (self, event):
+        global miSERVERS
+        self.miSERVERS = miSERVERS[:]
         for i,[ipaddr ,netaddr, chkboxip, boton] in enumerate(self.ListaIPs):
-            ipaddr.SetValue(self.miIP[i])
+            self.GridCfg.Detach(ipaddr)
+            self.GridCfg.Detach(netaddr)
+            if self.miSERVERS[i][0]:
+            #Verifico si el campo a cargar es una IP o una www
+                self.GridCfg.Add( netaddr , wx.GBPosition( i, 2 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.EXPAND, 5 )
+                netaddr.SetValue(self.miSERVERS[i][1].decode('latin1','ignore'))
+                netaddr.Show()
+                ipaddr.Hide()
+                chkboxip.SetValue(False)
+            else:
+                self.GridCfg.Add( ipaddr , wx.GBPosition( i, 2 ), wx.GBSpan( 1, 1 ), wx.ALL, 5 )
+                try:
+                    ipaddr.SetValue(self.miSERVERS[i][1])
+                except:
+                    ipaddr.SetValue("0.0.0.0")
+                ipaddr.Show()
+                netaddr.Hide()
+                chkboxip.SetValue(True)
     
     def OnCargar(self, event):
         global DIRACTUAL
@@ -2455,12 +2495,22 @@ class mifrmIPs ( gui.frmCfgServers ):
                 dlg.ShowModal()
                 dlg.Destroy()
                 return
-            global miIP
+            global miSERVERS
             try: 
-                self.miIP = shelf["IP"]
+                self.miSERVERS = shelf["IP"]
                 for i,[ipaddr ,netaddr, chkboxip, boton] in enumerate(self.ListaIPs):
-                    ipaddr.SetValue(self.miIP[i])
-                    ipaddr.SetModified(True)
+                    if self.miSERVERS[i][0]:
+                        #Verifico si el campo a cargar es una IP o una www
+                        self.GridCfg.Add( netaddr , wx.GBPosition( i, 2 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.EXPAND, 5 )
+                        netaddr.SetValue(self.miSERVERS[i][1].decode('latin1','ignore'))
+                        ipaddr.Hide()
+                    else:
+                        self.GridCfg.Add( ipaddr , wx.GBPosition( i, 2 ), wx.GBSpan( 1, 1 ), wx.ALL, 5 )
+                        try:
+                            ipaddr.SetValue(self.miSERVERS[i][1])
+                        except:
+                            ipaddr.SetValue("0.0.0.0")
+                            netaddr.Hide()
             except:
                 pass
             shelf.close()
@@ -2501,9 +2551,8 @@ class mifrmTEL ( gui.frmCfgServers ):
                                                 choiceRequired = True,
                                                 defaultValue = control[7],
                                                 demo         = True,
-                                                name         = control[0])
-              
-            #teladdr.SetValue(self.miIP[i])
+                                                name         = control[0])  
+            teladdr.SetValue(self.miTEL[i])
             self.GridCfg.Add( teladdr,  wx.GBPosition( i, 1 ), wx.GBSpan( 1, 1 ), wx.ALL|wx.EXPAND, 5 )
             botonborrar = wx.Button(self.CfgScrolled, wx.ID_ANY, u"Borrar TEL", wx.DefaultPosition, wx.DefaultSize, 0 )
             self.GridCfg.Add( botonborrar,  wx.GBPosition( i, 2 ), wx.GBSpan( 1, 1 ), wx.ALL, 5 )
@@ -2519,7 +2568,7 @@ class mifrmTEL ( gui.frmCfgServers ):
     def OnClose(self, event):
         cambios = False
         for i,[txtctrl,boton] in enumerate(self.ListaTELs):
-            if txtctrl.IsModified():
+            if txtctrl.GetValue() != self.miTEL[i]: 
                 cambios = True
                 break
         if cambios:
@@ -2530,7 +2579,7 @@ class mifrmTEL ( gui.frmCfgServers ):
             val = dlg.ShowModal()
             if val == wx.ID_YES:
                 global miTEL
-                for i,[txtctrl,boton] in enumerate(self.ListaIPs):
+                for i,[txtctrl,boton] in enumerate(self.ListaTELs):
                     if txtctrl.IsModified():
                         self.miTEL[i] = txtctrl.GetValue()
                         miTEL = self.miTEL[:]
@@ -2551,9 +2600,7 @@ class mifrmTEL ( gui.frmCfgServers ):
             if teladdr.IsModified():
                 self.miTEL[i] = teladdr.GetValue()
         miTEL = self.miTEL[:]
-        print miTEL
-        for [ipaddr,btn] in self.ListaTELs:
-            teladdr.SetModified(False)
+        print miTEL        
         global Modificado
         Modificado = True
         
