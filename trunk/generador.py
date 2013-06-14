@@ -4,7 +4,7 @@
 #  generador.py
 #
 #  Copyright 2013 santiago <spaleka@cylgem.com.ar>
-#
+#6
 
 
 #TODO usar isModified() para guardar cambios.
