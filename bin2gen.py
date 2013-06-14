@@ -20,6 +20,7 @@ class CargarBinario():
         self.SMS = SMS[:]
         self.binBIT = Bits[:]
         self.binBYTE = Bytes[:]
+        self.
         self.nombrearchivo = nombrearchivo
         #for i in range(Cantidad_Bits_Usuario):
         #   self.MemoriaUsuario_Bytes.append(-1)
@@ -75,22 +76,30 @@ class CargarBinario():
         self.binBIT[self.buff[0]][2] = bool(self.buff[1])
         #self.MemoriaUsuario_Bits[self.buff[0]] = bool(self.buff[1])
         
+    def OnHeader_TEL(self):
+		self.
+    
     def OnHeader_END(self):
         pass
     
         
     def CargarArchivo(self):
         self.HEADERSFUNCS = {
-                Header_App:        self.OnHeader_APLICACION,
-                Header_Bloques:    self.OnHeader_BLOQUE,
-                Header_Estado:     self.OnHeader_ESTADO,
-                Header_Condicion:  self.OnHeader_CONDICION,
-                Header_Resultado:  self.OnHeader_RESULTADO,
-                Header_SMS:        self.OnHeader_SMS,
-                Header_BYTE:       self.OnHeader_BYTE,
-                Header_BIT:        self.OnHeader_BIT,
-                Header_END:        self.OnHeader_END
-                }
+			HEADER_APP:			self.OnHeader_APLICACION,
+			HEADER_BLOQUES:		self.OnHeader_BLOQUE,
+			HEADER_ESTADO:		self.OnHeader_ESTADO,
+			HEADER_CONDICION:	self.OnHeader_CONDICION,
+			HEADER_RESULTADO:	self.OnHeader_RESULTADO,
+			HEADER_SMS:			self.OnHeader_SMS,
+			HEADER_BYTE:		self.OnHeader_BYTE,
+			HEADER_BIT:			self.OnHeader_BIT,
+			HEADER_TEL:			self.OnHeader_TEL,
+			HEADER_IP:			self.OnHeader_IP,
+			HEADER_WWW:			self.OnHeader_WWW,
+			HEADER_MAIL:		self.OnHeader_MAIL,
+			HEADER_END:			self.OnHeader_END,
+			HEADER_ERROR_LECTURA:  self.OnHeaderErrorLectura,
+            }
         self.archivo = open(self.nombrearchivo,'rb')
         lectura = self.archivo.read(3)
         while lectura != "":

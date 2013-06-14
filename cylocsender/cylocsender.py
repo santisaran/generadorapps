@@ -21,7 +21,7 @@ from struct import pack, unpack
 import GUI
 
 PUERTO = 42
-BAUDRATE = 19200
+BAUDRATE = 115200
 TIMEOUT = None
 XONXOFF = False
 WRITETIMEOUT = None
