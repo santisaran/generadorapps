@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  generador.py
+#  bin2gen.py
+#
+#########################################################################
+#    Módulo encargado de cargar los datos desde un archivo binario en el  
+# software generador de apps. generador.py
+#
 #
 #  Copyright 2013 santiago <spaleka@cylgem.com.ar>
 #
@@ -20,7 +25,9 @@ class CargarBinario():
         self.SMS = SMS[:]
         self.binBIT = Bits[:]
         self.binBYTE = Bytes[:]
-        self.
+        self.telefono = TEL[:]
+        self.servers = SERVERS[:]
+        self.mails = MAIL[:]
         self.nombrearchivo = nombrearchivo
         #for i in range(Cantidad_Bits_Usuario):
         #   self.MemoriaUsuario_Bytes.append(-1)
@@ -68,7 +75,7 @@ class CargarBinario():
     
     
     def OnHeader_BYTE(self):
-        self.binBYTE[ self.buff[0] ][2] = self.buff[1]
+        self.binBYTE[ self.buff[0]][2] = self.buff[1]
         #self.MemoriaUsuario_Bytes[ self.buff[0] ] = self.buff[1]
     
     
@@ -77,7 +84,26 @@ class CargarBinario():
         #self.MemoriaUsuario_Bits[self.buff[0]] = bool(self.buff[1])
         
     def OnHeader_TEL(self):
-		self.
+        print self.buff
+        self.telefono[self.buff[0]][2] = self.buff[1]
+        
+    def OnHeader_IP(self):
+        self.servers[self.buff[0]][0] = False
+        cadena = ""
+        for i in map(str,self.buff[1:]):
+            cadena += i+"."
+        self.servers[self.buff[0]][1] = cadena[:-1]
+            
+        
+    def OnHeader_WWW(self):
+        self.servers[self.buff[0]][0] = True
+        self.servers[self.buff[0]][1] = "".join(map(chr,self.buff[1:]))
+            
+    def OnHeader_MAIL(self):
+        self.mails[self.buff[0]] = "".join(map(chr,self.buff[1:]))
+    
+    def OnHeaderErrorLectura(self):
+        print "ERROR AL CARGAR ARCHIVO"
     
     def OnHeader_END(self):
         pass
@@ -85,20 +111,20 @@ class CargarBinario():
         
     def CargarArchivo(self):
         self.HEADERSFUNCS = {
-			HEADER_APP:			self.OnHeader_APLICACION,
-			HEADER_BLOQUES:		self.OnHeader_BLOQUE,
-			HEADER_ESTADO:		self.OnHeader_ESTADO,
-			HEADER_CONDICION:	self.OnHeader_CONDICION,
-			HEADER_RESULTADO:	self.OnHeader_RESULTADO,
-			HEADER_SMS:			self.OnHeader_SMS,
-			HEADER_BYTE:		self.OnHeader_BYTE,
-			HEADER_BIT:			self.OnHeader_BIT,
-			HEADER_TEL:			self.OnHeader_TEL,
-			HEADER_IP:			self.OnHeader_IP,
-			HEADER_WWW:			self.OnHeader_WWW,
-			HEADER_MAIL:		self.OnHeader_MAIL,
-			HEADER_END:			self.OnHeader_END,
-			HEADER_ERROR_LECTURA:  self.OnHeaderErrorLectura,
+            HEADER_APP:         self.OnHeader_APLICACION,
+            HEADER_BLOQUES:     self.OnHeader_BLOQUE,
+            HEADER_ESTADO:      self.OnHeader_ESTADO,
+            HEADER_CONDICION:   self.OnHeader_CONDICION,
+            HEADER_RESULTADO:   self.OnHeader_RESULTADO,
+            HEADER_SMS:         self.OnHeader_SMS,
+            HEADER_BYTE:        self.OnHeader_BYTE,
+            HEADER_BIT:         self.OnHeader_BIT,
+            HEADER_TEL:         self.OnHeader_TEL,
+            HEADER_IP:          self.OnHeader_IP,
+            HEADER_WWW:         self.OnHeader_WWW,
+            HEADER_MAIL:        self.OnHeader_MAIL,
+            HEADER_END:         self.OnHeader_END,
+            HEADER_ERROR_LECTURA:  self.OnHeaderErrorLectura,
             }
         self.archivo = open(self.nombrearchivo,'rb')
         lectura = self.archivo.read(3)
@@ -131,7 +157,10 @@ class CargarBinario():
                 self.aplicaciones ,\
                 self.binBYTE,\
                 self.binBIT,\
-                self.SMS\
+                self.SMS,\
+                self.mails,\
+                self.telefono,\
+                self.servers,\
                 )
         
         self.archivo.close()

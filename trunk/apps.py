@@ -377,8 +377,9 @@ class Programa():
     recibe como parámetros una lista de aplicaciones, una lista de listas con
     la configuracion de bits, una lista de listas con la configuracion de los 
     bytes, y una lista con los mensajes de texto"""
-    def __init__(self, aplicaciones=False , cfgBits=False , \
-            cfgBytes=False , cfgSMS=False):
+    def __init__(self, aplicaciones=False , cfgBits=False ,\
+            cfgBytes=False , cfgSMS=False , cfgMails=False,\
+            cfgTel=False, cfgServers=False):
         
         self.aplicaciones = []
         if (aplicaciones != False) and (len(aplicaciones) == Cantidad_Apps):
@@ -407,6 +408,20 @@ class Programa():
             self.SMS = cfgSMS[:]
         else:
             self.SMS = SMS[:]
+            
+        self.Mails = []
+        if cfgMails != False:
+            self.Mails = cfgMails
+        
+        self.Tel = []
+        if cfgTel != False:
+            self.Tel = cfgTel
+        
+        self.Servers = []
+        if cfgServers != False:
+            self.Servers = cfgServers
+            
+            
         print "Programa creado"        
 
 PorZonas = False
@@ -432,7 +447,7 @@ HEADER_IP = 0x0a
 HEADER_WWW = 0x0b
 HEADER_MAIL = 0x0c
 HEADER_END = 0x0d
-HEADER_ERROR_LECTURA = 0x0d
+HEADER_ERROR_LECTURA = 0x0e
 
 def GenerarBin(programa):
     binario = ""
