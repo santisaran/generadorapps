@@ -484,15 +484,20 @@ class MiFrame(gui.frmPpal):
             for i in range(Cantidad_MAIL):
                 if miMAIL[i] != "":
                     binario +=  str(chr(0xAA)) + str(chr(HEADER_MAIL))
-                    nextstring = ""
                     cadena = str(miMAIL[i].encode('latin1','ignore'))
-                    nextstring += str(chr(i)) + cadena.strip()
+                    nextstring = str(chr(i)) + cadena.strip()
                     binario += chr(len(nextstring)) + nextstring
-                                       
+            
+            #Agregar números de teléfono al binario:
+            # 0xAA, HEADER_TEL, SIZE, NºTEL,
+            #Solo Agrega teléfonos que no estén vacíos
+            for i in range(Cantidad_TEL):
+                if miTEL[i] != "":
+                    binario +=  str(chr(0xAA)) + str(chr(HEADER_TEL))
+                    nextstring = str(chr(i)) + miTEL[i].strip()
+                    binario += chr(len(nextstring)) + nextstring
+                                                           
             binario +=  str(chr(0xAA)) + str(chr(HEADER_END)) + chr(0)           
-            
-                       
-            
             
             archivobinario.write(binario)
             archivobinario.flush()
@@ -573,7 +578,8 @@ class MiFrame(gui.frmPpal):
 
 
     def CrearNuevoPrograma(self, aplicaciones = False,\
-                            BitsVal = False, BytesVal = False, SMSVal = False):
+                            BitsVal = False, BytesVal = False, SMSVal = False,\
+                            MailsVal=False,TelVal=False, ServersVal=False):
         global Modificado
         Modificado = False
         global NombreArchivo
@@ -594,6 +600,7 @@ class MiFrame(gui.frmPpal):
         
         
         global Analogica
+        
         global miAnalogica
         miAnalogica = {}
         for i in Analogica.keys():
@@ -617,6 +624,24 @@ class MiFrame(gui.frmPpal):
         else:
             miSMS = SMSVal[:]
             
+        if MailsVal == False:
+            global miMAIL
+            miMAIL = MAIL[:]
+        else:
+            miMAIL = MailsVal[:]
+            
+        if TelVal == False:
+            global miTEL
+            miTEL = TEL[:]
+        else:
+            miTEL = TelVal[:]
+
+        if ServersVal == False:
+            global miSERVERS
+            miSERVERS = SERVERS[:]
+        else:
+            miSERVERS = ServersVal[:]
+            
     
     def OnImportarDesdeBin(self, event):
         """Importar datos desde un archivo binario"""
@@ -639,7 +664,10 @@ class MiFrame(gui.frmPpal):
                 self.CrearNuevoPrograma(NuevoPrograma.aplicaciones,\
                                         NuevoPrograma.binBIT,\
                                         NuevoPrograma.binBYTE,\
-                                        NuevoPrograma.SMS)
+                                        NuevoPrograma.SMS,
+                                        NuevoPrograma.mails,\
+                                        NuevoPrograma.telefono,\
+                                        NuevoPrograma.servers)
         dlg.Destroy()
         
         
