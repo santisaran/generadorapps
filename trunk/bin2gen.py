@@ -14,8 +14,6 @@
 from struct import pack, unpack
 from apps import *
 
-
-
 class CargarBinario():
     def __init__(self,nombrearchivo):
         self.MemoriaUsuario_Bytes = []
@@ -84,8 +82,7 @@ class CargarBinario():
         #self.MemoriaUsuario_Bits[self.buff[0]] = bool(self.buff[1])
         
     def OnHeader_TEL(self):
-        print self.buff
-        self.telefono[self.buff[0]][2] = self.buff[1]
+        self.telefono[self.buff[0]] = "".join(map(chr,self.buff[1:]))
         
     def OnHeader_IP(self):
         self.servers[self.buff[0]][0] = False
@@ -93,8 +90,7 @@ class CargarBinario():
         for i in map(str,self.buff[1:]):
             cadena += i+"."
         self.servers[self.buff[0]][1] = cadena[:-1]
-            
-        
+                
     def OnHeader_WWW(self):
         self.servers[self.buff[0]][0] = True
         self.servers[self.buff[0]][1] = "".join(map(chr,self.buff[1:]))
@@ -107,8 +103,7 @@ class CargarBinario():
     
     def OnHeader_END(self):
         pass
-    
-        
+            
     def CargarArchivo(self):
         self.HEADERSFUNCS = {
             HEADER_APP:         self.OnHeader_APLICACION,

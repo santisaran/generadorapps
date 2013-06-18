@@ -28,6 +28,7 @@ Cantidad_SMS = 20
 Cantidad_WEBs = 16
 Cantidad_TEL = 10
 Cantidad_MAIL = 10
+Cantidad_Timers = 20
 
 # bits definidos en el archivo CylocDefines.h
 DefinicionesBits = (
@@ -234,6 +235,10 @@ TEL = []
 for i in range(Cantidad_TEL):
     TEL.append(u"")
                     
+TIMERS = []
+for i in range(Cantidad_Timers):
+    TIMERS.append([-1,0,0,0,0,0,0])
+
 SERVERS = []
 for i in range(Cantidad_WEBs):
     #el primer campo es true si se trata de una dirección web
