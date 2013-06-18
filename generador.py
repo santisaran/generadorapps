@@ -62,6 +62,9 @@ miSERVERS = SERVERS[:]
 global miMAIL                    
 miMAIL = MAIL[:]
 
+global miTimers
+miTimers = TIMERS[:]
+
 global Analogica
 #Diccionario con los valores de cfg de la entra analógica
 global miAnalogica
@@ -96,7 +99,9 @@ class MiFrame(gui.frmPpal):
         # Lista con las aplicaciones actuales
         self.AppMenuItems = {}
         # Diccionario con referencia a los item del menú Aplicaciones
-
+        
+        self.numtimers = 0
+        
         for i in range(Cantidad_Apps):
             self.aplicaciones.append(Aplicacion(i,""))
             # Crea aplicaciones vacías
@@ -243,6 +248,14 @@ class MiFrame(gui.frmPpal):
                 win.Show(True)
                 item.Enable(False)
                 return
+
+    def OnNuevoTimer(self,event):
+        i = self.numtimers + 1
+        win = mifrmNuevoTimer(self,i)
+        win.Show()
+ 
+        
+        
 
     #def OnImprimirApp(self, event):
 
@@ -474,10 +487,7 @@ class MiFrame(gui.frmPpal):
                         cadena += str(j) 
                     nextstring += str(chr(i)) + cadena
                     binario += chr(len(nextstring)) + nextstring
-                    
                                 
-                    
-            
             #Agregar direcciones Mail al binario:
             # 0xAA, HEADER_MAIL, SIZE, NºMAIL, direccionMail
             #Solo Agrega Mails que no estén vacíos
@@ -859,7 +869,6 @@ class mifrmBloques( gui.frmBloques):
 
 
     def OnClose (self, event):
-
         """Quita la ventana actual de la lista de ventanas abiertas"""
 
         if self.notBloque.Modificado == True:
@@ -2596,7 +2605,7 @@ class mifrmTEL ( gui.frmCfgServers ):
     def OnClose(self, event):
         cambios = False
         for i,[txtctrl,boton] in enumerate(self.ListaTELs):
-            if txtctrl.GetValue() != self.miTEL[i]: 
+            if txtctrl.GetValue().strip() != self.miTEL[i].strip(): 
                 cambios = True
                 break
         if cambios:
@@ -2667,6 +2676,40 @@ class mifrmTEL ( gui.frmCfgServers ):
         dlg.Destroy()
 
 
+
+
+
+########################################################################
+########################################################################
+##############                                   #######################
+##############    Edición del Frame Editar       #######################
+##############    timers                         #######################
+##############                                   #######################
+########################################################################
+########################################################################
+
+class mifrmNuevoTimer ( gui.frmTimers ):
+    """Frame para crear timers"""
+    def __init__(self,parent,item):
+        gui.frmTimers.__init__(self,parent)
+        self.item = item
+        self.txtAccion.SetLabel("Timer")
+    
+    def OnFecha(self,event):
+        
+        self.txtAccion.SetLabel(u"Fecha de el evento")
+        self.panelTimer.Hide()
+        self.panelFecha.Show()
+        event.Skip()
+        
+    def OnTimer(self,event):
+        
+        self.txtAccion.SetLabel("Timer")
+        self.panelFecha.Hide()
+        self.panelTimer.Show()
+        event.Skip()
+
+
 ########################################################################
 ########################################################################
 ##############                                   #######################
@@ -2711,7 +2754,7 @@ class mifrmMAIL ( gui.frmCfgServers ):
     def OnClose(self, event):
         cambios = False
         for i,[txtctrl,boton] in enumerate(self.ListaMAILs):
-            if txtctrl.IsModified():
+            if txtctrl.strip() != miMAIL.strip():
                 cambios = True
                 break
         if cambios:
@@ -2724,7 +2767,7 @@ class mifrmMAIL ( gui.frmCfgServers ):
                 global miMAIL
                 for i,[txtctrl,boton] in enumerate(self.ListaMAILs):
                     if txtctrl.IsModified():
-                        self.miMAIL[i] = txtctrl.GetValue()
+                        self.miMAIL[i] = txtctrl.GetValue().strip()
                         miMAIL = self.miMAIL[:]
         
         self.item.Enable(True)
