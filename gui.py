@@ -9,6 +9,7 @@
 
 import wx
 import wx.xrc
+import wx.calendar
 
 import gettext
 _ = gettext.gettext
@@ -1586,130 +1587,90 @@ class frmIPs ( wx.Frame ):
 class frmTimers ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = _(u"Edición Timers"), pos = wx.DefaultPosition, size = wx.Size( 668,250 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 468,415 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
-		bSizerTimer = wx.BoxSizer( wx.VERTICAL )
+		bSizer48 = wx.BoxSizer( wx.VERTICAL )
 		
-		bSizer43 = wx.BoxSizer( wx.HORIZONTAL )
+		sbSizer18 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, wx.EmptyString ), wx.VERTICAL )
 		
-		
-		bSizer43.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
-		
-		self.m_radioBtn3 = wx.RadioButton( self, wx.ID_ANY, _(u"Timers"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer43.Add( self.m_radioBtn3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-		
-		self.m_radioBtn4 = wx.RadioButton( self, wx.ID_ANY, _(u"Fecha"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer43.Add( self.m_radioBtn4, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
-		
-		
-		bSizer43.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
-		
-		
-		bSizerTimer.Add( bSizer43, 0, wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL, 5 )
+		self.m_radioBtn5 = wx.RadioButton( self, wx.ID_ANY, _(u"Evento en la feha:"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		sbSizer18.Add( self.m_radioBtn5, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		self.panelFecha = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
-		self.panelFecha.Hide()
+		bSizer58 = wx.BoxSizer( wx.HORIZONTAL )
 		
-		self.SizerFecha = wx.BoxSizer( wx.VERTICAL )
+		bSizer53 = wx.BoxSizer( wx.VERTICAL )
 		
-		bSizer63 = wx.BoxSizer( wx.HORIZONTAL )
+		self.m_calendar1 = wx.calendar.CalendarCtrl( self.panelFecha, wx.ID_ANY, wx.DefaultDateTime, wx.DefaultPosition, wx.DefaultSize, wx.calendar.CAL_SHOW_HOLIDAYS )
+		bSizer53.Add( self.m_calendar1, 0, wx.ALL|wx.EXPAND, 5 )
 		
-		self.txtAccion = wx.StaticText( self.panelFecha, wx.ID_ANY, _(u"Fecha"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-		self.txtAccion.Wrap( -1 )
-		bSizer63.Add( self.txtAccion, 0, wx.ALL, 5 )
+		self.m_staticText40 = wx.StaticText( self.panelFecha, wx.ID_ANY, _(u"Hora:"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText40.Wrap( -1 )
+		bSizer53.Add( self.m_staticText40, 0, wx.ALL, 5 )
 		
+		bSizer54 = wx.BoxSizer( wx.HORIZONTAL )
 		
-		bSizer63.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
+		self.m_spinCtrl12 = wx.SpinCtrl( self.panelFecha, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 23, 23 )
+		bSizer54.Add( self.m_spinCtrl12, 1, wx.ALL, 0 )
 		
+		self.m_spinCtrl13 = wx.SpinCtrl( self.panelFecha, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 59, 59 )
+		bSizer54.Add( self.m_spinCtrl13, 1, wx.ALL, 0 )
 		
-		self.SizerFecha.Add( bSizer63, 0, wx.EXPAND, 5 )
-		
-		bSizer451 = wx.BoxSizer( wx.HORIZONTAL )
-		
-		self.txtAnio1 = wx.StaticText( self.panelFecha, wx.ID_ANY, _(u"Año"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-		self.txtAnio1.Wrap( -1 )
-		bSizer451.Add( self.txtAnio1, 1, wx.ALL|wx.EXPAND, 5 )
-		
-		self.txtMes1 = wx.StaticText( self.panelFecha, wx.ID_ANY, _(u"Mes"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-		self.txtMes1.Wrap( -1 )
-		bSizer451.Add( self.txtMes1, 1, wx.ALL|wx.EXPAND, 5 )
-		
-		self.txtDia1 = wx.StaticText( self.panelFecha, wx.ID_ANY, _(u"Día"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-		self.txtDia1.Wrap( -1 )
-		bSizer451.Add( self.txtDia1, 1, wx.ALL|wx.EXPAND, 5 )
-		
-		self.txtHora1 = wx.StaticText( self.panelFecha, wx.ID_ANY, _(u"Hora"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-		self.txtHora1.Wrap( -1 )
-		bSizer451.Add( self.txtHora1, 1, wx.ALL|wx.EXPAND, 5 )
-		
-		self.txtMinuto1 = wx.StaticText( self.panelFecha, wx.ID_ANY, _(u"Minuto"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-		self.txtMinuto1.Wrap( -1 )
-		bSizer451.Add( self.txtMinuto1, 1, wx.ALL|wx.EXPAND, 5 )
-		
-		self.txtSegundo1 = wx.StaticText( self.panelFecha, wx.ID_ANY, _(u"Segundo"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-		self.txtSegundo1.Wrap( -1 )
-		bSizer451.Add( self.txtSegundo1, 1, wx.ALL|wx.EXPAND, 5 )
+		self.m_spinCtrl14 = wx.SpinCtrl( self.panelFecha, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 59, 0 )
+		bSizer54.Add( self.m_spinCtrl14, 1, wx.ALL, 0 )
 		
 		
-		self.SizerFecha.Add( bSizer451, 0, wx.EXPAND, 5 )
-		
-		bSizer441 = wx.BoxSizer( wx.HORIZONTAL )
-		
-		cmb_anio1Choices = []
-		self.cmb_anio1 = wx.ComboBox( self.panelFecha, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, cmb_anio1Choices, 0 )
-		bSizer441.Add( self.cmb_anio1, 1, wx.ALL|wx.EXPAND, 5 )
-		
-		cmb_mes1Choices = []
-		self.cmb_mes1 = wx.ComboBox( self.panelFecha, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, cmb_mes1Choices, 0 )
-		bSizer441.Add( self.cmb_mes1, 1, wx.ALL|wx.EXPAND, 5 )
-		
-		cmb_dia1Choices = []
-		self.cmb_dia1 = wx.ComboBox( self.panelFecha, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, cmb_dia1Choices, 0 )
-		bSizer441.Add( self.cmb_dia1, 1, wx.ALL|wx.EXPAND, 5 )
-		
-		cmb_hor1Choices = []
-		self.cmb_hor1 = wx.ComboBox( self.panelFecha, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, cmb_hor1Choices, 0 )
-		bSizer441.Add( self.cmb_hor1, 1, wx.ALL|wx.EXPAND, 5 )
-		
-		cmb_min1Choices = []
-		self.cmb_min1 = wx.ComboBox( self.panelFecha, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, cmb_min1Choices, 0 )
-		bSizer441.Add( self.cmb_min1, 1, wx.ALL|wx.EXPAND, 5 )
-		
-		m_comboBox111Choices = []
-		self.m_comboBox111 = wx.ComboBox( self.panelFecha, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, m_comboBox111Choices, 0 )
-		bSizer441.Add( self.m_comboBox111, 1, wx.ALL|wx.EXPAND, 5 )
+		bSizer53.Add( bSizer54, 1, wx.EXPAND, 5 )
 		
 		
-		self.SizerFecha.Add( bSizer441, 0, wx.EXPAND, 5 )
+		bSizer58.Add( bSizer53, 1, wx.EXPAND, 5 )
+		
+		bSizer55 = wx.BoxSizer( wx.VERTICAL )
 		
 		
-		self.panelFecha.SetSizer( self.SizerFecha )
+		bSizer55.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
+		
+		self.m_staticText41 = wx.StaticText( self.panelFecha, wx.ID_ANY, _(u"Setear Bit:"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText41.Wrap( -1 )
+		bSizer55.Add( self.m_staticText41, 0, wx.ALL|wx.EXPAND, 5 )
+		
+		cmbBitsChoices = []
+		self.cmbBits = wx.ComboBox( self.panelFecha, wx.ID_ANY, _(u"Combo!"), wx.DefaultPosition, wx.DefaultSize, cmbBitsChoices, 0 )
+		bSizer55.Add( self.cmbBits, 1, wx.ALL|wx.EXPAND, 5 )
+		
+		
+		bSizer55.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
+		
+		
+		bSizer58.Add( bSizer55, 0, wx.EXPAND, 5 )
+		
+		
+		self.panelFecha.SetSizer( bSizer58 )
 		self.panelFecha.Layout()
-		self.SizerFecha.Fit( self.panelFecha )
-		bSizerTimer.Add( self.panelFecha, 1, wx.EXPAND |wx.ALL, 0 )
+		bSizer58.Fit( self.panelFecha )
+		sbSizer18.Add( self.panelFecha, 1, wx.EXPAND |wx.ALL, 5 )
+		
+		
+		bSizer48.Add( sbSizer18, 1, wx.EXPAND, 5 )
+		
+		sbSizer19 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, wx.EmptyString ), wx.VERTICAL )
+		
+		self.m_radioBtn6 = wx.RadioButton( self, wx.ID_ANY, _(u"Evento repetitivo"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		sbSizer19.Add( self.m_radioBtn6, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		self.panelTimer = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
 		self.SizerTimer = wx.BoxSizer( wx.VERTICAL )
-		
-		bSizer631 = wx.BoxSizer( wx.HORIZONTAL )
-		
-		self.txtAccion1 = wx.StaticText( self.panelTimer, wx.ID_ANY, _(u"Timer"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
-		self.txtAccion1.Wrap( -1 )
-		bSizer631.Add( self.txtAccion1, 0, wx.ALL, 5 )
-		
-		
-		bSizer631.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
-		
-		
-		self.SizerTimer.Add( bSizer631, 0, wx.EXPAND, 5 )
 		
 		bSizer45 = wx.BoxSizer( wx.HORIZONTAL )
 		
 		self.txtRepeticiones = wx.StaticText( self.panelTimer, wx.ID_ANY, _(u"Repeticiones"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
 		self.txtRepeticiones.Wrap( -1 )
-		bSizer45.Add( self.txtRepeticiones, 1, wx.ALL|wx.EXPAND, 5 )
+		bSizer45.Add( self.txtRepeticiones, 1, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 5 )
+		
+		
+		bSizer45.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
 		
 		self.txtDia = wx.StaticText( self.panelTimer, wx.ID_ANY, _(u"Días"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_CENTRE )
 		self.txtDia.Wrap( -1 )
@@ -1728,79 +1689,81 @@ class frmTimers ( wx.Frame ):
 		bSizer45.Add( self.txtSegundo, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
-		self.SizerTimer.Add( bSizer45, 0, wx.EXPAND, 5 )
+		self.SizerTimer.Add( bSizer45, 0, wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 		
 		bSizer44 = wx.BoxSizer( wx.HORIZONTAL )
 		
-		self.m_spinCtrl15 = wx.SpinCtrl( self.panelTimer, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 255, 0 )
-		bSizer44.Add( self.m_spinCtrl15, 1, wx.ALL, 5 )
-		
-		cmb_diaChoices = []
-		self.cmb_dia = wx.ComboBox( self.panelTimer, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, cmb_diaChoices, 0 )
-		bSizer44.Add( self.cmb_dia, 1, wx.ALL|wx.EXPAND, 5 )
-		
-		cmb_horChoices = []
-		self.cmb_hor = wx.ComboBox( self.panelTimer, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, cmb_horChoices, 0 )
-		bSizer44.Add( self.cmb_hor, 1, wx.ALL|wx.EXPAND, 5 )
-		
-		cmb_minChoices = []
-		self.cmb_min = wx.ComboBox( self.panelTimer, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, cmb_minChoices, 0 )
-		bSizer44.Add( self.cmb_min, 1, wx.ALL|wx.EXPAND, 5 )
-		
-		m_comboBox11Choices = []
-		self.m_comboBox11 = wx.ComboBox( self.panelTimer, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, m_comboBox11Choices, 0 )
-		bSizer44.Add( self.m_comboBox11, 1, wx.ALL|wx.EXPAND, 5 )
+		self.m_spinCtrl15 = wx.SpinCtrl( self.panelTimer, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 65535, 0 )
+		bSizer44.Add( self.m_spinCtrl15, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		
-		self.SizerTimer.Add( bSizer44, 0, wx.EXPAND, 5 )
+		bSizer44.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
+		
+		self.m_spinCtrl151 = wx.SpinCtrl( self.panelTimer, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 1000, 0 )
+		bSizer44.Add( self.m_spinCtrl151, 1, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 5 )
+		
+		self.m_spinCtrl16 = wx.SpinCtrl( self.panelTimer, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 23, 2 )
+		bSizer44.Add( self.m_spinCtrl16, 1, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 5 )
+		
+		self.m_spinCtrl17 = wx.SpinCtrl( self.panelTimer, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 59, 7 )
+		bSizer44.Add( self.m_spinCtrl17, 1, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 5 )
+		
+		self.m_spinCtrl18 = wx.SpinCtrl( self.panelTimer, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 59, 2 )
+		bSizer44.Add( self.m_spinCtrl18, 1, wx.ALL|wx.EXPAND|wx.ALIGN_CENTER_VERTICAL, 5 )
+		
+		
+		self.SizerTimer.Add( bSizer44, 0, wx.EXPAND|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 		
 		
 		self.panelTimer.SetSizer( self.SizerTimer )
 		self.panelTimer.Layout()
 		self.SizerTimer.Fit( self.panelTimer )
-		bSizerTimer.Add( self.panelTimer, 1, wx.EXPAND |wx.ALL, 0 )
+		sbSizer19.Add( self.panelTimer, 1, wx.EXPAND |wx.ALL, 5 )
 		
-		bSizer48 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		bSizer48.Add( sbSizer19, 0, wx.EXPAND, 5 )
+		
+		bSizer481 = wx.BoxSizer( wx.HORIZONTAL )
 		
 		self.btnGuardar = wx.Button( self, wx.ID_ANY, _(u"Guardar"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer48.Add( self.btnGuardar, 1, wx.ALL|wx.EXPAND, 5 )
+		bSizer481.Add( self.btnGuardar, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		self.m_button39 = wx.Button( self, wx.ID_ANY, _(u"Cancelar"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer48.Add( self.m_button39, 1, wx.ALL|wx.EXPAND, 5 )
+		bSizer481.Add( self.m_button39, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		self.m_button40 = wx.Button( self, wx.ID_ANY, _(u"Aceptar"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		bSizer48.Add( self.m_button40, 1, wx.ALL|wx.EXPAND, 5 )
+		bSizer481.Add( self.m_button40, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
-		bSizerTimer.Add( bSizer48, 0, wx.EXPAND, 5 )
+		bSizer48.Add( bSizer481, 0, wx.EXPAND, 5 )
 		
 		
-		self.SetSizer( bSizerTimer )
+		self.SetSizer( bSizer48 )
 		self.Layout()
 		
 		self.Centre( wx.BOTH )
 		
 		# Connect Events
-		self.m_radioBtn3.Bind( wx.EVT_RADIOBUTTON, self.OnTimer )
-		self.m_radioBtn4.Bind( wx.EVT_RADIOBUTTON, self.OnFecha )
+		self.m_radioBtn5.Bind( wx.EVT_RADIOBUTTON, self.OnFecha )
+		self.m_radioBtn6.Bind( wx.EVT_RADIOBUTTON, self.OnTimer )
 		self.btnGuardar.Bind( wx.EVT_BUTTON, self.OnGuardar )
 		self.m_button39.Bind( wx.EVT_BUTTON, self.OnCancelar )
 		self.m_button40.Bind( wx.EVT_BUTTON, self.OnAceptar )
 	
 	def __del__( self ):
 		# Disconnect Events
-		self.m_radioBtn3.Unbind( wx.EVT_RADIOBUTTON, None )
-		self.m_radioBtn4.Unbind( wx.EVT_RADIOBUTTON, None )
+		self.m_radioBtn5.Unbind( wx.EVT_RADIOBUTTON, None )
+		self.m_radioBtn6.Unbind( wx.EVT_RADIOBUTTON, None )
 		self.btnGuardar.Unbind( wx.EVT_BUTTON, None )
 		self.m_button39.Unbind( wx.EVT_BUTTON, None )
 		self.m_button40.Unbind( wx.EVT_BUTTON, None )
 	
 	
 	# Virtual event handlers, overide them in your derived class
-	def OnTimer( self, event ):
+	def OnFecha( self, event ):
 		event.Skip()
 	
-	def OnFecha( self, event ):
+	def OnTimer( self, event ):
 		event.Skip()
 	
 	def OnGuardar( self, event ):
