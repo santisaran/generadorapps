@@ -133,7 +133,7 @@ class MiFrame(gui.frmPpal):
         item = wx.MenuItem (self.m_drivers , wx.ID_ANY, u"Cargar desde archivo...",\
             wx.EmptyString, wx.ITEM_NORMAL )
         self.m_drivers.AppendItem ( item )
-        self.Bind ( wx.EVT_MENU, self.OnCopiarDesde, id = item.GetId() ) 
+        self.Bind (wx.EVT_MENU, self.OnCopiarDesde, id = item.GetId()) 
         
 
     def AgregarVentana(self):
@@ -504,7 +504,7 @@ class MiFrame(gui.frmPpal):
             for i in range(Cantidad_TEL):
                 if miTEL[i] != "":
                     binario +=  str(chr(0xAA)) + str(chr(HEADER_TEL))
-                    nextstring = str(chr(i)) + miTEL[i].strip()
+                    nextstring = str(chr(i)) + miTEL[i].strip().encode('latin1','ignore')
                     binario += chr(len(nextstring)) + nextstring
                                                            
             binario +=  str(chr(0xAA)) + str(chr(HEADER_END)) + chr(0)           
@@ -2693,20 +2693,17 @@ class mifrmNuevoTimer ( gui.frmTimers ):
     def __init__(self,parent,item):
         gui.frmTimers.__init__(self,parent)
         self.item = item
-        self.txtAccion.SetLabel("Timer")
     
     def OnFecha(self,event):
         
-        self.txtAccion.SetLabel(u"Fecha de el evento")
-        self.panelTimer.Hide()
-        self.panelFecha.Show()
+        self.panelTimer.Enable(False)
+        self.panelFecha.Enable(True)
         event.Skip()
         
     def OnTimer(self,event):
         
-        self.txtAccion.SetLabel("Timer")
-        self.panelFecha.Hide()
-        self.panelTimer.Show()
+        self.panelFecha.Enable(False)
+        self.panelTimer.Enable(True)
         event.Skip()
 
 
@@ -2754,7 +2751,7 @@ class mifrmMAIL ( gui.frmCfgServers ):
     def OnClose(self, event):
         cambios = False
         for i,[txtctrl,boton] in enumerate(self.ListaMAILs):
-            if txtctrl.strip() != miMAIL.strip():
+            if txtctrl.GetValue().strip() != miMAIL[i].strip():
                 cambios = True
                 break
         if cambios:
