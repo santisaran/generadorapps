@@ -237,7 +237,7 @@ for i in range(Cantidad_TEL):
                     
 TIMERS = []
 for i in range(Cantidad_Timers):
-    TIMERS.append([-1,0,0,0,0,0,0])
+    TIMERS.append([-1,2013,01,01,0,0,0,72])
 
 SERVERS = []
 for i in range(Cantidad_WEBs):
