@@ -32,6 +32,8 @@ const.Nombre = 0
 const.Def = 1
 const.mod = 3
 const.defavan = 4
+const.Fecha = 0
+const.Timer = 1
 
 global DIRACTUAL
 #DIRACTUAL = os.getenv("HOME")
@@ -100,8 +102,7 @@ class MiFrame(gui.frmPpal):
         self.AppMenuItems = {}
         # Diccionario con referencia a los item del menú Aplicaciones
         
-        self.numtimers = 0
-        
+        self.timers = []
         for i in range(Cantidad_Apps):
             self.aplicaciones.append(Aplicacion(i,""))
             # Crea aplicaciones vacías
@@ -250,10 +251,20 @@ class MiFrame(gui.frmPpal):
                 return
 
     def OnNuevoTimer(self,event):
-        i = self.numtimers + 1
-        win = mifrmNuevoTimer(self,i)
+        i = len(self.timers)
+        item = wx.MenuItem(self.m_timers, wx.ID_ANY, "Timer " + str(len(self.timers)),\
+                           wx.EmptyString, wx.ITEM_NORMAL )
+        self.timers.append(item)
+        self.m_timers.AppendItem(item)
+        self.Bind ( wx.EVT_MENU, self.OnEditTimer, id = item.GetId() )
+        win = mifrmNuevoTimer(self,item)
         win.Show()
  
+    def OnEditTimer(self,event):
+        timerId = event.GetId()
+        item = self.GetMenuBar().FindItemById(timerId)
+        win = mifrmNuevoTimer(self,item)
+        win.Show()
         
         
 
@@ -2692,20 +2703,120 @@ class mifrmNuevoTimer ( gui.frmTimers ):
     """Frame para crear timers"""
     def __init__(self,parent,item):
         gui.frmTimers.__init__(self,parent)
+        self.padre = parent
+        self.modificado = False
         self.item = item
+        self.timer = self.item.GetText()
+        global miTimers
+        self.numtimer = int(self.timer.split("Timer ")[1])
+        self.cmbBitsFecha.SetItems([i[const.Nombre] for i in miBits])
+        self.cmbBitsTimer.SetItems([i[const.Nombre] for i in miBits])
+        self.CargarValores()
+        self.SetTitle(u"Edición de timer: " + str(self.numtimer))
+        
+    def CargarValores(self):
+        self.valor = miTimers[self.numtimer][:]
+        print self.valor
+        if self.valor[0] == const.Fecha:
+            self.rbtnFecha.SetValue(True)
+            self.panelFecha.Enable(True)
+            self.panelTimer.Enable(False)
+            self.spinHoraFecha.SetValue(self.valor[2])
+            self.spinMinFecha.SetValue(self.valor[1])
+            self.spinSegFecha.SetValue(self.valor[0])
+            dt = wx.DateTime.Now()
+            dt.Set(self.valor[3],\
+                   year= int(self.valor[1]),\
+                   month = int(self.valor[2]),\
+                   hour=int(self.valor[4]),\
+                   minute=int(self.valor[5]),\
+                   second=self.valor[6]\
+                   )
+            self.Calendario.SetValue(dt) 
+            self.cmbBitsFecha.SetSelection(self.valor[7])
+        elif self.valor[0] == const.Timer:
+            self.rbtnTimer.SetValue(True)
+            self.panelFecha.Enable(False)
+            self.panelTimer.Enable(True)
+            self.spinDias.SetValue(self.valor[3])
+            self.spinHoras.SetValue(self.valor[4])
+            self.spinMinutos.SetValue(self.valor[5])
+            self.spinSegundos.SetValue(self.valor[6])
+            self.cmbBitsTimer.SetSelection(self.valor[7])
+        else:
+            self.spinDias.SetValue(0)
+            self.spinHoras.SetValue(0)
+            self.spinMinutos.SetValue(0)
+            self.spinSegundos.SetValue(0)
+            self.spinHoraFecha.SetValue(0)
+            self.spinMinFecha.SetValue(0)
+            self.spinSegFecha.SetValue(0)
+            self.cmbBitsFecha.SetSelection(72) #selecciono bit 72 por defecto
+            self.cmbBitsTimer.SetSelection(72)
     
     def OnFecha(self,event):
-        
+        """Editar timer para generar un evento en una fecha determinada"""        
         self.panelTimer.Enable(False)
         self.panelFecha.Enable(True)
+        self.valor[0] = const.Fecha
+        self.modificado = True
         event.Skip()
         
     def OnTimer(self,event):
-        
+        """Editar timer para genrerar un evento repetitivo por tiempo"""
+        self.valor[0] = const.Timer
         self.panelFecha.Enable(False)
         self.panelTimer.Enable(True)
+        self.modificado = True
         event.Skip()
-
+        
+    def OnClose( self, event ):
+        if self.modificado:
+            dlg = wx.MessageDialog(self, u"Guardar cambios?",\
+                                   caption=u"Cerrar Edición Timers",\
+                                   style=wx.YES | wx.NO,\
+                                   pos=wx.DefaultPosition)
+            val = dlg.ShowModal()
+            if val == wx.ID_YES:
+                self.GuardarCambios()                
+        self.Destroy()
+        event.Skip()
+    
+    def OnCambios(self , event):
+        self.modificado = True
+        event.Skip()
+    
+    def OnGuardar( self, event ):
+        if self.modificado:
+            self.GuardarCambios()
+        event.Skip()
+    
+    def OnUndo( self, event ):
+        self.CargarValores()
+        event.Skip()
+    
+    def OnAceptar( self, event ):
+        event.Skip()
+        
+    def GuardarCambios(self):        
+        self.modificado = False
+        self.padre.Modificado = True
+        global miTimers
+        if self.valor[0] == const.Timer:
+            self.valor[3] = self.spinDias.GetValue()
+            self.valor[4] = self.spinHoras.GetValue()
+            self.valor[5] = self.spinMinutos.GetValue()
+            self.valor[6] = self.spinSegundos.GetValue()
+            self.valor[7] = self.cmbBitsTimer.GetCurrentSelection()
+        else:
+            self.valor[1] = self.Calendario.GetValue().GetYear() 
+            self.valor[2] = self.Calendario.GetValue().GetMonth()
+            self.valor[3] = self.Calendario.GetValue().GetDay()
+            self.valor[4] = self.spinHoraFecha.GetValue()
+            self.valor[5] = self.spinMinFecha.GetValue()
+            self.valor[6] = self.spinSegFecha.GetValue()
+            self.valor[7] = self.cmbBitsFecha.GetCurrentSelection()
+        miTimers[self.numtimer] = self.valor[:]
 
 ########################################################################
 ########################################################################
@@ -2750,6 +2861,7 @@ class mifrmMAIL ( gui.frmCfgServers ):
             
     def OnClose(self, event):
         cambios = False
+        global miMAIL
         for i,[txtctrl,boton] in enumerate(self.ListaMAILs):
             if txtctrl.GetValue().strip() != miMAIL[i].strip():
                 cambios = True
@@ -2761,7 +2873,7 @@ class mifrmMAIL ( gui.frmCfgServers ):
             pos=wx.DefaultPosition)
             val = dlg.ShowModal()
             if val == wx.ID_YES:
-                global miMAIL
+                
                 for i,[txtctrl,boton] in enumerate(self.ListaMAILs):
                     if txtctrl.IsModified():
                         self.miMAIL[i] = txtctrl.GetValue().strip()
