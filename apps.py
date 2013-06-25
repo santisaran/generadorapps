@@ -243,7 +243,7 @@ for i in range(Cantidad_Timers):
     #
     # evento repetitivo:
     # tipo=1 , repeticiones ,días[15:8],días[7:0], horas, minutos, segundos, setear bit , nombre
-    TIMERS.append([-1,13,01,01,0,0,0,72,""])
+    TIMERS.append({"tipo":0,"repeticiones":0,"anio":2013,"mes":06,"dia":25,"hora":0,"minuto":0,"segundo":0,"bit":72,"nombre":""})
 
 SERVERS = []
 for i in range(Cantidad_WEBs):
