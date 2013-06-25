@@ -1603,21 +1603,38 @@ class frmTimers ( wx.Frame ):
 		
 		sbSizer181 = wx.StaticBoxSizer( wx.StaticBox( self.panelFecha, wx.ID_ANY, wx.EmptyString ), wx.HORIZONTAL )
 		
-		self.Calendario = wx.DatePickerCtrl( self.panelFecha, wx.ID_ANY, wx.DefaultDateTime, wx.DefaultPosition, wx.DefaultSize, wx.DP_DEFAULT|wx.DP_DROPDOWN|wx.DP_SHOWCENTURY )
-		sbSizer181.Add( self.Calendario, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		gSizer6 = wx.GridSizer( 2, 4, 0, 0 )
+		
+		self.m_staticText37 = wx.StaticText( self.panelFecha, wx.ID_ANY, _(u"Fecha:"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText37.Wrap( -1 )
+		gSizer6.Add( self.m_staticText37, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		self.m_staticText40 = wx.StaticText( self.panelFecha, wx.ID_ANY, _(u"Hora:"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_staticText40.Wrap( -1 )
-		sbSizer181.Add( self.m_staticText40, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		gSizer6.Add( self.m_staticText40, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		
+		self.m_staticText36 = wx.StaticText( self.panelFecha, wx.ID_ANY, _(u"Minutos"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText36.Wrap( -1 )
+		gSizer6.Add( self.m_staticText36, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		
+		self.m_staticText35 = wx.StaticText( self.panelFecha, wx.ID_ANY, _(u"Segundos"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText35.Wrap( -1 )
+		gSizer6.Add( self.m_staticText35, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		
+		self.Calendario = wx.DatePickerCtrl( self.panelFecha, wx.ID_ANY, wx.DefaultDateTime, wx.DefaultPosition, wx.DefaultSize, wx.DP_DEFAULT|wx.DP_DROPDOWN|wx.DP_SHOWCENTURY )
+		gSizer6.Add( self.Calendario, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		self.spinHoraFecha = wx.SpinCtrl( self.panelFecha, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.Size( -1,-1 ), wx.SP_ARROW_KEYS, 0, 23, 0 )
-		sbSizer181.Add( self.spinHoraFecha, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 0 )
+		gSizer6.Add( self.spinHoraFecha, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 0 )
 		
 		self.spinMinFecha = wx.SpinCtrl( self.panelFecha, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 59, 0 )
-		sbSizer181.Add( self.spinMinFecha, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 0 )
+		gSizer6.Add( self.spinMinFecha, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 0 )
 		
 		self.spinSegFecha = wx.SpinCtrl( self.panelFecha, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 59, 0 )
-		sbSizer181.Add( self.spinSegFecha, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 0 )
+		gSizer6.Add( self.spinSegFecha, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 0 )
+		
+		
+		sbSizer181.Add( gSizer6, 1, wx.EXPAND, 5 )
 		
 		
 		bSizer58.Add( sbSizer181, 4, wx.EXPAND, 5 )
@@ -1633,7 +1650,7 @@ class frmTimers ( wx.Frame ):
 		sbSizer17.Add( self.cmbBitsFecha, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
-		bSizer58.Add( sbSizer17, 2, wx.EXPAND, 5 )
+		bSizer58.Add( sbSizer17, 1, wx.EXPAND, 5 )
 		
 		
 		self.panelFecha.SetSizer( bSizer58 )
@@ -1653,6 +1670,11 @@ class frmTimers ( wx.Frame ):
 		self.panelTimer.Enable( False )
 		
 		self.SizerTimer = wx.BoxSizer( wx.HORIZONTAL )
+		
+		radioTipoChoices = [ _(u"Mensual"), _(u"Periódico") ]
+		self.radioTipo = wx.RadioBox( self.panelTimer, wx.ID_ANY, _(u"Tipo"), wx.DefaultPosition, wx.DefaultSize, radioTipoChoices, 1, wx.RA_SPECIFY_COLS )
+		self.radioTipo.SetSelection( 0 )
+		self.SizerTimer.Add( self.radioTipo, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		sbSizer22 = wx.StaticBoxSizer( wx.StaticBox( self.panelTimer, wx.ID_ANY, wx.EmptyString ), wx.VERTICAL )
 		
@@ -1678,10 +1700,10 @@ class frmTimers ( wx.Frame ):
 		self.txtSegundo.Wrap( -1 )
 		gSizer5.Add( self.txtSegundo, 0, wx.ALL|wx.EXPAND, 5 )
 		
-		self.spinRepeticiones = wx.SpinCtrl( self.panelTimer, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 65535, 0 )
+		self.spinRepeticiones = wx.SpinCtrl( self.panelTimer, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 16383, 0 )
 		gSizer5.Add( self.spinRepeticiones, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 		
-		self.spinDias = wx.SpinCtrl( self.panelTimer, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 1000, 0 )
+		self.spinDias = wx.SpinCtrl( self.panelTimer, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 65535, 0 )
 		gSizer5.Add( self.spinDias, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 		
 		self.spinHoras = wx.SpinCtrl( self.panelTimer, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 23, 0 )
@@ -1710,7 +1732,7 @@ class frmTimers ( wx.Frame ):
 		sbSizer171.Add( self.cmbBitsTimer, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		
-		self.SizerTimer.Add( sbSizer171, 2, wx.EXPAND, 5 )
+		self.SizerTimer.Add( sbSizer171, 1, wx.EXPAND, 5 )
 		
 		
 		self.panelTimer.SetSizer( self.SizerTimer )
@@ -1755,6 +1777,7 @@ class frmTimers ( wx.Frame ):
 		self.spinMinFecha.Bind( wx.EVT_SPINCTRL, self.OnCambios )
 		self.spinSegFecha.Bind( wx.EVT_SPINCTRL, self.OnCambios )
 		self.rbtnTimer.Bind( wx.EVT_RADIOBUTTON, self.OnTimer )
+		self.radioTipo.Bind( wx.EVT_RADIOBOX, self.OnTipoRep )
 		self.spinRepeticiones.Bind( wx.EVT_SPINCTRL, self.OnCambios )
 		self.spinDias.Bind( wx.EVT_SPINCTRL, self.OnCambios )
 		self.spinHoras.Bind( wx.EVT_SPINCTRL, self.OnCambios )
@@ -1774,6 +1797,7 @@ class frmTimers ( wx.Frame ):
 		self.spinMinFecha.Unbind( wx.EVT_SPINCTRL, None )
 		self.spinSegFecha.Unbind( wx.EVT_SPINCTRL, None )
 		self.rbtnTimer.Unbind( wx.EVT_RADIOBUTTON, None )
+		self.radioTipo.Unbind( wx.EVT_RADIOBOX, None )
 		self.spinRepeticiones.Unbind( wx.EVT_SPINCTRL, None )
 		self.spinDias.Unbind( wx.EVT_SPINCTRL, None )
 		self.spinHoras.Unbind( wx.EVT_SPINCTRL, None )
@@ -1799,6 +1823,9 @@ class frmTimers ( wx.Frame ):
 	
 	
 	def OnTimer( self, event ):
+		event.Skip()
+	
+	def OnTipoRep( self, event ):
 		event.Skip()
 	
 	

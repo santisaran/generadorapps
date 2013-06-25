@@ -32,8 +32,10 @@ const.Nombre = 0
 const.Def = 1
 const.mod = 3
 const.defavan = 4
-const.Fecha = 0
-const.Timer = 1
+const.Unable = 0
+const.Fecha = 1
+const.Timer = 2
+const.Mensual = 3
 
 global DIRACTUAL
 #DIRACTUAL = os.getenv("HOME")
@@ -137,7 +139,7 @@ class MiFrame(gui.frmPpal):
         self.TimerItems = {}
         for i in range(Cantidad_Timers):
             item = wx.MenuItem(self.m_timers, wx.ID_ANY, \
-                u"Timer %0.2d: %s"%(i,miTIMERS[i][8]) ,\
+                u"Timer %0.2d: %s"%(i,miTIMERS[i]["nombre"]) ,\
                 wx.EmptyString, wx.ITEM_NORMAL )
             self.m_timers.AppendItem(item)
             self.TimerItems[i] = item
@@ -523,16 +525,32 @@ class MiFrame(gui.frmPpal):
                     binario += chr(len(nextstring)) + nextstring           
             
             for i in range(Cantidad_Timers):
-                if miTIMERS[i][0] != -1:
+                if miTIMERS[i]["tipo"] != const.Unable:
                     binario +=  str(chr(0xAA)) + str(chr(HEADER_TIMER))
                     cadena = ""
-                    for j in map(chr,miTIMERS[i][:-1]):
-                        cadena += str(j)
+                    if miTIMERS[i]["tipo"]==const.Fecha: #fecha determinada
+                        cadena += chr(0x0FF&((miTIMERS[i]["tipo"]<<6) | ((miTIMERS[i]["anio"]>>8) & 0x3F)))
+                        cadena += chr(miTIMERS[i]["anio"]&0x0FF)
+                        cadena += chr((miTIMERS[i]["dia"]>>8)&0x0FF)
+                        cadena += chr(miTIMERS[i]["dia"]&0x0FF)
+                        cadena += chr(miTIMERS[i]["hora"])
+                        cadena += chr(miTIMERS[i]["minuto"])
+                        cadena += chr(miTIMERS[i]["segundo"])
+                        cadena += chr(miTIMERS[i]["bit"])    
+                    else:
+                        cadena += chr(0x0FF&((miTIMERS[i]["tipo"]<<6) | ((miTIMERS[i]["repeticiones"]>>8) & 0x3F)))
+                        cadena += chr(miTIMERS[i]["repeticiones"] & 0x0FF)
+                        cadena += chr((miTIMERS[i]["dia"]>>8) & 0x0FF)
+                        cadena += chr(miTIMERS[i]["dia"] & 0x0FF)
+                        cadena += chr(miTIMERS[i]["hora"])
+                        cadena += chr(miTIMERS[i]["minuto"])
+                        cadena += chr(miTIMERS[i]["segundo"])
+                        cadena += chr(miTIMERS[i]["bit"])                        
+                        
                     nextstring = str(chr(i)) + cadena
                     binario += chr(len(nextstring)) + nextstring
-                                                           
-            binario +=  str(chr(0xAA)) + str(chr(HEADER_END)) + chr(0)
-            
+                                                                                       
+            binario +=  str(chr(0xAA)) + str(chr(HEADER_END)) + chr(0)            
             archivobinario.write(binario)
             archivobinario.flush()
             archivobinario.close()
@@ -2730,33 +2748,55 @@ class mifrmTimer ( gui.frmTimers ):
         self.SetTitle(u"Edición de timer: " + str(self.numtimer))
         
     def CargarValores(self):
-        self.valor = miTIMERS[self.numtimer][:]
-        if self.valor[0] == const.Fecha:
+        self.valor = miTIMERS[self.numtimer].copy()
+        if self.valor["tipo"] == const.Fecha:
             self.rbtnFecha.SetValue(True)
             self.panelFecha.Enable(True)
             self.panelTimer.Enable(False)
-            self.spinHoraFecha.SetValue(self.valor[2])
-            self.spinMinFecha.SetValue(self.valor[1])
-            self.spinSegFecha.SetValue(self.valor[0])
+            self.spinHoraFecha.SetValue(self.valor["hora"])
+            self.spinMinFecha.SetValue(self.valor["minuto"])
+            self.spinSegFecha.SetValue(self.valor["segundo"])
             dt = wx.DateTime.Now()
-            dt.Set(self.valor[3],\
-                   year= int(self.valor[1]+2000),\
-                   month = int(self.valor[2]),\
-                   hour=int(self.valor[4]),\
-                   minute=int(self.valor[5]),\
-                   second=self.valor[6]\
+            dt.Set(self.valor["dia"],\
+                   year= int(self.valor["anio"]+2000),\
+                   month = int(self.valor["mes"]),\
+                   hour=int(self.valor["hora"]),\
+                   minute=int(self.valor["minuto"]),\
+                   second=self.valor["segundo"]\
                    )
             self.Calendario.SetValue(dt) 
-            self.cmbBitsFecha.SetSelection(self.valor[7])            
-        elif self.valor[0] == const.Timer:
+            self.cmbBitsFecha.SetSelection(self.valor["bit"])            
+        elif self.valor["tipo"] == const.Timer:
+            self.txtDia.SetLabel(u"Días")
+            self.txtHora.SetLabel(u"Horas")
+            self.txtMinuto.SetLabel(u"Minutos")
+            self.txtSegundo.SetLabel(u"Segundos")
             self.rbtnTimer.SetValue(True)
             self.panelFecha.Enable(False)
             self.panelTimer.Enable(True)
-            self.spinDias.SetValue(self.valor[3]+self.valor[2]*256)
-            self.spinHoras.SetValue(self.valor[4])
-            self.spinMinutos.SetValue(self.valor[5])
-            self.spinSegundos.SetValue(self.valor[6])
-            self.cmbBitsTimer.SetSelection(self.valor[7])
+            self.radioTipo.SetStringSelection(u"Periódico")
+            self.spinDias.SetValue(self.valor["dia"])
+            self.spinHoras.SetValue(self.valor["hora"])
+            self.spinMinutos.SetValue(self.valor["minuto"])
+            self.spinSegundos.SetValue(self.valor["segundo"])
+            self.spinRepeticiones.SetValue(self.valor["repeticiones"])
+            self.cmbBitsTimer.SetSelection(self.valor["bit"])
+        elif self.valor["tipo"] == const.Mensual:
+            self.txtDia.SetLabel(u"Día")
+            self.txtHora.SetLabel(u"Hora")
+            self.txtMinuto.SetLabel(u"Minuto")
+            self.txtSegundo.SetLabel(u"Segundo")
+            self.rbtnTimer.SetValue(True)
+            self.panelFecha.Enable(False)
+            self.panelTimer.Enable(True)
+            self.radioTipo.SetStringSelection(u"Mensual")
+            self.spinDias.SetValue(self.valor["dia"])
+            self.spinHoras.SetValue(self.valor["hora"])
+            self.spinMinutos.SetValue(self.valor["minuto"])
+            self.spinSegundos.SetValue(self.valor["segundo"])
+            self.spinRepeticiones.SetValue(self.valor["repeticiones"])
+            self.cmbBitsTimer.SetSelection(self.valor["bit"])
+        
         else:
             self.spinDias.SetValue(0)
             self.spinHoras.SetValue(0)
@@ -2772,13 +2812,16 @@ class mifrmTimer ( gui.frmTimers ):
         """Editar timer para generar un evento en una fecha determinada"""        
         self.panelTimer.Enable(False)
         self.panelFecha.Enable(True)
-        self.valor[0] = const.Fecha
+        self.valor["tipo"] = const.Fecha
         self.modificado = True
         event.Skip()
         
     def OnTimer(self,event):
         """Editar timer para genrerar un evento repetitivo por tiempo"""
-        self.valor[0] = const.Timer
+        if self.radioTipo.GetStringSelection() == "Mensual": #mensual
+            self.valor["tipo"] = const.Mensual
+        else:
+            self.valor["tipo"] = const.Timer  #evento repetitivo
         self.panelFecha.Enable(False)
         self.panelTimer.Enable(True)
         self.modificado = True
@@ -2814,23 +2857,48 @@ class mifrmTimer ( gui.frmTimers ):
         self.modificado = False
         self.padre.Modificado = True
         global miTIMERS
-        if self.valor[0] == const.Timer:
-            self.valor[1] = self.spinRepeticiones.GetValue()
-            self.valor[2] = (self.spinDias.GetValue()>>8)&0x0FF
-            self.valor[3] = self.spinDias.GetValue()&0x0FF        
-            self.valor[4] = self.spinHoras.GetValue()
-            self.valor[5] = self.spinMinutos.GetValue()
-            self.valor[6] = self.spinSegundos.GetValue()
-            self.valor[7] = self.cmbBitsTimer.GetCurrentSelection()
+        if self.valor["tipo"] == const.Fecha:
+            self.valor["anio"] = self.Calendario.GetValue().GetYear()-2000 
+            self.valor["mes"] = self.Calendario.GetValue().GetMonth()
+            self.valor["dia"] = self.Calendario.GetValue().GetDay()
+            self.valor["hora"] = self.spinHoraFecha.GetValue()
+            self.valor["minuto"] = self.spinMinFecha.GetValue()
+            self.valor["segundo"] = self.spinSegFecha.GetValue()
+            self.valor["bit"] = self.cmbBitsFecha.GetCurrentSelection()
         else:
-            self.valor[1] = self.Calendario.GetValue().GetYear()-2000 
-            self.valor[2] = self.Calendario.GetValue().GetMonth()
-            self.valor[3] = self.Calendario.GetValue().GetDay()
-            self.valor[4] = self.spinHoraFecha.GetValue()
-            self.valor[5] = self.spinMinFecha.GetValue()
-            self.valor[6] = self.spinSegFecha.GetValue()
-            self.valor[7] = self.cmbBitsFecha.GetCurrentSelection()
-        miTIMERS[self.numtimer] = self.valor[:]
+            self.valor["repeticiones"] = self.spinRepeticiones.GetValue()
+            self.valor["dia"] = self.spinDias.GetValue()       
+            self.valor["hora"] = self.spinHoras.GetValue()
+            self.valor["minuto"] = self.spinMinutos.GetValue()
+            self.valor["segundo"] = self.spinSegundos.GetValue()
+            self.valor["bit"] = self.cmbBitsTimer.GetCurrentSelection()
+        
+        miTIMERS[self.numtimer] = self.valor.copy()
+        
+    def OnTipoRep(self,event):
+        self.modificado = True
+        if self.radioTipo.GetStringSelection() == "Mensual": #mensual
+            self.valor["tipo"] = const.Mensual
+            self.txtDia.SetLabel(u"Día")
+            self.txtHora.SetLabel(u"Hora")
+            self.txtMinuto.SetLabel(u"Minuto")
+            self.txtSegundo.SetLabel(u"Segundo")
+        else:
+            self.valor["tipo"] = const.Timer  #evento repetitivo
+            self.txtDia.SetLabel(u"Días")
+            self.txtHora.SetLabel(u"Horas")
+            self.txtMinuto.SetLabel(u"Minutos")
+            self.txtSegundo.SetLabel(u"Segundos")
+        event.Skip()
+    
+    def OnEliminar(self,event):
+        self.padre.Modificado = True
+        self.valor["tipo"] = const.Unable
+        global miTIMERS
+        miTIMERS[self.numtimer] = self.valor.copy()
+        self.item.Enable(True)
+        self.Destroy()
+        
 
 ########################################################################
 ########################################################################
