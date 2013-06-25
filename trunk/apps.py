@@ -237,7 +237,13 @@ for i in range(Cantidad_TEL):
                     
 TIMERS = []
 for i in range(Cantidad_Timers):
-    TIMERS.append([-1,2013,01,01,0,0,0,72])
+    # 
+    # evento único:
+    # tipo=2 , año, mes, día, hora, minuto, segundo, setear bit , nombre 
+    #
+    # evento repetitivo:
+    # tipo=1 , repeticiones ,días[15:8],días[7:0], horas, minutos, segundos, setear bit , nombre
+    TIMERS.append([-1,13,01,01,0,0,0,72,""])
 
 SERVERS = []
 for i in range(Cantidad_WEBs):
@@ -451,8 +457,9 @@ HEADER_TEL = 0x09
 HEADER_IP = 0x0a
 HEADER_WWW = 0x0b
 HEADER_MAIL = 0x0c
-HEADER_END = 0x0d
-HEADER_ERROR_LECTURA = 0x0e
+HEADER_TIMER = 0x0d
+HEADER_END = 0x0e
+HEADER_ERROR_LECTURA = 0x0f
 
 def GenerarBin(programa):
     binario = ""

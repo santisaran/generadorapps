@@ -64,8 +64,8 @@ miSERVERS = SERVERS[:]
 global miMAIL                    
 miMAIL = MAIL[:]
 
-global miTimers
-miTimers = TIMERS[:]
+global miTIMERS
+miTIMERS = TIMERS[:]
 
 global Analogica
 #Diccionario con los valores de cfg de la entra analógica
@@ -102,7 +102,7 @@ class MiFrame(gui.frmPpal):
         self.AppMenuItems = {}
         # Diccionario con referencia a los item del menú Aplicaciones
         
-        self.timers = []
+        #entradas de menú para editar aplicaciones:
         for i in range(Cantidad_Apps):
             self.aplicaciones.append(Aplicacion(i,""))
             # Crea aplicaciones vacías
@@ -114,17 +114,13 @@ class MiFrame(gui.frmPpal):
             # Agrega el item al diccionario para la aplicación i
             self.Bind ( wx.EVT_MENU, self.OnAbrirApp, id = item.GetId() )
             item.Enable ( True )
-            
-            #boton = wx.Button(self.scroolled, wx.ID_ANY,\
-            #    u"Aplicación: %0.2d"%i, wx.DefaultPosition, wx.DefaultSize, 0 )
-            #self.sizerbotones.Add( boton, 0, wx.ALL, 5 )
-            #boton.Bind(wx.EVT_BUTTON, self.OnImprimirApp)
         item = wx.MenuItem(self.m_aplicaciones, wx.ID_ANY, u"Copiar Aplicación",\
             wx.EmptyString, wx.ITEM_NORMAL )
         self.m_aplicaciones.AppendItem(item)
         self.Bind ( wx.EVT_MENU, self.OnCopiarApp, id = item.GetId() )
 
 
+        #entradas de menú para los manejadores de entradas:
         self.sizerbotones.Fit(self.scroolled )
         for i in Entradas:
             item = wx.MenuItem(self.m_drivers, wx.ID_ANY, i,\
@@ -134,8 +130,20 @@ class MiFrame(gui.frmPpal):
         item = wx.MenuItem (self.m_drivers , wx.ID_ANY, u"Cargar desde archivo...",\
             wx.EmptyString, wx.ITEM_NORMAL )
         self.m_drivers.AppendItem ( item )
-        self.Bind (wx.EVT_MENU, self.OnCopiarDesde, id = item.GetId()) 
+        self.Bind (wx.EVT_MENU, self.OnCopiarDesde, id = item.GetId())
         
+        #entradas de menú para la edición de timers:
+        global miTIMERS
+        self.TimerItems = {}
+        for i in range(Cantidad_Timers):
+            item = wx.MenuItem(self.m_timers, wx.ID_ANY, \
+                u"Timer %0.2d: %s"%(i,miTIMERS[i][8]) ,\
+                wx.EmptyString, wx.ITEM_NORMAL )
+            self.m_timers.AppendItem(item)
+            self.TimerItems[i] = item
+            # Agrega el item al diccionario para el timer i
+            self.Bind ( wx.EVT_MENU, self.OnAbrirTimer, id = item.GetId() )
+            item.Enable ( True )        
 
     def AgregarVentana(self):
         pass
@@ -250,24 +258,17 @@ class MiFrame(gui.frmPpal):
                 item.Enable(False)
                 return
 
-    def OnNuevoTimer(self,event):
-        i = len(self.timers)
-        item = wx.MenuItem(self.m_timers, wx.ID_ANY, "Timer " + str(len(self.timers)),\
-                           wx.EmptyString, wx.ITEM_NORMAL )
-        self.timers.append(item)
-        self.m_timers.AppendItem(item)
-        self.Bind ( wx.EVT_MENU, self.OnEditTimer, id = item.GetId() )
-        win = mifrmNuevoTimer(self,item)
-        win.Show()
- 
-    def OnEditTimer(self,event):
-        timerId = event.GetId()
-        item = self.GetMenuBar().FindItemById(timerId)
-        win = mifrmNuevoTimer(self,item)
-        win.Show()
+    def OnAbrirTimer(self,event):
+        timerid = event.GetId()
+        item = self.GetMenuBar().FindItemById(timerid)
+        global miTIMERS
+        for i in range(Cantidad_Timers):            
+            if self.TimerItems[i].GetId() == item.GetId():
+                win = mifrmTimer(self,item,i)
+                win.Show(True)
+                item.Enable(False)
+                return        
         
-        
-
     #def OnImprimirApp(self, event):
 
      #   boton = event.GetEventObject()
@@ -404,6 +405,9 @@ class MiFrame(gui.frmPpal):
                 global miMAIL
                 miMAIL = shelf["MAIL"]
 
+                global miTIMERS
+                miTIMERS = shelf["TIMERS"]
+                
             except:
                 print "Error abriendo archivo"
                 pass
@@ -516,9 +520,18 @@ class MiFrame(gui.frmPpal):
                 if miTEL[i] != "":
                     binario +=  str(chr(0xAA)) + str(chr(HEADER_TEL))
                     nextstring = str(chr(i)) + miTEL[i].strip().encode('latin1','ignore')
+                    binario += chr(len(nextstring)) + nextstring           
+            
+            for i in range(Cantidad_Timers):
+                if miTIMERS[i][0] != -1:
+                    binario +=  str(chr(0xAA)) + str(chr(HEADER_TIMER))
+                    cadena = ""
+                    for j in map(chr,miTIMERS[i][:-1]):
+                        cadena += str(j)
+                    nextstring = str(chr(i)) + cadena
                     binario += chr(len(nextstring)) + nextstring
                                                            
-            binario +=  str(chr(0xAA)) + str(chr(HEADER_END)) + chr(0)           
+            binario +=  str(chr(0xAA)) + str(chr(HEADER_END)) + chr(0)
             
             archivobinario.write(binario)
             archivobinario.flush()
@@ -578,6 +591,9 @@ class MiFrame(gui.frmPpal):
                     
                     global miAnalogica
                     shelf["miAnalogica"] = miAnalogica
+                    
+                    global miTIMERS
+                    shelf["TIMERS"] = miTIMERS
                     
                     shelf["version"] = const.VERSION
                     shelf.close()
@@ -2699,24 +2715,22 @@ class mifrmTEL ( gui.frmCfgServers ):
 ########################################################################
 ########################################################################
 
-class mifrmNuevoTimer ( gui.frmTimers ):
+class mifrmTimer ( gui.frmTimers ):
     """Frame para crear timers"""
-    def __init__(self,parent,item):
+    def __init__(self,parent,item,num):
         gui.frmTimers.__init__(self,parent)
         self.padre = parent
         self.modificado = False
         self.item = item
-        self.timer = self.item.GetText()
-        global miTimers
-        self.numtimer = int(self.timer.split("Timer ")[1])
+        global miTIMERS
+        self.numtimer = num
         self.cmbBitsFecha.SetItems([i[const.Nombre] for i in miBits])
         self.cmbBitsTimer.SetItems([i[const.Nombre] for i in miBits])
         self.CargarValores()
         self.SetTitle(u"Edición de timer: " + str(self.numtimer))
         
     def CargarValores(self):
-        self.valor = miTimers[self.numtimer][:]
-        print self.valor
+        self.valor = miTIMERS[self.numtimer][:]
         if self.valor[0] == const.Fecha:
             self.rbtnFecha.SetValue(True)
             self.panelFecha.Enable(True)
@@ -2726,19 +2740,19 @@ class mifrmNuevoTimer ( gui.frmTimers ):
             self.spinSegFecha.SetValue(self.valor[0])
             dt = wx.DateTime.Now()
             dt.Set(self.valor[3],\
-                   year= int(self.valor[1]),\
+                   year= int(self.valor[1]+2000),\
                    month = int(self.valor[2]),\
                    hour=int(self.valor[4]),\
                    minute=int(self.valor[5]),\
                    second=self.valor[6]\
                    )
             self.Calendario.SetValue(dt) 
-            self.cmbBitsFecha.SetSelection(self.valor[7])
+            self.cmbBitsFecha.SetSelection(self.valor[7])            
         elif self.valor[0] == const.Timer:
             self.rbtnTimer.SetValue(True)
             self.panelFecha.Enable(False)
             self.panelTimer.Enable(True)
-            self.spinDias.SetValue(self.valor[3])
+            self.spinDias.SetValue(self.valor[3]+self.valor[2]*256)
             self.spinHoras.SetValue(self.valor[4])
             self.spinMinutos.SetValue(self.valor[5])
             self.spinSegundos.SetValue(self.valor[6])
@@ -2779,6 +2793,7 @@ class mifrmNuevoTimer ( gui.frmTimers ):
             val = dlg.ShowModal()
             if val == wx.ID_YES:
                 self.GuardarCambios()                
+        self.item.Enable(True)
         self.Destroy()
         event.Skip()
     
@@ -2794,29 +2809,28 @@ class mifrmNuevoTimer ( gui.frmTimers ):
     def OnUndo( self, event ):
         self.CargarValores()
         event.Skip()
-    
-    def OnAceptar( self, event ):
-        event.Skip()
         
     def GuardarCambios(self):        
         self.modificado = False
         self.padre.Modificado = True
-        global miTimers
+        global miTIMERS
         if self.valor[0] == const.Timer:
-            self.valor[3] = self.spinDias.GetValue()
+            self.valor[1] = self.spinRepeticiones.GetValue()
+            self.valor[2] = (self.spinDias.GetValue()>>8)&0x0FF
+            self.valor[3] = self.spinDias.GetValue()&0x0FF        
             self.valor[4] = self.spinHoras.GetValue()
             self.valor[5] = self.spinMinutos.GetValue()
             self.valor[6] = self.spinSegundos.GetValue()
             self.valor[7] = self.cmbBitsTimer.GetCurrentSelection()
         else:
-            self.valor[1] = self.Calendario.GetValue().GetYear() 
+            self.valor[1] = self.Calendario.GetValue().GetYear()-2000 
             self.valor[2] = self.Calendario.GetValue().GetMonth()
             self.valor[3] = self.Calendario.GetValue().GetDay()
             self.valor[4] = self.spinHoraFecha.GetValue()
             self.valor[5] = self.spinMinFecha.GetValue()
             self.valor[6] = self.spinSegFecha.GetValue()
             self.valor[7] = self.cmbBitsFecha.GetCurrentSelection()
-        miTimers[self.numtimer] = self.valor[:]
+        miTIMERS[self.numtimer] = self.valor[:]
 
 ########################################################################
 ########################################################################
