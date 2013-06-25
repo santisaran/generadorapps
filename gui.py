@@ -1595,6 +1595,7 @@ class frmTimers ( wx.Frame ):
 		sbSizer18 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, wx.EmptyString ), wx.VERTICAL )
 		
 		self.rbtnFecha = wx.RadioButton( self, wx.ID_ANY, _(u"Evento en la feha:"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.rbtnFecha.SetValue( True ) 
 		sbSizer18.Add( self.rbtnFecha, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		self.panelFecha = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
@@ -1646,10 +1647,11 @@ class frmTimers ( wx.Frame ):
 		sbSizer19 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, wx.EmptyString ), wx.VERTICAL )
 		
 		self.rbtnTimer = wx.RadioButton( self, wx.ID_ANY, _(u"Evento repetitivo"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.rbtnTimer.SetValue( True ) 
 		sbSizer19.Add( self.rbtnTimer, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		self.panelTimer = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.panelTimer.Enable( False )
+		
 		self.SizerTimer = wx.BoxSizer( wx.HORIZONTAL )
 		
 		sbSizer22 = wx.StaticBoxSizer( wx.StaticBox( self.panelTimer, wx.ID_ANY, wx.EmptyString ), wx.VERTICAL )
@@ -1721,10 +1723,16 @@ class frmTimers ( wx.Frame ):
 		
 		bSizer481 = wx.BoxSizer( wx.HORIZONTAL )
 		
+		self.m_button36 = wx.Button( self, wx.ID_ANY, _(u"Eliminar Timer"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		bSizer481.Add( self.m_button36, 0, wx.ALL, 5 )
+		
+		
+		bSizer481.AddSpacer( ( 0, 0), 1, wx.EXPAND, 5 )
+		
 		self.btnGuardar = wx.Button( self, wx.ID_ANY, _(u"Guardar"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer481.Add( self.btnGuardar, 1, wx.ALL|wx.EXPAND, 5 )
 		
-		self.btnUndo = wx.Button( self, wx.ID_ANY, _(u"Deshacer"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.btnUndo = wx.Button( self, wx.ID_ANY, _(u"Deshacer Cambios"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bSizer481.Add( self.btnUndo, 1, wx.ALL|wx.EXPAND, 5 )
 		
 		self.btnAceptar = wx.Button( self, wx.ID_ANY, _(u"Aceptar"), wx.DefaultPosition, wx.DefaultSize, 0 )
@@ -1752,9 +1760,10 @@ class frmTimers ( wx.Frame ):
 		self.spinHoras.Bind( wx.EVT_SPINCTRL, self.OnCambios )
 		self.spinMinutos.Bind( wx.EVT_SPINCTRL, self.OnCambios )
 		self.spinSegundos.Bind( wx.EVT_SPINCTRL, self.OnCambios )
+		self.m_button36.Bind( wx.EVT_BUTTON, self.OnEliminar )
 		self.btnGuardar.Bind( wx.EVT_BUTTON, self.OnGuardar )
 		self.btnUndo.Bind( wx.EVT_BUTTON, self.OnUndo )
-		self.btnAceptar.Bind( wx.EVT_BUTTON, self.OnAceptar )
+		self.btnAceptar.Bind( wx.EVT_BUTTON, self.OnClose )
 	
 	def __del__( self ):
 		# Disconnect Events
@@ -1770,6 +1779,7 @@ class frmTimers ( wx.Frame ):
 		self.spinHoras.Unbind( wx.EVT_SPINCTRL, None )
 		self.spinMinutos.Unbind( wx.EVT_SPINCTRL, None )
 		self.spinSegundos.Unbind( wx.EVT_SPINCTRL, None )
+		self.m_button36.Unbind( wx.EVT_BUTTON, None )
 		self.btnGuardar.Unbind( wx.EVT_BUTTON, None )
 		self.btnUndo.Unbind( wx.EVT_BUTTON, None )
 		self.btnAceptar.Unbind( wx.EVT_BUTTON, None )
@@ -1796,13 +1806,14 @@ class frmTimers ( wx.Frame ):
 	
 	
 	
+	def OnEliminar( self, event ):
+		event.Skip()
+	
 	def OnGuardar( self, event ):
 		event.Skip()
 	
 	def OnUndo( self, event ):
 		event.Skip()
 	
-	def OnAceptar( self, event ):
-		event.Skip()
 	
 
