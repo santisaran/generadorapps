@@ -531,8 +531,8 @@ class MiFrame(gui.frmPpal):
                     if miTIMERS[i]["tipo"]==const.Fecha: #fecha determinada
                         cadena += chr(0x0FF&((miTIMERS[i]["tipo"]<<6) | ((miTIMERS[i]["anio"]>>8) & 0x3F)))
                         cadena += chr(miTIMERS[i]["anio"]&0x0FF)
-                        cadena += chr((miTIMERS[i]["dia"]>>8)&0x0FF)
-                        cadena += chr(miTIMERS[i]["dia"]&0x0FF)
+                        cadena += chr(miTIMERS[i]["mes"])
+                        cadena += chr(miTIMERS[i]["dia"])
                         cadena += chr(miTIMERS[i]["hora"])
                         cadena += chr(miTIMERS[i]["minuto"])
                         cadena += chr(miTIMERS[i]["segundo"])
@@ -634,7 +634,7 @@ class MiFrame(gui.frmPpal):
 
     def CrearNuevoPrograma(self, aplicaciones = False,\
                             BitsVal = False, BytesVal = False, SMSVal = False,\
-                            MailsVal=False,TelVal=False, ServersVal=False):
+                            MailsVal=False,TelVal=False, ServersVal=False,TimersVal=False):
         global Modificado
         Modificado = False
         global NombreArchivo
@@ -694,6 +694,12 @@ class MiFrame(gui.frmPpal):
         if ServersVal == False:
             global miSERVERS
             miSERVERS = SERVERS[:]
+        else:
+            miSERVERS = ServersVal[:]
+            
+        if TimersVal == False:
+            global miTIMERS
+            miTIMERS = SERVERS[:]
         else:
             miSERVERS = ServersVal[:]
             
