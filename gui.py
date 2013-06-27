@@ -86,11 +86,6 @@ class frmPpal ( wx.Frame ):
 		self.m_menubar1.Append( self.m_drivers, _(u"&Drivers") ) 
 		
 		self.m_timers = wx.Menu()
-		self.m_timers.AppendSeparator()
-		
-		self.m_menuItem17 = wx.MenuItem( self.m_timers, wx.ID_ANY, _(u"Agregar Timer"), wx.EmptyString, wx.ITEM_NORMAL )
-		self.m_timers.AppendItem( self.m_menuItem17 )
-		
 		self.m_menubar1.Append( self.m_timers, _(u"Timers") ) 
 		
 		self.SetMenuBar( self.m_menubar1 )
@@ -134,7 +129,6 @@ class frmPpal ( wx.Frame ):
 		self.Bind( wx.EVT_MENU, self.OnEditarTEL, id = self.mVariablesTEL.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnEditarMAIL, id = self.mVariablesMAIL.GetId() )
 		self.Bind( wx.EVT_MENU, self.OnDriverAnalog, id = self.m_drivers_analog.GetId() )
-		self.Bind( wx.EVT_MENU, self.OnNuevoTimer, id = self.m_menuItem17.GetId() )
 		self.m_button22.Bind( wx.EVT_BUTTON, self.OnTest )
 	
 	def __del__( self ):
@@ -154,7 +148,6 @@ class frmPpal ( wx.Frame ):
 		self.Unbind( wx.EVT_MENU, id = self.mVariablesTEL.GetId() )
 		self.Unbind( wx.EVT_MENU, id = self.mVariablesMAIL.GetId() )
 		self.Unbind( wx.EVT_MENU, id = self.m_drivers_analog.GetId() )
-		self.Unbind( wx.EVT_MENU, id = self.m_menuItem17.GetId() )
 		self.m_button22.Unbind( wx.EVT_BUTTON, None )
 	
 	
@@ -200,9 +193,6 @@ class frmPpal ( wx.Frame ):
 		event.Skip()
 	
 	def OnDriverAnalog( self, event ):
-		event.Skip()
-	
-	def OnNuevoTimer( self, event ):
 		event.Skip()
 	
 	def OnTest( self, event ):
