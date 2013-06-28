@@ -105,9 +105,9 @@ class CargarBinario():
         self.mails[self.buff[0]] = "".join(map(chr,self.buff[1:]))
         
     def OnHeader_TIMER(self):
-        self.timers[self.buff[0]]["tipo"] = ((self.buff[1]>>6) & 0x03)
+        self.timers[self.buff[0]]["tipo"] = ((self.buff[1]) & 0x03)
         if self.timers[self.buff[0]]["tipo"] ==  Mensual:
-            self.timers[self.buff[0]]["repeticiones"] = (self.buff[1]&0x3F)<<8 + self.buff[2]
+            self.timers[self.buff[0]]["repeticiones"] = (self.buff[1]>>2) & 0x3F + (self.buff[2]<<6&0x0FC0)
             self.timers[self.buff[0]]["dia"] = self.buff[4]
             self.timers[self.buff[0]]["hora"] = self.buff[5]
             self.timers[self.buff[0]]["minuto"] = self.buff[6]
@@ -115,8 +115,8 @@ class CargarBinario():
             self.timers[self.buff[0]]["bit"] = self.buff[8]
             print self.timers[self.buff[0]]
         elif self.timers[self.buff[0]]["tipo"] == Fecha:
-            self.timers[self.buff[0]]["anio"] = (self.buff[1]&0x3F)<<8 + self.buff[2]
-            self.timers[self.buff[0]]["mes"] = self.buff[3]
+            self.timers[self.buff[0]]["anio"] = (self.buff[1]>>2) & 0x3F + (self.buff[2]<<6&0x0FC0)
+            self.timers[self.buff[0]]["mes"] = self.buff[3]-1
             self.timers[self.buff[0]]["dia"] = self.buff[4]
             self.timers[self.buff[0]]["hora"] = self.buff[5]
             self.timers[self.buff[0]]["minuto"] = self.buff[6]
@@ -124,8 +124,8 @@ class CargarBinario():
             self.timers[self.buff[0]]["bit"] = self.buff[8]
             print self.timers[self.buff[0]]
         elif self.timers[self.buff[0]]["tipo"] == Timer:
-            self.timers[self.buff[0]]["repeticiones"] = (self.buff[1]&0x3F)<<8 + self.buff[2]
-            self.timers[self.buff[0]]["dia"] = self.buff[4]
+            self.timers[self.buff[0]]["repeticiones"] = (self.buff[1]>>2) & 0x3F + (self.buff[2]<<6&0x0FC0)
+            self.timers[self.buff[0]]["dia"] = self.buff[4]<<8+self.buff[3]
             self.timers[self.buff[0]]["hora"] = self.buff[5]
             self.timers[self.buff[0]]["minuto"] = self.buff[6]
             self.timers[self.buff[0]]["segundo"] = self.buff[7]

@@ -529,19 +529,19 @@ class MiFrame(gui.frmPpal):
                     binario +=  str(chr(0xAA)) + str(chr(HEADER_TIMER))
                     cadena = ""
                     if miTIMERS[i]["tipo"]==const.Fecha: #fecha determinada
-                        cadena += chr(0x0FF&((miTIMERS[i]["tipo"]<<6) | ((miTIMERS[i]["anio"]>>8) & 0x3F)))
-                        cadena += chr(miTIMERS[i]["anio"]&0x0FF)
-                        cadena += chr(miTIMERS[i]["mes"])
+                        cadena += chr(0x0FF&((miTIMERS[i]["tipo"]&0x03) | ((miTIMERS[i]["anio"]<<2) & 0xFC)))
+                        cadena += chr((miTIMERS[i]["anio"]>>6)&0x0FF)
+                        cadena += chr(miTIMERS[i]["mes"]+1)
                         cadena += chr(miTIMERS[i]["dia"])
                         cadena += chr(miTIMERS[i]["hora"])
                         cadena += chr(miTIMERS[i]["minuto"])
                         cadena += chr(miTIMERS[i]["segundo"])
                         cadena += chr(miTIMERS[i]["bit"])    
                     else:
-                        cadena += chr(0x0FF&((miTIMERS[i]["tipo"]<<6) | ((miTIMERS[i]["repeticiones"]>>8) & 0x3F)))
-                        cadena += chr(miTIMERS[i]["repeticiones"] & 0x0FF)
-                        cadena += chr((miTIMERS[i]["dia"]>>8) & 0x0FF)
+                        cadena += chr(0x0FF&((miTIMERS[i]["tipo"]&0x03) | ((miTIMERS[i]["repeticiones"]<<2) & 0xFC)))
+                        cadena += chr((miTIMERS[i]["repeticiones"]>>6) & 0x0FF)
                         cadena += chr(miTIMERS[i]["dia"] & 0x0FF)
+                        cadena += chr((miTIMERS[i]["dia"]>>8) & 0x0FF)                        
                         cadena += chr(miTIMERS[i]["hora"])
                         cadena += chr(miTIMERS[i]["minuto"])
                         cadena += chr(miTIMERS[i]["segundo"])
@@ -699,7 +699,7 @@ class MiFrame(gui.frmPpal):
             
         if TimersVal == False:
             global miTIMERS
-            miTIMERS = SERVERS[:]
+            miTIMERS = TIMERS[:]
         else:
             miSERVERS = ServersVal[:]
             
@@ -2771,7 +2771,8 @@ class mifrmTimer ( gui.frmTimers ):
                    second=self.valor["segundo"]\
                    )
             self.Calendario.SetValue(dt) 
-            self.cmbBitsFecha.SetSelection(self.valor["bit"])            
+            self.cmbBitsFecha.SetSelection(self.valor["bit"])
+                        
         elif self.valor["tipo"] == const.Timer:
             self.txtDia.SetLabel(u"Días")
             self.txtHora.SetLabel(u"Horas")
@@ -2804,6 +2805,7 @@ class mifrmTimer ( gui.frmTimers ):
             self.cmbBitsTimer.SetSelection(self.valor["bit"])
         
         else:
+            self.valor["tipo"] = const.Fecha
             self.spinDias.SetValue(0)
             self.spinHoras.SetValue(0)
             self.spinMinutos.SetValue(0)
