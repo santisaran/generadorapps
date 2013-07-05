@@ -540,15 +540,16 @@ class MiFrame(gui.frmPpal):
                     elif miTIMERS[i]["tipo"] == const.Timer:
                         cadena += chr(0x0FF&((miTIMERS[i]["tipo"]&0x03) | ((miTIMERS[i]["repeticiones"]<<2) & 0xFC)))
                         cadena += chr((miTIMERS[i]["repeticiones"]>>6) & 0x0FF)
-                        intervalo = miTIMERS[i]["dia"]*3600*24 + \
-                            miTIMERS[i]["hora"]*3600 + miTIMERS[i]["minuto"]*60 + miTIMERS[i]["segundo"]
-                        
-                        cadena += chr(intervalo>>24 & 0x0FF)
-                        cadena += chr(intervalo>>16 & 0x0FF)
-                        cadena += chr(intervalo>>8 & 0x0FF)
-                        cadena += chr(intervalo & 0x0FF) 
                         cadena += chr(0)   
-                        cadena += chr(miTIMERS[i]["bit"])   
+                        cadena += chr(miTIMERS[i]["bit"])
+                        
+                        intervalo = miTIMERS[i]["dia"]*3600*24 + \
+                            miTIMERS[i]["hora"]*3600 + miTIMERS[i]["minuto"]*60 + miTIMERS[i]["segundo"]                        
+                        cadena += chr(intervalo & 0x0FF)
+                        cadena += chr(intervalo>>8 & 0x0FF)
+                        cadena += chr(intervalo>>16 & 0x0FF)
+                        cadena += chr(intervalo>>24 & 0x0FF)                                                    
+                           
                     
                     elif miTIMERS[i]["tipo"] == const.Mensual:
                         cadena += chr(0x0FF&((miTIMERS[i]["tipo"]&0x03) | ((miTIMERS[i]["repeticiones"]<<2) & 0xFC)))
