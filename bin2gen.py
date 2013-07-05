@@ -125,12 +125,12 @@ class CargarBinario():
             print self.timers[self.buff[0]]
         elif self.timers[self.buff[0]]["tipo"] == Timer:
             self.timers[self.buff[0]]["repeticiones"] = (self.buff[1]>>2) & 0x3F + (self.buff[2]<<6&0x0FC0)
-            intervalo = self.buff[3]*256*256*256+self.buff[4]*256*256+self.buff[5]*256+self.buff[6]
+            intervalo = self.buff[8]*256*256*256+self.buff[7]*256*256+self.buff[6]*256+self.buff[5]
             self.timers[self.buff[0]]["dia"] = intervalo/(3600*24)
             self.timers[self.buff[0]]["hora"] = intervalo%(3600*24)/3600
             self.timers[self.buff[0]]["minuto"] = intervalo%(3600)/60
             self.timers[self.buff[0]]["segundo"] = intervalo%60
-            self.timers[self.buff[0]]["bit"] = self.buff[8]
+            self.timers[self.buff[0]]["bit"] = self.buff[4]
             print self.timers[self.buff[0]]
     
     def OnHeaderErrorLectura(self):
