@@ -4,7 +4,7 @@
 #  generador.py
 #
 #  Copyright 2013 santiago <spaleka@cylgem.com.ar>
-#6
+#
 
 
 #TODO usar isModified() para guardar cambios.
@@ -2765,10 +2765,12 @@ class mifrmTimer ( gui.frmTimers ):
         self.cmbBitsFecha.SetItems([i[const.Nombre] for i in miBits])
         self.cmbBitsTimer.SetItems([i[const.Nombre] for i in miBits])
         self.CargarValores()
-        self.SetTitle(u"Edición de timer: " + str(self.numtimer))
         
     def CargarValores(self):
         self.valor = miTIMERS[self.numtimer].copy()
+        self.SetTitle(self.valor["nombre"])
+        self.NombreTimer.SetValue(self.valor["nombre"])
+        
         if self.valor["tipo"] == const.Fecha:
             self.rbtnFecha.SetValue(True)
             self.panelFecha.Enable(True)
@@ -2786,6 +2788,7 @@ class mifrmTimer ( gui.frmTimers ):
                    )
             self.Calendario.SetValue(dt) 
             self.cmbBitsFecha.SetSelection(self.valor["bit"])
+            self.SetTitle(self.valor["nombre"])
                         
         elif self.valor["tipo"] == const.Timer:
             self.txtDia.SetLabel(u"Días")
@@ -2802,6 +2805,7 @@ class mifrmTimer ( gui.frmTimers ):
             self.spinSegundos.SetValue(self.valor["segundo"])
             self.spinRepeticiones.SetValue(self.valor["repeticiones"])
             self.cmbBitsTimer.SetSelection(self.valor["bit"])
+            
         elif self.valor["tipo"] == const.Mensual:
             self.txtDia.SetLabel(u"Día")
             self.txtHora.SetLabel(u"Hora")
@@ -2819,6 +2823,7 @@ class mifrmTimer ( gui.frmTimers ):
             self.cmbBitsTimer.SetSelection(self.valor["bit"])
         
         else:
+            self.panelTimer.Enable(False)
             self.valor["tipo"] = const.Fecha
             self.spinDias.SetValue(0)
             self.spinHoras.SetValue(0)
@@ -2829,6 +2834,7 @@ class mifrmTimer ( gui.frmTimers ):
             self.spinSegFecha.SetValue(0)
             self.cmbBitsFecha.SetSelection(72) #selecciono bit 72 por defecto
             self.cmbBitsTimer.SetSelection(72)
+            self.SetTitle(u"Edición de timer: " + str(self.numtimer))            
     
     def OnFecha(self,event):
         """Editar timer para generar un evento en una fecha determinada"""        
@@ -2842,8 +2848,10 @@ class mifrmTimer ( gui.frmTimers ):
         """Editar timer para genrerar un evento repetitivo por tiempo"""
         if self.radioTipo.GetStringSelection() == "Mensual": #mensual
             self.valor["tipo"] = const.Mensual
+            self.spinDias.SetRange(1,28)
         else:
             self.valor["tipo"] = const.Timer  #evento repetitivo
+            self.spinDias.SetRange(0,65535)
         self.panelFecha.Enable(False)
         self.panelTimer.Enable(True)
         self.modificado = True
@@ -2875,10 +2883,16 @@ class mifrmTimer ( gui.frmTimers ):
         self.CargarValores()
         event.Skip()
         
+    def OnTitulo(self, event):
+        self.modificado = True
+        self.Title = self.NombreTimer.GetValue()
+
+        
     def GuardarCambios(self):        
         self.modificado = False
         self.padre.Modificado = True
         global miTIMERS
+        self.valor["nombre"] = self.NombreTimer.GetValue()
         if self.valor["tipo"] == const.Fecha:
             self.valor["anio"] = self.Calendario.GetValue().GetYear()-2000 
             self.valor["mes"] = self.Calendario.GetValue().GetMonth()
@@ -2905,12 +2919,14 @@ class mifrmTimer ( gui.frmTimers ):
             self.txtHora.SetLabel(u"Hora")
             self.txtMinuto.SetLabel(u"Minuto")
             self.txtSegundo.SetLabel(u"Segundo")
+            self.spinDias.SetRange(1,28)
         else:
             self.valor["tipo"] = const.Timer  #evento repetitivo
             self.txtDia.SetLabel(u"Días")
             self.txtHora.SetLabel(u"Horas")
             self.txtMinuto.SetLabel(u"Minutos")
             self.txtSegundo.SetLabel(u"Segundos")
+            self.spinDias.SetRange(0,65535)
         event.Skip()
     
     def OnEliminar(self,event):
