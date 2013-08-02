@@ -1383,9 +1383,9 @@ class mipanelBloque(gui.panelBloque):
         """Función encargada de generar el seudocódigo
         para la función setear 2 bits
         """
-        cadena = GetTexto(self.choiceParametro1) + " = 1"
-        cadena += "\n\t" + GetTexto(self.choiceParametro2) + " = 1"
-        cadena += "\n\t" + GetTexto(self.choiceGuardar) + " = 1"
+        cadena = "" + GetTexto(self.choiceParametro1) + " = 1"
+        cadena += "\n" + GetTexto(self.choiceParametro2) + " = 1"
+        cadena += "\n" + GetTexto(self.choiceGuardar) + " = 1"
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = 0
         self.ValorBloque = ((Bloque_Set3Bit<<24)|\
@@ -1412,8 +1412,8 @@ class mipanelBloque(gui.panelBloque):
         para la función clr 3 bits
         """
         cadena = GetTexto(self.choiceParametro1) + " = 0"
-        cadena += "\n\t" + GetTexto(self.choiceParametro2) + " = 0"
-        cadena += "\n\t" + GetTexto(self.choiceGuardar) + " = 0"
+        cadena += "\n" + GetTexto(self.choiceParametro2) + " = 0"
+        cadena += "\n" + GetTexto(self.choiceGuardar) + " = 0"
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = 0
         self.ValorBloque = ((Bloque_Clr3Bit<<24)|\
@@ -1490,21 +1490,23 @@ class mipanelCondicion ( gui.panelCondicion ):
         #self.SCTotal = self.padre.SCTotal
         #self.Condicion = frmEditApp.app.Estados[0].Condiciones
         self.Acciones = {
-                        "NULL"      : self.BloqueNull,
-                        "Mayor"     : self.Mayor,
-                        "Menor"     : self.Menor,
-                        "Igual"     : self.Igual,
-                        "Bit_True"  : self.BitTrue,
-                        "Bit_False" : self.BitFalse
+                        "NULL"         : self.BloqueNull,
+                        "Mayor"        : self.Mayor,
+                        "Menor"        : self.Menor,
+                        "Igual"        : self.Igual,
+                        "Bit_True"     : self.BitTrue,
+                        "Bit_False"    : self.BitFalse,
+                        "Igual_Numero" : self.IgualNum 
                         }
 
         self.GeneradoresCodigo = {
-                        "NULL"      : self.SCNull,
-                        "Mayor"     : self.SCMayor,
-                        "Menor"     : self.SCMenor,
-                        "Igual"     : self.SCIgual,
-                        "Bit_True"  : self.SCBitTrue,
-                        "Bit_False" : self.SCBitFalse
+                        "NULL"         : self.SCNull,
+                        "Mayor"        : self.SCMayor,
+                        "Menor"        : self.SCMenor,
+                        "Igual"        : self.SCIgual,
+                        "Bit_True"     : self.SCBitTrue,
+                        "Bit_False"    : self.SCBitFalse,
+                        "Igual_Numero" : self.SCIgualNum
                         }
         self.Acciones[CondicionesPosibles[\
             self.padre.Estado.Condiciones[0]]]()
@@ -1531,6 +1533,7 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.ValorCondiciones = [Condicion_NULL,0,0]
         return cadena
 
+
     def SCMayor(self):
         """ Función encargada de generar el seudocódigo
         para la condición mayor
@@ -1547,6 +1550,7 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.padre.Estado.Condiciones = self.ValorCondiciones[:]
         self.padre.Estado.Resultados = self.ValorResultados[:]
         return cadena
+
 
     def SCMenor(self):
         """ Función encargada de generar el seudocódigo
@@ -1565,6 +1569,7 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.padre.Estado.Resultados = self.ValorResultados[:]
         return cadena
 
+
     def SCIgual(self):
         """ Función encargada de generar el seudocódigo
         para la condición igual
@@ -1582,6 +1587,7 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.padre.Estado.Resultados = self.ValorResultados[:]
         return cadena
 
+
     def SCBitTrue(self):
         """ Función encargada de generar el seudocódigo
         para la condición bit true
@@ -1598,6 +1604,7 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.padre.Estado.Resultados = self.ValorResultados[:]
         return cadena
 
+
     def SCBitFalse(self):
         """ Función encargada de generar el seudocódigo
         para la condición bit true
@@ -1613,6 +1620,25 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.padre.Estado.Condiciones = self.ValorCondiciones[:]
         self.padre.Estado.Resultados = self.ValorResultados[:]
         return cadena
+    
+    
+    def SCIgualNum(self):
+        """ Función encargada de generar el seudocódigo
+        para la condición igual a un número
+        """
+        cadena = "if (" + GetTexto(self.choiceParametro1) + " == " +\
+                GetTexto(self.choiceParametro2) + ")\n" +\
+                "\t\tEstadoApp = " + GetTexto(self.choiceEstadoTrue)\
+                + "\n\telse:\n\t\tEstadoApp = " + GetTexto(self.choiceEstadoFalse)
+        self.ValorCondiciones[0] = Condicion_Igual_Numero
+        self.ValorCondiciones[1] = self.choiceParametro1.GetCurrentSelection()
+        self.ValorCondiciones[2] = self.choiceParametro2.GetCurrentSelection()
+        self.ValorResultados[0] = self.choiceEstadoTrue.GetCurrentSelection()
+        self.ValorResultados[1] = self.choiceEstadoFalse.GetCurrentSelection()
+        self.padre.Estado.Condiciones = self.ValorCondiciones[:]
+        self.padre.Estado.Resultados = self.ValorResultados[:]
+        return cadena
+    
 
     def ActualizarSeudoCodigo(self):
         self.padre.SCTotal[self.numero] = self.GeneradoresCodigo[GetTexto(self.choiceAccion)]()
@@ -1620,16 +1646,19 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.txtctrlSeudo.SetValue("")
         for i in range(len(self.padre.SCTotal)-1):
             if self.padre.SCTotal[i]:
-                self.txtctrlSeudo.AppendText("Bloque "+str(i)+": \n\t"+ \
-                    self.padre.SCTotal[i] + "\n\n")
+                a=""
+                for j in self.padre.SCTotal[i].splitlines():
+                    a+=j+"\n\t"     #agrego una tabulación por cada nueva línea
+                self.txtctrlSeudo.AppendText("\rBloque "+str(i)+": \n\t"+ a)                            
         if self.padre.SCTotal[-1]:
-            self.txtctrlSeudo.AppendText("Condicion: \n" +\
+            self.txtctrlSeudo.AppendText("\rCondicion: \n" +\
                 self.padre.SCTotal[-1])
 
 
     def OnChoiceComparacion(self, event):
         self.Acciones.get(event.GetString())()
         self.ActualizarSeudoCodigo()
+
 
     def OnChoice(self, event):
         self.ActualizarSeudoCodigo()
@@ -1678,6 +1707,7 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.choiceEstadoTrue.Enable(True)
         self.choiceEstadoFalse.Enable(True)
 
+
     def Igual(self):
         self.choiceParametro1.SetItems([i[const.Nombre] for i in miBytes])
         self.choiceParametro1.SetSelection(0)
@@ -1693,6 +1723,7 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.choiceEstadoTrue.Enable(True)
         self.choiceEstadoFalse.Enable(True)
 
+
     def BitTrue(self):
         self.choiceParametro1.SetItems([i[const.Nombre] for i in miBits])
         self.choiceParametro1.SetSelection(0)
@@ -1706,6 +1737,7 @@ class mipanelCondicion ( gui.panelCondicion ):
         self.choiceEstadoTrue.Enable(True)
         self.choiceEstadoFalse.Enable(True)
 
+
     def BitFalse(self):
         self.choiceParametro1.SetItems([i[const.Nombre] for i in miBits])
         self.choiceParametro1.SetSelection(0)
@@ -1716,6 +1748,22 @@ class mipanelCondicion ( gui.panelCondicion ):
         #Habilito choices usables
         self.choiceParametro1.Enable(True)
         self.choiceParametro2.Enable(False)
+        self.choiceEstadoTrue.Enable(True)
+        self.choiceEstadoFalse.Enable(True)
+
+
+    def IgualNum(self):
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBytes])
+        self.choiceParametro1.SetSelection(0)
+        self.choiceParametro2.SetItems([str(i) for i in range(256)])
+        self.choiceParametro2.SetSelection(0)
+        self.choiceEstadoTrue.SetItems(miEstados)
+        self.choiceEstadoTrue.SetSelection(0)
+        self.choiceEstadoFalse.SetItems(miEstados)
+        self.choiceEstadoFalse.SetSelection(0)
+        #Habilito choices usables
+        self.choiceParametro1.Enable(True)
+        self.choiceParametro2.Enable(True)
         self.choiceEstadoTrue.Enable(True)
         self.choiceEstadoFalse.Enable(True)
 
