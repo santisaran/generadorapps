@@ -988,9 +988,12 @@ class mipanelBloque(gui.panelBloque):
                         "Invertir_Reg"  :  self.SCInvertir,
                         "Transmitir_BB" :  self.SCTransmitir,
                         "SetBit"        :  self.SCSetBit,
+                        "Set3Bits"      :  self.SCSet3Bits,
                         "ClrBit"        :  self.SCClrBit,
+                        "Clr3Bit"       :  self.SCClr3Bits,
                         "ClrReg"        :  self.SCClrReg,
-                        "CopiarRegistro":  self.SCCopiar
+                        "CopiarRegistro":  self.SCCopiar,
+                        "CargarValor"   :  self.SCCargarVal,
                         }
 
         #Carga los bloques posibles en la selección
@@ -1010,9 +1013,12 @@ class mipanelBloque(gui.panelBloque):
                         "Invertir_Reg"  :  self.BloqueInvertir,
                         "Transmitir_BB" :  self.BloqueTransmitir,
                         "SetBit"        :  self.BloqueSetBit,
+                        "Set3Bits"      :  self.BloqueSet3Bits,
                         "ClrBit"        :  self.BloqueClrBit,
+                        "Clr3Bit"       :  self.BloqueClr3Bits,
                         "ClrReg"        :  self.BloqueClrReg,
-                        "CopiarRegistro":  self.BloqueCopiar
+                        "CopiarRegistro":  self.BloqueCopiar,
+                        "CargarValor"   :  self.BloqueCargarValor,
                         }
 
         #Ejecuto la acción predeterminada para este bloque
@@ -1156,6 +1162,16 @@ class mipanelBloque(gui.panelBloque):
         self.choiceParametro2.Enable(False)
         self.choiceGuardar.Enable(False)
 
+    def BloqueSet3Bits(self):
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBits])
+        self.choiceParametro2.SetItems([i[const.Nombre] for i in miBits])
+        self.choiceGuardar.SetItems([i[const.Nombre] for i in miBits])
+        self.choiceParametro1.Enable(True)
+        self.choiceParametro1.SetSelection(self.Par1 )
+        self.choiceParametro2.Enable(True)
+        self.choiceParametro2.SetSelection(self.Par2 )
+        self.choiceGuardar.Enable(True)
+        self.choiceGuardar.SetSelection(self.Guardar )
 
     def BloqueClrBit(self):
         self.choiceParametro1.SetItems([i[const.Nombre] for i in miBits])
@@ -1165,6 +1181,18 @@ class mipanelBloque(gui.panelBloque):
         self.choiceParametro1.SetSelection(self.Par1 )
         self.choiceParametro2.Enable(False)
         self.choiceGuardar.Enable(False)
+
+    def BloqueClr3Bits(self):
+        self.choiceParametro1.SetItems([i[const.Nombre] for i in miBits])
+        self.choiceParametro2.SetItems([i[const.Nombre] for i in miBits])
+        self.choiceGuardar.SetItems([i[const.Nombre] for i in miBits])
+        self.choiceParametro1.Enable(True)
+        self.choiceParametro1.SetSelection(self.Par1 )
+        self.choiceParametro2.Enable(True)
+        self.choiceParametro2.SetSelection(self.Par2 )
+        self.choiceGuardar.Enable(True)
+        self.choiceGuardar.SetSelection(self.Guardar )
+
 
 
     def BloqueClrReg(self):
@@ -1187,6 +1215,16 @@ class mipanelBloque(gui.panelBloque):
         self.choiceGuardar.Enable(True)
         self.choiceGuardar.SetSelection(self.Guardar )
 
+    def BloqueCargarValor(self):
+        self.choiceParametro1.SetItems([str(i) for i in range(256)])
+        #self.choiceParametro2.SetItems([i[const.Nombre] for i in miBytes])
+        self.choiceGuardar.SetItems([i[const.Nombre] for i in miBytes])
+        self.choiceParametro1.Enable(True)
+        self.choiceParametro1.SetSelection(self.Par1 )
+        self.choiceParametro2.Enable(False)
+        self.choiceGuardar.Enable(True)
+        self.choiceGuardar.SetSelection(self.Guardar )
+        
 
     def SCNull(self):
         """ Función encargada de generar el seudocódigo
@@ -1340,6 +1378,22 @@ class mipanelBloque(gui.panelBloque):
         self.padre.Estado.Bloques[self.numero] = self.ValorBloque
 
         return cadena
+    
+    def SCSet3Bits(self):
+        """Función encargada de generar el seudocódigo
+        para la función setear 2 bits
+        """
+        cadena = GetTexto(self.choiceParametro1) + " = 1"
+        cadena += "\n\t" + GetTexto(self.choiceParametro2) + " = 1"
+        cadena += "\n\t" + GetTexto(self.choiceGuardar) + " = 1"
+        self.txtctrlSeudo.SetValue(cadena)
+        self.ValorBloque = 0
+        self.ValorBloque = ((Bloque_Set3Bit<<24)|\
+            int(self.choiceParametro1.GetCurrentSelection())|\
+            int(self.choiceParametro2.GetCurrentSelection()<<8)|\
+            int(self.choiceGuardar.GetCurrentSelection()<<16))
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
+        return cadena
 
 
     def SCClrBit(self):
@@ -1350,6 +1404,22 @@ class mipanelBloque(gui.panelBloque):
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = ((Bloque_ClrBit<<24)|\
             int(self.choiceParametro1.GetCurrentSelection()))
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
+        return cadena
+    
+    def SCClr3Bits(self):
+        """Función encargada de generar el seudocódigo
+        para la función clr 3 bits
+        """
+        cadena = GetTexto(self.choiceParametro1) + " = 0"
+        cadena += "\n\t" + GetTexto(self.choiceParametro2) + " = 0"
+        cadena += "\n\t" + GetTexto(self.choiceGuardar) + " = 0"
+        self.txtctrlSeudo.SetValue(cadena)
+        self.ValorBloque = 0
+        self.ValorBloque = ((Bloque_Clr3Bit<<24)|\
+            int(self.choiceParametro1.GetCurrentSelection())|\
+            int(self.choiceParametro2.GetCurrentSelection()<<8)|\
+            int(self.choiceGuardar.GetCurrentSelection()<<16))
         self.padre.Estado.Bloques[self.numero] = self.ValorBloque
         return cadena
 
@@ -1374,6 +1444,19 @@ class mipanelBloque(gui.panelBloque):
             GetTexto(self.choiceParametro1)
         self.txtctrlSeudo.SetValue(cadena)
         self.ValorBloque = ((Bloque_CopiarRegistro<<24)|\
+            int(self.choiceGuardar.GetCurrentSelection()<<16)|\
+            int(self.choiceParametro1.GetCurrentSelection()))
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
+        return cadena
+    
+    def SCCargarVal(self):
+        """Función encargada de generar el seudocódigo
+        para la función cargar valor
+        """
+        cadena = GetTexto(self.choiceGuardar) + " = "+\
+            GetTexto(self.choiceParametro1)
+        self.txtctrlSeudo.SetValue(cadena)
+        self.ValorBloque = ((Bloque_CargarValor<<24)|\
             int(self.choiceGuardar.GetCurrentSelection()<<16)|\
             int(self.choiceParametro1.GetCurrentSelection()))
         self.padre.Estado.Bloques[self.numero] = self.ValorBloque
