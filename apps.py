@@ -294,13 +294,14 @@ Bloque_CopiarRegistro = 15
 Bloque_CargarValor = 16
 
 # // Defines Tipos de Condiciones
-CondicionesPosibles = ("NULL", "Mayor", "Menor", "Igual", "Bit_True", "Bit_False")
+CondicionesPosibles = ("NULL", "Mayor", "Menor", "Igual", "Bit_True", "Bit_False", "Igual_Numero")
 Condicion_NULL = 0
 Condicion_Mayor = 1
 Condicion_Menor = 2
 Condicion_Igual = 3
 Condicion_Bit_True = 4
 Condicion_Bit_False = 5
+Condicion_Igual_Numero = 6
 
 PARAMETRO1 = 0
 PARAMETRO2 = 0
