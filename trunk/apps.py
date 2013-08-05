@@ -268,7 +268,7 @@ for i in range(Cantidad_MAIL):
 BloquesPosibles = (u"Null", u"Incrementar", u"Decrementar", u"AND_2_BIT", \
     u"OR_2_BIT", u"NOT_BIT", u"Sumar_2_Reg", u"Restar_2_Reg", u"Invertir_Reg", \
     u"Transmitir_BB", u"SetBit",u"Set3Bits", u"ClrBit",u"Clr3Bit", u"ClrReg", u"CopiarRegistro",\
-    u"CargarValor")
+    u"CargarValor",u"EnviarSMS")
 
 BloquesDic = {}
 
@@ -292,6 +292,7 @@ Bloque_Clr3Bit = 13
 Bloque_ClrReg = 14
 Bloque_CopiarRegistro = 15
 Bloque_CargarValor = 16
+Bloque_EnviarSMS = 17
 
 # // Defines Tipos de Condiciones
 CondicionesPosibles = ("NULL", "Mayor", "Menor", "Igual", "Bit_True", "Bit_False", "Igual_Numero")
