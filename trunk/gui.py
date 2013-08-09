@@ -829,41 +829,69 @@ class panelBloque ( wx.Panel ):
 		
 		bSizer21.Add( sbSizer2, 1, wx.EXPAND, 5 )
 		
-		sbSizer6 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Parámetro 1") ), wx.VERTICAL )
+		self.panelParametros = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		bSizer42 = wx.BoxSizer( wx.VERTICAL )
+		
+		sbSizer6 = wx.StaticBoxSizer( wx.StaticBox( self.panelParametros, wx.ID_ANY, _(u"Parámetro 1") ), wx.VERTICAL )
 		
 		choiceParametro1Choices = []
-		self.choiceParametro1 = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceParametro1Choices, 0 )
+		self.choiceParametro1 = wx.Choice( self.panelParametros, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceParametro1Choices, 0 )
 		self.choiceParametro1.SetSelection( 0 )
 		self.choiceParametro1.Enable( False )
 		
 		sbSizer6.Add( self.choiceParametro1, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 		
 		
-		bSizer21.Add( sbSizer6, 1, wx.EXPAND, 5 )
+		bSizer42.Add( sbSizer6, 1, wx.EXPAND, 5 )
 		
-		sbSizer8 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Parámetro 2") ), wx.VERTICAL )
+		sbSizer8 = wx.StaticBoxSizer( wx.StaticBox( self.panelParametros, wx.ID_ANY, _(u"Parámetro 2") ), wx.VERTICAL )
 		
 		choiceParametro2Choices = []
-		self.choiceParametro2 = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceParametro2Choices, 0 )
+		self.choiceParametro2 = wx.Choice( self.panelParametros, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceParametro2Choices, 0 )
 		self.choiceParametro2.SetSelection( 0 )
 		self.choiceParametro2.Enable( False )
 		
 		sbSizer8.Add( self.choiceParametro2, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 		
 		
-		bSizer21.Add( sbSizer8, 1, wx.EXPAND, 5 )
+		bSizer42.Add( sbSizer8, 1, wx.EXPAND, 5 )
 		
-		sbSizer9 = wx.StaticBoxSizer( wx.StaticBox( self, wx.ID_ANY, _(u"Guardar en:") ), wx.VERTICAL )
+		sbSizer9 = wx.StaticBoxSizer( wx.StaticBox( self.panelParametros, wx.ID_ANY, _(u"Guardar en:") ), wx.VERTICAL )
 		
 		choiceGuardarChoices = []
-		self.choiceGuardar = wx.Choice( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceGuardarChoices, 0 )
+		self.choiceGuardar = wx.Choice( self.panelParametros, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, choiceGuardarChoices, 0 )
 		self.choiceGuardar.SetSelection( 0 )
 		self.choiceGuardar.Enable( False )
 		
 		sbSizer9.Add( self.choiceGuardar, 0, wx.ALL|wx.ALIGN_CENTER_HORIZONTAL, 5 )
 		
 		
-		bSizer21.Add( sbSizer9, 1, wx.EXPAND, 5 )
+		bSizer42.Add( sbSizer9, 1, wx.EXPAND, 5 )
+		
+		
+		self.panelParametros.SetSizer( bSizer42 )
+		self.panelParametros.Layout()
+		bSizer42.Fit( self.panelParametros )
+		bSizer21.Add( self.panelParametros, 3, wx.EXPAND |wx.ALL, 5 )
+		
+		self.panelSegundos = wx.Panel( self, wx.ID_ANY, wx.DefaultPosition, wx.DefaultSize, wx.TAB_TRAVERSAL )
+		self.panelSegundos.Enable( False )
+		self.panelSegundos.Hide()
+		
+		bSizer43 = wx.BoxSizer( wx.HORIZONTAL )
+		
+		self.m_staticText39 = wx.StaticText( self.panelSegundos, wx.ID_ANY, _(u"Segundos:"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_staticText39.Wrap( -1 )
+		bSizer43.Add( self.m_staticText39, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		
+		self.choiceSegundos = wx.SpinCtrl( self.panelSegundos, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 16777215, 0 )
+		bSizer43.Add( self.choiceSegundos, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		
+		
+		self.panelSegundos.SetSizer( bSizer43 )
+		self.panelSegundos.Layout()
+		bSizer43.Fit( self.panelSegundos )
+		bSizer21.Add( self.panelSegundos, 3, wx.EXPAND |wx.ALL, 5 )
 		
 		
 		bSizer20.Add( bSizer21, 1, wx.EXPAND, 5 )
@@ -889,6 +917,8 @@ class panelBloque ( wx.Panel ):
 		self.choiceParametro1.Bind( wx.EVT_CHOICE, self.OnChoice )
 		self.choiceParametro2.Bind( wx.EVT_CHOICE, self.OnChoice )
 		self.choiceGuardar.Bind( wx.EVT_CHOICE, self.OnChoice )
+		self.choiceSegundos.Bind( wx.EVT_SPINCTRL, self.OnChoice )
+		self.choiceSegundos.Bind( wx.EVT_TEXT, self.OnChoice )
 	
 	def __del__( self ):
 		# Disconnect Events
@@ -896,6 +926,8 @@ class panelBloque ( wx.Panel ):
 		self.choiceParametro1.Unbind( wx.EVT_CHOICE, None )
 		self.choiceParametro2.Unbind( wx.EVT_CHOICE, None )
 		self.choiceGuardar.Unbind( wx.EVT_CHOICE, None )
+		self.choiceSegundos.Unbind( wx.EVT_SPINCTRL, None )
+		self.choiceSegundos.Unbind( wx.EVT_TEXT, None )
 	
 	
 	# Virtual event handlers, overide them in your derived class
@@ -904,6 +936,8 @@ class panelBloque ( wx.Panel ):
 	
 	def OnChoice( self, event ):
 		event.Skip()
+	
+	
 	
 	
 	
@@ -1576,7 +1610,7 @@ class frmIPs ( wx.Frame ):
 class frmTimers ( wx.Frame ):
 	
 	def __init__( self, parent ):
-		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( -1,-1 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
+		wx.Frame.__init__ ( self, parent, id = wx.ID_ANY, title = wx.EmptyString, pos = wx.DefaultPosition, size = wx.Size( 652,332 ), style = wx.DEFAULT_FRAME_STYLE|wx.TAB_TRAVERSAL )
 		
 		self.SetSizeHintsSz( wx.DefaultSize, wx.DefaultSize )
 		
@@ -1766,7 +1800,6 @@ class frmTimers ( wx.Frame ):
 		
 		self.SetSizer( bSizer48 )
 		self.Layout()
-		bSizer48.Fit( self )
 		
 		self.Centre( wx.BOTH )
 		

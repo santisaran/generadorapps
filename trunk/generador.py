@@ -994,6 +994,8 @@ class mipanelBloque(gui.panelBloque):
                         "ClrReg"        :  self.SCClrReg,
                         "CopiarRegistro":  self.SCCopiar,
                         "CargarValor"   :  self.SCCargarVal,
+                        "EnviarSMS"     :  self.SCEnviarSMS,
+                        "SetGPSTime"    :  self.SCSetGPSTime,
                         }
 
         #Carga los bloques posibles en la selección
@@ -1019,6 +1021,8 @@ class mipanelBloque(gui.panelBloque):
                         "ClrReg"        :  self.BloqueClrReg,
                         "CopiarRegistro":  self.BloqueCopiar,
                         "CargarValor"   :  self.BloqueCargarValor,
+                        "EnviarSMS"     :  self.BloqueEnviarSMS,
+                        "SetGPSTime"    :  self.BloqueSetGPSTime,
                         }
 
         #Ejecuto la acción predeterminada para este bloque
@@ -1037,7 +1041,13 @@ class mipanelBloque(gui.panelBloque):
     def OnChoiceAccion(self, event):
         self.padre.Modificado = True
         self.txtctrlSeudo.SetValue("")
+        self.panelParametros.Enable(True)
+        self.panelSegundos.Enable(False) 
+        self.panelParametros.Show()
+        self.panelSegundos.Hide()        
         self.Acciones.get(event.GetString())()
+        self.Layout()
+        self.SetAutoLayout(True)
 
 
     def OnChoice(self, event):
@@ -1225,7 +1235,23 @@ class mipanelBloque(gui.panelBloque):
         self.choiceGuardar.Enable(True)
         self.choiceGuardar.SetSelection(self.Guardar )
         
-
+    def BloqueEnviarSMS(self):
+        self.choiceParametro1.SetItems(["Numero: "+str(i) for i in range(16)])
+        self.choiceParametro2.SetItems(["SMS: "+str(i) for i in range(16)])
+        self.choiceParametro1.Enable(True)
+        self.choiceParametro1.SetSelection(self.Par1 )
+        self.choiceParametro2.Enable(True)
+        self.choiceParametro2.SetSelection(self.Par2 )
+        self.choiceGuardar.Enable(False)
+        
+    def BloqueSetGPSTime(self):
+        self.panelParametros.Enable(False)
+        self.panelSegundos.Enable(True) 
+        self.panelParametros.Hide()
+        self.panelSegundos.Show()                
+        self.choiceSegundos.SetValue(self.Guardar*256*256+self.Par2*256+self.Par1)
+        
+    
     def SCNull(self):
         """ Función encargada de generar el seudocódigo
         para la función Null
@@ -1461,6 +1487,25 @@ class mipanelBloque(gui.panelBloque):
             int(self.choiceParametro1.GetCurrentSelection()))
         self.padre.Estado.Bloques[self.numero] = self.ValorBloque
         return cadena
+    
+    def SCEnviarSMS(self):
+        cadena = u"Enviar mensaje " + GetTexto(self.choiceParametro2) + " a el teléfono "+\
+            GetTexto(self.choiceParametro1)
+        self.txtctrlSeudo.SetValue(cadena)
+        self.ValorBloque = ((Bloque_EnviarSMS<<24)|\
+            int(self.choiceParametro2.GetCurrentSelection()<<8)|\
+            int(self.choiceParametro1.GetCurrentSelection()))
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
+        return cadena
+    
+    def SCSetGPSTime(self):
+        cadena = u"Intervalo GPS = " + str(self.choiceSegundos.GetValue())
+        self.txtctrlSeudo.SetValue(cadena)
+        self.ValorBloque = ((Bloque_SetGPSTime<<24)|int(self.choiceSegundos.GetValue()))
+        self.padre.Estado.Bloques[self.numero] = self.ValorBloque
+        return cadena
+    
+        
 
 ########################################################################
 ########################################################################

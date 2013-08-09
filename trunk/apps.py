@@ -24,10 +24,10 @@ Cantidad_Estados = 10
 Cantidad_Bloques = 5
 Cantidad_Bits_Usuario = 256
 Cantidad_Bytes_Usuario = 256
-Cantidad_SMS = 20
+Cantidad_SMS = 16
 Cantidad_WEBs = 16
-Cantidad_TEL = 10
-Cantidad_MAIL = 10
+Cantidad_TEL = 16
+Cantidad_MAIL = 16
 Cantidad_Timers = 20
 
 # bits definidos en el archivo CylocDefines.h
@@ -103,8 +103,8 @@ CfgCNTan0, Cantidad de muestras para validar valor An0. """, "-1", 0, ""),
     ("AntenaGSMPresente", "", "-1", 0, ""),
 )
 
-DefinicionesBits = DefinicionesBits + \
-    tuple([["sendSMS%d" % i, u"Envía Mensaje de Texto Nº %d" % i, "-1", 0, ""] for i in range(Cantidad_SMS)])
+#DefinicionesBits = DefinicionesBits + \
+#    tuple([["sendSMS%d" % i, u"Envía Mensaje de Texto Nº %d" % i, "-1", 0, ""] for i in range(Cantidad_SMS)])
 
 DefinicionesBits = DefinicionesBits + (("BitSendSMSPwoff","", "-1", 0, ""),("BitSendSMSGPSoff","", "-1", 0, ""),("BitSendSMSOutZone","", "-1", 0, ""))
 
@@ -223,7 +223,9 @@ DefinicionesBytes = (\
     ("CfgCNTbuzz", u"", "-1", 0),
     ("CNTbuzz", u"", "-1", 0),
     ("Frecoscbuzz", u"", "-1", 0),
-    ("Dutyenc", u"", "-1", 0)
+    ("Dutyenc", u"", "-1", 0),
+    ("GPSFixTimeL",u"Intervalo de tiempo entre Datos del GPS", "-1",0),
+    ("GPSFixTimeH",u"Intervalo de tiempo entre Datos del GPS", "-1",0)
 )
 
 
@@ -268,7 +270,7 @@ for i in range(Cantidad_MAIL):
 BloquesPosibles = (u"Null", u"Incrementar", u"Decrementar", u"AND_2_BIT", \
     u"OR_2_BIT", u"NOT_BIT", u"Sumar_2_Reg", u"Restar_2_Reg", u"Invertir_Reg", \
     u"Transmitir_BB", u"SetBit",u"Set3Bits", u"ClrBit",u"Clr3Bit", u"ClrReg", u"CopiarRegistro",\
-    u"CargarValor",u"EnviarSMS")
+    u"CargarValor",u"EnviarSMS",u"SetGPSTime")
 
 BloquesDic = {}
 
@@ -293,7 +295,7 @@ Bloque_ClrReg = 14
 Bloque_CopiarRegistro = 15
 Bloque_CargarValor = 16
 Bloque_EnviarSMS = 17
-
+Bloque_SetGPSTime = 18
 # // Defines Tipos de Condiciones
 CondicionesPosibles = ("NULL", "Mayor", "Menor", "Igual", "Bit_True", "Bit_False", "Igual_Numero")
 Condicion_NULL = 0
