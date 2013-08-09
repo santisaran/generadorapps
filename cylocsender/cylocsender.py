@@ -285,11 +285,13 @@ class MyCylocFrame (GUI.CylocFrame):
     
                 else: 
                     print "Error al cargar archivo binario"
+                    self.progreso.SetValue(0)
                     self.archivo.close()
                     self.EnviandoArchivo = False
                     return False                    
             else:
                 print "fin de archivo"
+                self.progreso.SetValue(0)
                 self.archivo.close()
                 self.EnviandoArchivo = False
               
