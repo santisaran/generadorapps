@@ -94,7 +94,7 @@ CfgCNTan0, Cantidad de muestras para validar valor An0. """, "-1", 0, ""),
     
     ("Accel_Flag_DR", u"Flag indicador de dato nuevo de aceleracion disponible", "-1", 0, ""),
     ("Accel_Flag_Choque", u"Flag de accidente. Para mas informacion, ver Registro STAT", "-1", 0, ""),
-    
+    ("GPS_ON_OFF", u"encender el GPS con 1 apagar con 0","-1",0,""),
     ("Pulsos", "", "-1", 0, ""),
     ("Buzz", "", "-1", 0, ""),
     ("AntenaGPSCorto", "", "-1", 0, ""),

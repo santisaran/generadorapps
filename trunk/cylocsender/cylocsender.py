@@ -126,7 +126,7 @@ class MyCylocFrame (GUI.CylocFrame):
         except:
             pass
         #Agregar lo recibido por el puerto serie en fomato hexadecimal
-        self.textCtrlEntradaHex.AppendText(str(map(hex,map(ord,text))))
+        #self.textCtrlEntradaHex.AppendText(str(map(hex,map(ord,text))))
         if self.EsperaACK:
             retorno = map(ord,text)
             #print "recibido: " + str(retorno)
