@@ -884,7 +884,7 @@ class panelBloque ( wx.Panel ):
 		self.m_staticText39.Wrap( -1 )
 		bSizer43.Add( self.m_staticText39, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
-		self.choiceSegundos = wx.SpinCtrl( self.panelSegundos, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 16777215, 0 )
+		self.choiceSegundos = wx.SpinCtrl( self.panelSegundos, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, wx.SP_ARROW_KEYS, 0, 4294967, 0 )
 		bSizer43.Add( self.choiceSegundos, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 		
 		
