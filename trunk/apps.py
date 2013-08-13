@@ -78,7 +78,6 @@ CfgCNTan0, Cantidad de muestras para validar valor An0. """, "-1", 0, ""),
     ("LeerAn4", u"True => petición de lectura AD4.", "-1", 0, ""),
     ("LeerAn5", u"True => petición de lectura AD5.", "-1", 0, ""),
     
-    ("LeerXYZ", "", "-1", 0, ""),
     
     ("Led", u"Led prendido u apagado.", "-1", 0, ""),
     ("Destellar", "", "-1", 0, ""),
