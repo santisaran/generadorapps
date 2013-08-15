@@ -920,11 +920,11 @@ class mifrmBloques( gui.frmBloques):
         #nombre del estado
         self.padre.tempApp.Estados[self.notBloque.NumEstado] =\
             self.notBloque.Estado.copy()
-        nombre = "%0.2d"%self.notBloque.NumEstado + " : " + self.Title
+        nombre = "%0.2d"%self.notBloque.NumEstado + " : " + self.txtctrlTitulo.GetValue()
         self.padre.EstadosDic[self.notBloque.NumEstado].opened = True
         self.padre.listEstados.Delete(self.notBloque.NumEstado)
         self.padre.listEstados.Insert(nombre, self.notBloque.NumEstado)
-        self.padre.EstadosDic[self.notBloque.NumEstado].Nombre = self.Title
+        self.padre.EstadosDic[self.notBloque.NumEstado].Nombre = self.txtctrlTitulo.GetValue()
         self.padre.EstadosDic[self.notBloque.NumEstado].opened = True
         self.notBloque.Modificado = False
         global Modificado
@@ -951,8 +951,8 @@ class mifrmBloques( gui.frmBloques):
 
     def OnTitulo(self, event):
         self.notBloque.Modificado = True
-        self.Title = self.txtctrlTitulo.GetValue()
-        self.notBloque.Estado.Nombre = self.Title
+        self.Title = "Estado %d: "%self.notBloque.NumEstado + self.txtctrlTitulo.GetValue()
+        self.notBloque.Estado.Nombre = self.txtctrlTitulo.GetValue()
 
 ########################################################################
 ########################################################################
